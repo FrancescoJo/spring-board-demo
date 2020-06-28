@@ -1,0 +1,16 @@
+group "com.github.fj.lib"
+version "1.0.3"
+
+apply from: "$project.rootDir/gradle/scripts/java.gradle"
+apply from: "$project.rootDir/gradle/scripts/kotlin.gradle"
+apply from: "$project.rootDir/gradle/scripts/jacoco.gradle"
+apply from: "$project.rootDir/gradle/scripts/testing-junit.gradle"
+apply from: "$project.rootDir/gradle/scripts/detekt.gradle"
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    implementation "com.google.code.findbugs:jsr305:3.0.2"
+}

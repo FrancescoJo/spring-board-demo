@@ -1,0 +1,17 @@
+// Kotlin for JVM supports java source level 1.8 currently (Jan 2018)
+apply plugin: "kotlin"
+apply plugin: "kotlin-spring"
+
+sourceCompatibility = version_jvm
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version_kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$version_kotlin"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "$version_jvm"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "$version_jvm"
+}

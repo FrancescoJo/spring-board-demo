@@ -1,0 +1,47 @@
+buildscript {
+    ext {
+        // lang
+        version_jvm = 1.8
+        version_kotlin = "1.3.72"
+
+        // Spring + infrastructure
+        version_springBoot = "2.3.1.RELEASE"
+
+        // 3rdparty
+        version_semVer = "2.1.0"
+
+        // Testing & Code quality
+        version_junit5 = "5.6.2"
+        version_mockito = "3.3.3"
+        version_detekt = "1.9.1"
+    }
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url "https://repo.spring.io/plugins-release" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        // lang
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
+        // https://kotlinlang.org/docs/reference/compiler-plugins.html
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$version_kotlin"
+
+        // Spring
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$version_springBoot"
+
+        // Testing & Code quality
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$version_detekt"
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        maven { url "https://jitpack.io" }
+    }
+}

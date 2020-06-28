@@ -1,0 +1,5 @@
+apply plugin: "java"
+
+sourceCompatibility = version_jvm
+targetCompatibility = version_jvm
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
