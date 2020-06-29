@@ -16,4 +16,4 @@ keystore.p12
 version.properties
 application.yml
 /application-*.yml
-
+/database
