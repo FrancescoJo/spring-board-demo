@@ -16,6 +16,10 @@ import org.springframework.boot.builder.SpringApplicationBuilder
 @SpringBootApplication
 class Application {
     companion object {
+        val profile: AppProfile by lazy {
+            AppProfile.from(BuildConfig.profileName)
+        }
+
         @JvmStatic
         fun main(args: Array<String>) {
             @Suppress("SpreadOperator") // This logic is called only once.

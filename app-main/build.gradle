@@ -11,6 +11,32 @@ apply from: "$project.rootDir/gradle/scripts/jacoco.gradle"
 apply from: "$project.rootDir/gradle/scripts/testing-junit.gradle"
 apply from: "$project.rootDir/gradle/scripts/detekt.gradle"
 
+sourceSets {
+    def allowedBuildTargets = ["local", "release"]
+    def buildConfig
+    if (project.hasProperty("buildConfig")) {
+        buildConfig = project.properties["buildConfig"].toString().toLowerCase(Locale.US)
+    } else {
+        buildConfig = "local"
+        println("No build configuration is specified - '$buildConfig' is used by default")
+    }
+
+    if (!allowedBuildTargets.contains(buildConfig)) {
+        throw new IllegalArgumentException("Only these build targets are accepted: $allowedBuildTargets")
+    }
+
+    println("Building JAR for '$buildConfig' environment")
+    main {
+        java {
+            srcDirs srcDirs = [srcDirs, "src/$buildConfig/java", "src/$buildConfig/kotlin"]
+        }
+
+        resources {
+            srcDirs srcDirs = [srcDirs, "src/$buildConfig/resources"]
+        }
+    }
+}
+
 dependencies {
     implementation project(":app-core")
 

@@ -54,9 +54,7 @@ logging:
   path:
   file:
   level:
-    # Better to raise over than INFO in production environment
-    org.springframework.web: INFO
-    # All exceptions are handled and logged by com.github.fj.restapi.endpoint.CustomErrorHandler
+    ROOT: INFO
+    # All exceptions are handled and logged by com.github.fj.board.component.advice.CustomErrorHandler
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: OFF
-    org.hibernate: INFO
     com.github.fj: DEBUG
