@@ -4,7 +4,7 @@
  * Distributed under no licences and no warranty.
  * Use this software at your own risk.
  */
-package com.github.fj.lib.java;
+package com.github.fj.lib.function;
 
 import java.util.function.Consumer;
 

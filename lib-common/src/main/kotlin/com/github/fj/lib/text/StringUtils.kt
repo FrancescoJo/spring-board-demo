@@ -6,7 +6,6 @@
  */
 package com.github.fj.lib.text
 
-import java.util.*
 import java.util.regex.Pattern
 
 /*
@@ -15,35 +14,36 @@ import java.util.regex.Pattern
  *
  * Type notation to ensure this collection is immutable even though a reference leakage happens
  */
-private val UNICODE_BLANK_CHARS: Set<Char> = HashSet<Char>().apply {
-    add('\u0009') // control-0009
-    add('\u000A') // control-000A
-    add('\u000B') // control-000B
-    add('\u000C') // control-000C
-    add('\u000D') // control-000D
-    add('\u001C') // FILE SEPARATOR
-    add('\u001D') // GROUP SEPARATOR
-    add('\u001E') // RECORD SEPARATOR
-    add('\u001F') // UNIT SEPARATOR
-    add('\u0020') // SPACE
-    add('\u0085') // control-0085
-    add('\u00A0') // NO-BREAK SPACE
-    add('\u1680') // OGHAM SPACE MARK
-    add('\u2000') // EN QUAD
-    add('\u2001') // EM QUAD
-    add('\u2002') // EN SPACE
-    add('\u2003') // EM SPACE
-    add('\u2004') // THREE-PER-EM SPACE
-    add('\u2005') // FOUR-PER-EM SPACE
-    add('\u2006') // SIX-PER-EM SPACE
-    add('\u2007') // FIGURE SPACE
-    add('\u2008') // PUNCTUATION SPACE
-    add('\u2009') // THIN SPACE
-    add('\u200A') // HAIR SPACE
-    add('\u202F') // NARROW NO-BREAK SPACE
-    add('\u205F') // MEDIUM MATHEMATICAL SPACE
-    add('\u3000') // IDEOGRAPHIC SPACE
-}
+@Suppress("DuplicatedCode")
+private val UNICODE_BLANK_CHARS: Set<Char> = setOf(
+    '\u0009', // control-0009
+    '\u000A', // control-000A
+    '\u000B', // control-000B
+    '\u000C', // control-000C
+    '\u000D', // control-000D
+    '\u001C', // FILE SEPARATOR
+    '\u001D', // GROUP SEPARATOR
+    '\u001E', // RECORD SEPARATOR
+    '\u001F', // UNIT SEPARATOR
+    '\u0020', // SPACE
+    '\u0085', // control-0085
+    '\u00A0', // NO-BREAK SPACE
+    '\u1680', // OGHAM SPACE MARK
+    '\u2000', // EN QUAD
+    '\u2001', // EM QUAD
+    '\u2002', // EN SPACE
+    '\u2003', // EM SPACE
+    '\u2004', // THREE-PER-EM SPACE
+    '\u2005', // FOUR-PER-EM SPACE
+    '\u2006', // SIX-PER-EM SPACE
+    '\u2007', // FIGURE SPACE
+    '\u2008', // PUNCTUATION SPACE
+    '\u2009', // THIN SPACE
+    '\u200A', // HAIR SPACE
+    '\u202F', // NARROW NO-BREAK SPACE
+    '\u205F', // MEDIUM MATHEMATICAL SPACE
+    '\u3000'  // IDEOGRAPHIC SPACE
+)
 
 fun String?.isNullOrUnicodeBlank(): Boolean {
     if (isNullOrBlank()) {
