@@ -16,7 +16,7 @@ import javax.inject.Inject
  * @since 08 - Nov - 2018
  */
 @Configuration
-class ContextConfig @Inject constructor(
+class MessageConverterConfig @Inject constructor(
     private val defaultObjMapper: ObjectMapper
 ) : WebMvcConfigurer {
     override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>?) {

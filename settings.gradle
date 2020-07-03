@@ -1,4 +1,5 @@
 rootProject.name = "spring-message-board-demo"
 
-include ":app-main",
+include ":app-core",
+        ":app-main",
         ":lib-common"

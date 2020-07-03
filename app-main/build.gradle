@@ -12,31 +12,17 @@ apply from: "$project.rootDir/gradle/scripts/testing-junit.gradle"
 apply from: "$project.rootDir/gradle/scripts/detekt.gradle"
 
 dependencies {
-    implementation project(":lib-common")
-
-    // JSR extensions
-    implementation "javax.inject:javax.inject:1"
+    implementation project(":app-core")
 
     // Spring boot
-    implementation "org.springframework.boot:spring-boot-starter:$version_springBoot"
-    implementation("org.springframework.boot:spring-boot-starter-web:$version_springBoot") {
-        exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
-    }
     implementation "org.springframework.boot:spring-boot-starter-undertow:$version_springBoot"
     implementation "org.springframework.boot:spring-boot-starter-actuator:$version_springBoot"
 
     // Spring Data + JPA
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$version_springBoot"
     implementation "org.springframework:spring-tx"
     implementation "com.zaxxer:HikariCP"
     // Change this to your favourite database (and apply it to application.yml configuration file)
     implementation "com.h2database:h2"
-
-    // Jackson Kotlin support
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
-
-    // semver
-    implementation "de.skuzzle:semantic-version:$version_semVer"
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$version_springBoot"
 }

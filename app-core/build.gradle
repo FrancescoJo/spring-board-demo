@@ -1,0 +1,33 @@
+group "com.github.fj.board.core"
+version "1.0"
+
+apply plugin: "idea"
+apply plugin: "io.spring.dependency-management"
+
+apply from: "$project.rootDir/gradle/scripts/java.gradle"
+apply from: "$project.rootDir/gradle/scripts/kotlin.gradle"
+apply from: "$project.rootDir/gradle/scripts/jacoco.gradle"
+apply from: "$project.rootDir/gradle/scripts/testing-junit.gradle"
+apply from: "$project.rootDir/gradle/scripts/detekt.gradle"
+
+dependencies {
+    api project(":lib-common")
+
+    // JSR extensions
+    api "javax.inject:javax.inject:1"
+
+    // Spring boot
+    api "org.springframework.boot:spring-boot-starter:$version_springBoot"
+    api("org.springframework.boot:spring-boot-starter-web:$version_springBoot") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
+    }
+
+    // Spring Data + JPA
+    api "org.springframework.boot:spring-boot-starter-data-jpa:$version_springBoot"
+
+    // Jackson Kotlin support
+    api "com.fasterxml.jackson.module:jackson-module-kotlin"
+
+    // semver
+    api "de.skuzzle:semantic-version:$version_semVer"
+}
