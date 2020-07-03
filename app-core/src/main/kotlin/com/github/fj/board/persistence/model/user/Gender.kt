@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 enum class Gender(val key: String) {
     MALE("u"),
     FEMALE("v"),
-    UNDEFINED("s");
+    UNDEFINED("");
 
     @JsonValue
     @Suppress("unused") // Used by Jackson upon serialising @JsonSerialize annotated classes

@@ -52,14 +52,11 @@ class User : Serializable {
     @Version
     private var version: Long = 0L
 
-    override fun toString(): String {
-        return "User(id=$id, " +
-                "authentication=<lazy> " +
-                "nickname='$nickname', " +
-                "status=$status, " +
-                "email='$email', " +
-                "invitedBy=$invitedBy " +
-                "gender=$gender" +
-                ")"
-    }
+    override fun toString() = "User(id=$id, " +
+            "authentication=<lazy> " +
+            "nickname='$nickname', " +
+            "status=$status, " +
+            "email='$email', " +
+            "invitedBy=$invitedBy " +
+            "gender=$gender)"
 }

@@ -11,7 +11,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <FileNamePattern>${LOG_PATH}/archives/${spring.application.name}-%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>
             <maxFileSize>200MB</maxFileSize>
-            <maxHistory>20</maxHistory>
+            <maxHistory>30</maxHistory>
             <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
     </appender>

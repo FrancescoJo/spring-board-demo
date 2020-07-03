@@ -5,8 +5,8 @@
 package com.github.fj.board.persistence.entity
 
 import com.github.fj.board.persistence.converter.ByteArrayInetAddressConverter
-import com.github.fj.board.persistence.converter.SemanticVersionConverter
 import com.github.fj.board.persistence.converter.PlatformTypeConverter
+import com.github.fj.board.persistence.converter.SemanticVersionConverter
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.PlatformType
 import com.github.fj.lib.net.InetAddressExtensions
@@ -66,19 +66,16 @@ class Authentication : Serializable {
     @Version
     private var version: Long = 0L
 
-    override fun toString(): String {
-        return "Authentication(id=$id, " +
-                "loginName='$loginName', " +
-                "password='[PROTECTED]', " +
-                "createdDate=$createdDate, " +
-                "createdIp=$createdIp, " +
-                "lastActiveDate=$lastActiveDate, " +
-                "lastActiveIp=$lastActiveIp, " +
-                "lastActivePlatformType=$lastActivePlatformType, " +
-                "lastActivePlatformVersion='$lastActivePlatformVersion', " +
-                "lastActiveAppVersion=$lastActiveAppVersion, " +
-                "version=$version, " +
-                "user=${user.id}" +
-                ")"
-    }
+    override fun toString(): String = "Authentication(id=$id, " +
+            "loginName='$loginName', " +
+            "password='[PROTECTED]', " +
+            "createdDate=$createdDate, " +
+            "createdIp=$createdIp, " +
+            "lastActiveDate=$lastActiveDate, " +
+            "lastActiveIp=$lastActiveIp, " +
+            "lastActivePlatformType=$lastActivePlatformType, " +
+            "lastActivePlatformVersion='$lastActivePlatformVersion', " +
+            "lastActiveAppVersion=$lastActiveAppVersion, " +
+            "version=$version, " +
+            "user=${user.id})"
 }
