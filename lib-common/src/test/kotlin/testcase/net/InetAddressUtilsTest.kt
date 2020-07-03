@@ -22,7 +22,7 @@ import java.net.InetAddress
  * @since 09 - Mar - 2018
  */
 class InetAddressUtilsTest {
-    @ParameterizedTest
+    @ParameterizedTest(name = "InetAddress conversion for ''{0}''")
     @ValueSource(strings = ["localhost", "8.8.8.8"])
     fun `InetAddress to bytes conversion and vice versa should be exactly same`(hostname: String) {
         val sourceAddress = InetAddress.getByName(hostname)

@@ -45,7 +45,7 @@ class StringUtilsTest {
         assertEquals(true, withInput("\u3000\u3000"))
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "\"{0}\".matchesIn(\"{1}\") ==> ''{2}''")
     @MethodSource("matchesInTestArgsProvider")
     fun `matchesIn test for various inputs`(str: String, pattern: Pattern, expected: Boolean) {
         assertEquals(expected, str.matchesIn(pattern))
