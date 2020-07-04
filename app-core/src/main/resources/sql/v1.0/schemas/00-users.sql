@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `users`
     `nickname`          VARCHAR(64)  NOT NULL UNIQUE,
     `status`            VARCHAR(4)   NOT NULL DEFAULT '',
     `email`             VARCHAR(128) NOT NULL DEFAULT '',
-    `invited_by`        BIGINT       NOT NULL DEFAULT 0,
+    `invited_by`        BIGINT,
     `gender`            VARCHAR(4)   NOT NULL DEFAULT '',
     `version`           BIGINT       NOT NULL,
 

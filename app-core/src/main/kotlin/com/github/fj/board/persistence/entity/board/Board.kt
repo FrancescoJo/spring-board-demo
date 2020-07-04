@@ -5,6 +5,7 @@
 package com.github.fj.board.persistence.entity.board
 
 import com.github.fj.board.persistence.converter.ByteArrayUuidConverter
+import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.util.UuidExtensions
 import java.io.Serializable
@@ -18,7 +19,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "boards")
-class Board : Serializable {
+class Board : AbstractIncrementalLockableEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0L
@@ -35,10 +36,6 @@ class Board : Serializable {
 
     @Column(name = "modified_date", nullable = false)
     var modifiedDate: LocalDateTime = LOCAL_DATE_TIME_MIN
-
-    // For optimistic locking
-    @Version
-    private var version: Long = 0L
 
     override fun toString() = "Board(id=$id, " +
             "accessId=$accessId, " +

@@ -6,10 +6,10 @@ package com.github.fj.board.persistence.entity.user
 
 import com.github.fj.board.persistence.converter.user.GenderConverter
 import com.github.fj.board.persistence.converter.user.StatusConverter
-import com.github.fj.board.persistence.entity.Authentication
+import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
+import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.model.user.Gender
 import com.github.fj.board.persistence.model.user.Status
-import java.io.Serializable
 import javax.persistence.*
 
 /**
@@ -18,7 +18,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "users")
-class User : Serializable {
+class User : AbstractIncrementalLockableEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0L
@@ -37,20 +37,13 @@ class User : Serializable {
     @Column(length = 128, nullable = false, columnDefinition = "VARCHAR(128)")
     var email: String = ""
 
-    /**
-     * Invited user id
-     * Not mapping directly to another 'User' object to prevent any chances of cyclic reference
-     */
-    @Column(name = "invited_by", nullable = false)
-    var invitedBy: Long = 0L
+    @ManyToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "invited_by", nullable = true)
+    var invitedBy: User? = null
 
     @Convert(converter = GenderConverter::class)
     @Column(length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
     var gender: Gender = Gender.UNDEFINED
-
-    // For optimistic locking
-    @Version
-    private var version: Long = 0L
 
     override fun toString() = "User(id=$id, " +
             "authentication=<lazy> " +

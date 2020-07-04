@@ -2,16 +2,16 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.persistence.entity
+package com.github.fj.board.persistence.entity.auth
 
 import com.github.fj.board.persistence.converter.ByteArrayInetAddressConverter
 import com.github.fj.board.persistence.converter.PlatformTypeConverter
 import com.github.fj.board.persistence.converter.SemanticVersionConverter
+import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.PlatformType
 import com.github.fj.lib.net.InetAddressExtensions
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
-import java.io.Serializable
 import java.net.InetAddress
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -22,7 +22,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "authentications")
-class Authentication : Serializable {
+class Authentication : AbstractIncrementalLockableEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0L
@@ -61,10 +61,6 @@ class Authentication : Serializable {
     @OneToOne(cascade = [CascadeType.ALL], optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "id")
     lateinit var user: User
-
-    // For optimistic locking
-    @Version
-    private var version: Long = 0L
 
     override fun toString(): String = "Authentication(id=$id, " +
             "loginName='$loginName', " +

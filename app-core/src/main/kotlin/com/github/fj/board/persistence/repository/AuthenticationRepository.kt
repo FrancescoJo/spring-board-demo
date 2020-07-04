@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.persistence.repository
 
-import com.github.fj.board.persistence.entity.Authentication
+import com.github.fj.board.persistence.entity.auth.Authentication
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
