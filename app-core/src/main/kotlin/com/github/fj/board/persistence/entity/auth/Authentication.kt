@@ -5,11 +5,11 @@
 package com.github.fj.board.persistence.entity.auth
 
 import com.github.fj.board.persistence.converter.ByteArrayInetAddressConverter
-import com.github.fj.board.persistence.converter.PlatformTypeConverter
+import com.github.fj.board.persistence.converter.auth.PlatformTypeConverter
 import com.github.fj.board.persistence.converter.SemanticVersionConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.user.User
-import com.github.fj.board.persistence.model.PlatformType
+import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.lib.net.InetAddressExtensions
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import java.net.InetAddress

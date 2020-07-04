@@ -14,9 +14,7 @@ import javax.persistence.Converter
  */
 @Converter
 class GenderConverter : AttributeConverter<Gender, String> {
-    override fun convertToDatabaseColumn(attribute: Gender?): String =
-        attribute?.key ?: Gender.UNDEFINED.key
+    override fun convertToDatabaseColumn(attribute: Gender): String = attribute.key
 
-    override fun convertToEntityAttribute(dbData: String?): Gender =
-        Gender.byKey(dbData)
+    override fun convertToEntityAttribute(dbData: String?): Gender = Gender.byKey(dbData)
 }

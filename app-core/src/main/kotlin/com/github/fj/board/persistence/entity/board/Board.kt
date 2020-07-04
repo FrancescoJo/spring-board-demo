@@ -6,6 +6,7 @@ package com.github.fj.board.persistence.entity.board
 
 import com.github.fj.board.persistence.converter.ByteArrayUuidConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
+import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.util.UuidExtensions
 import java.io.Serializable
@@ -31,11 +32,21 @@ class Board : AbstractIncrementalLockableEntity() {
     @Column(length = 128, nullable = false, columnDefinition = "VARCHAR(128)")
     var name: String = ""
 
+    @Column(name = "posts_count", nullable = false)
+    var postsCount: Long = 0L
+
     @Column(name = "created_date", nullable = false)
     var createdDate: LocalDateTime = LOCAL_DATE_TIME_MIN
 
     @Column(name = "modified_date", nullable = false)
     var modifiedDate: LocalDateTime = LOCAL_DATE_TIME_MIN
+
+    /*
+     * We don't introduce this relation here since accessing to this field may require huge memory
+     * when numbers Posts of this Board are sufficiently large
+     */
+    // @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
+    // lateinit var posts: List<Post>
 
     override fun toString() = "Board(id=$id, " +
             "accessId=$accessId, " +
