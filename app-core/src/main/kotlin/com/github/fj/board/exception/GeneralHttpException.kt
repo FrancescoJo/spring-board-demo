@@ -17,7 +17,7 @@ import org.springframework.web.client.HttpStatusCodeException
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 15 - Jan - 2018
  */
-open class GeneralHttpException private constructor(
+open class GeneralHttpException protected constructor(
     val httpStatus: HttpStatus,
     override val message: String = "",
     override val cause: Throwable? = null

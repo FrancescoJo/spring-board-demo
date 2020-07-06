@@ -43,10 +43,7 @@ class CustomErrorHandler : ErrorController {
     @ExceptionHandler(NoHandlerFoundException::class)
     fun handleSpring404(req: HttpServletRequest): ResponseEntity<ErrorResponseDto> {
         return handleError(
-            req, GeneralHttpException.create(
-                HttpStatus.NOT_FOUND,
-                req.requestURI ?: ""
-            )
+            req, GeneralHttpException.create(HttpStatus.NOT_FOUND, req.requestURI ?: "")
         )
     }
 
