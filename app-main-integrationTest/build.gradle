@@ -1,0 +1,24 @@
+apply plugin: "groovy"
+
+def groovyVersion = "2.5.3"
+
+dependencies {
+    testImplementation project (":app-main")
+
+    // lang
+    testImplementation "org.codehaus.groovy:groovy-all:$groovyVersion"
+
+    // spock framework
+    testImplementation "org.spockframework:spock-core:1.3-groovy-2.5"
+    // testImplementation "org.spockframework:spock-spring:1.3-groovy-2.5"
+
+    // in-memory database
+    testImplementation "com.h2database:h2"
+
+    testImplementation "cglib:cglib-nodep:3.2.4"
+    testImplementation "net.bytebuddy:byte-buddy:1.6.5"
+    testImplementation "org.objenesis:objenesis:2.5.1"
+}
+
+// https://stackoverflow.com/questions/50681096/groovy-2-5-0-gives-noclassdeffounderror-for-methodcalltransformation
+ext["groovy.version"] = "$groovyVersion"
