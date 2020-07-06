@@ -5,7 +5,7 @@
 package com.github.fj.board.appconfig
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.fj.board.component.JacksonDeserialisationModule
+import com.github.fj.board.component.JacksonMsgConverterModule
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -20,6 +20,6 @@ class MessageConverterConfig @Inject constructor(
     private val defaultObjMapper: ObjectMapper
 ) : WebMvcConfigurer {
     override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>?) {
-        defaultObjMapper.registerModule(JacksonDeserialisationModule())
+        defaultObjMapper.registerModule(JacksonMsgConverterModule())
     }
 }
