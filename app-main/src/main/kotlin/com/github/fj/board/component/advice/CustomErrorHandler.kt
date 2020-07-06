@@ -9,6 +9,7 @@ import com.github.fj.board.endpoint.AbstractResponseDto
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.ErrorResponseDto
 import com.github.fj.board.exception.GeneralHttpException
+import com.github.fj.board.exception.IllegalRequestException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.http.HttpStatus
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.stereotype.Controller
 import org.springframework.web.HttpMediaTypeNotSupportedException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -79,6 +81,13 @@ class CustomErrorHandler : ErrorController {
                     "Cannot process given request.",
                     "JsonProcessingException"
                 )
+            }
+            is MethodArgumentNotValidException -> {
+                LOG.error("Illegal request from client. Constraint violations are:")
+                ex.bindingResult.allErrors.forEach {
+                    LOG.error(it.defaultMessage)
+                }
+                return handleError(req, IllegalRequestException("Illegal request from client.", ex))
             }
             else -> {
                 if (ex.cause is Exception) {

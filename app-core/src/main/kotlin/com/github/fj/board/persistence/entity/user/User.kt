@@ -27,7 +27,7 @@ class User : AbstractIncrementalLockableEntity() {
     @MapsId
     lateinit var authentication: Authentication
 
-    @Column(length = 64, nullable = false)
+    @Column(length = 64, nullable = false, columnDefinition = "VARCHAR(64)")
     var nickname: String = ""
 
     @Convert(converter = StatusConverter::class)
