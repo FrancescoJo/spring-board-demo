@@ -8,7 +8,7 @@ package com.github.fj.board
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 01 - Jan - 2018
  */
-enum class AppProfile(private val profileName: String) {
+enum class AppProfile(val profileName: String) {
     LOCAL("local"),
     RELEASE("release");
 

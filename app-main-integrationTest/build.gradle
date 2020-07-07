@@ -1,6 +1,11 @@
 apply plugin: "groovy"
+apply plugin: "org.asciidoctor.convert"
+
+apply from: "$project.rootDir/gradle/scripts/java.gradle"
+apply from: "$project.rootDir/gradle/scripts/kotlin.gradle"
 
 def groovyVersion = "2.5.3"
+def spockVersion = "1.3-groovy-2.5"
 
 dependencies {
     testImplementation project (":app-main")
@@ -8,16 +13,28 @@ dependencies {
     // lang
     testImplementation "org.codehaus.groovy:groovy-all:$groovyVersion"
 
+    // Spring boot test libs
+    testImplementation "org.springframework.boot:spring-boot-starter-test:$version_springBoot"
+    testImplementation "org.springframework.restdocs:spring-restdocs-core:$version_restDocs"
+    testImplementation "org.springframework.restdocs:spring-restdocs-restassured:$version_restDocs"
+    testImplementation "org.springframework.restdocs:spring-restdocs-asciidoctor:$version_restDocs"
+
     // spock framework
-    testImplementation "org.spockframework:spock-core:1.3-groovy-2.5"
-    // testImplementation "org.spockframework:spock-spring:1.3-groovy-2.5"
+    testImplementation "org.spockframework:spock-core:$spockVersion"
+    testImplementation "org.spockframework:spock-spring:$spockVersion"
 
     // in-memory database
     testImplementation "com.h2database:h2"
 
-    testImplementation "cglib:cglib-nodep:3.2.4"
-    testImplementation "net.bytebuddy:byte-buddy:1.6.5"
-    testImplementation "org.objenesis:objenesis:2.5.1"
+    // spock mock support
+    testRuntimeOnly "cglib:cglib-nodep:3.2.4"
+    testRuntimeOnly "net.bytebuddy:byte-buddy:1.6.5"
+    testRuntimeOnly "org.objenesis:objenesis:2.5.1"
+}
+
+asciidoctor {
+    inputs.dir "${project.buildDir}/generated-snippets"
+    dependsOn test
 }
 
 // https://stackoverflow.com/questions/50681096/groovy-2-5-0-gives-noclassdeffounderror-for-methodcalltransformation

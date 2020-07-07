@@ -10,6 +10,7 @@ apply from: "$project.rootDir/gradle/scripts/kotlin.gradle"
 apply from: "$project.rootDir/gradle/scripts/jacoco.gradle"
 apply from: "$project.rootDir/gradle/scripts/testing-junit.gradle"
 apply from: "$project.rootDir/gradle/scripts/detekt.gradle"
+apply from: "packaging.gradle"
 
 sourceSets {
     def allowedBuildTargets = ["local", "release"]

@@ -20,10 +20,14 @@ class Application {
             AppProfile.from(BuildConfig.profileName)
         }
 
+        private val configurationNames = arrayOf("application", "application-" + profile.profileName)
+
         @JvmStatic
         fun main(args: Array<String>) {
-            @Suppress("SpreadOperator") // This logic is called only once.
+            // This logic is called only once.
+            @Suppress("SpreadOperator")
             SpringApplicationBuilder(Application::class.java)
+                .properties("spring.config.name:" + configurationNames.joinToString { it })
                 .build()
                 .run(*args)
         }

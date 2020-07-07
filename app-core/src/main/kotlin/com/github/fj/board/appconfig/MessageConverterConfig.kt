@@ -5,6 +5,7 @@
 package com.github.fj.board.appconfig
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.fj.board.component.JacksonMsgConverterModule
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.HttpMessageConverter
@@ -19,7 +20,10 @@ import javax.inject.Inject
 class MessageConverterConfig @Inject constructor(
     private val defaultObjMapper: ObjectMapper
 ) : WebMvcConfigurer {
-    override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>?) {
-        defaultObjMapper.registerModule(JacksonMsgConverterModule())
+    override fun configureMessageConverters(
+        converters: MutableList<HttpMessageConverter<*>>?
+    ): Unit = with(defaultObjMapper) {
+        registerModule(KotlinModule())
+        registerModule(JacksonMsgConverterModule())
     }
 }

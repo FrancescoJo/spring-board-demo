@@ -1,0 +1,14 @@
+/*
+ * This script force enables JAR packaging in order to export this module as library, especially for
+ * module `app-main-integrationTest`.
+ *
+ * https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/#packaging-executable
+ */
+jar {
+    enabled = true
+    archiveClassifier.set("lib")
+}
+
+bootJar {
+    archiveClassifier.set("boot")
+}

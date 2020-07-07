@@ -19,6 +19,7 @@ buildscript {
         version_junit5 = "5.6.2"
         version_mockito = "3.3.3"
         version_detekt = "1.9.1"
+        version_restDocs = "2.0.4.RELEASE"
     }
 
     repositories {
@@ -39,6 +40,7 @@ buildscript {
 
         // Testing & Code quality
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$version_detekt"
+        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.6.1"
     }
 }
 

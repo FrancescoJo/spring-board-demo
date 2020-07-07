@@ -51,8 +51,8 @@ management:
     add-application-context-header: false
 
 logging:
-  path:
   file:
+    path:
   level:
     ROOT: INFO
     # All exceptions are handled and logged by com.github.fj.board.component.advice.CustomErrorHandler
