@@ -6,13 +6,10 @@ package testcase.v1.board
 
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.board.dto.BoardsResponse
-import org.springframework.restdocs.payload.JsonFieldType
-import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import testcase.IntegrationTestBase
 
 import static org.hamcrest.CoreMatchers.is
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import static testcase.v1.board.GetBoardsSpecDoc.getBoardsResponseFields
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -31,25 +28,5 @@ class GetBoardsSpec extends IntegrationTestBase {
 
         expect:
         response.boards.size() == 1
-    }
-
-    private static ResponseFieldsSnippet getBoardsResponseFields() {
-        return responseFields(
-                fieldWithPath("timestamp")
-                        .type(JsonFieldType.NUMBER)
-                        .description("Server timestamp"),
-                fieldWithPath("type")
-                        .type(JsonFieldType.STRING)
-                        .description("Type of response"),
-                fieldWithPath("body")
-                        .type(JsonFieldType.OBJECT)
-                        .description("Response payload"),
-                fieldWithPath("body.boards")
-                        .type(JsonFieldType.ARRAY)
-                        .description("List of 'Board' object"),
-                fieldWithPath("body.boards[].name")
-                        .type(JsonFieldType.STRING)
-                        .description("Board name")
-        )
     }
 }
