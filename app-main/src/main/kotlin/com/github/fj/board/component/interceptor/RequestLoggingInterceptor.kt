@@ -19,10 +19,7 @@ import javax.servlet.http.HttpServletResponse
  * @see org.springframework.web.filter.CommonsRequestLoggingFilter
  */
 class RequestLoggingInterceptor : HandlerInterceptorAdapter() {
-    override fun preHandle(
-        req: HttpServletRequest, resp: HttpServletResponse,
-        handler: Any
-    ): Boolean {
+    override fun preHandle(req: HttpServletRequest, resp: HttpServletResponse, handler: Any): Boolean {
         val ip = req.run { "${extractIpStr()} ($remoteAddr:$remotePort)" }
         val method = req.method.let {
             it.padEnd(MAX_HTTP_METHOD_LENGTH - it.length, ' ')

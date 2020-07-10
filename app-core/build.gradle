@@ -11,6 +11,7 @@ apply from: "$project.rootDir/gradle/scripts/testing-junit.gradle"
 apply from: "$project.rootDir/gradle/scripts/detekt.gradle"
 
 dependencies {
+    // region Transitive dependency declarations
     api project(":lib-common")
 
     // JSR extensions
@@ -22,12 +23,28 @@ dependencies {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
     }
 
-    // Spring Data + JPA
-    api "org.springframework.boot:spring-boot-starter-data-jpa:$version_springBoot"
-
-    // Jackson Kotlin support
-    api "com.fasterxml.jackson.module:jackson-module-kotlin"
-
     // semver
     api "de.skuzzle:semantic-version:$version_semVer"
+
+    // BouncyCastle: Additional security measures
+    api "org.bouncycastle:bcprov-jdk15on:$version_bouncycastle"
+    api "org.bouncycastle:bcpkix-jdk15on:$version_bouncycastle"
+    // endregion
+
+    // region Private dependency declarations
+    // Spring security
+    implementation "org.springframework.boot:spring-boot-starter-security:$version_springBoot"
+
+    // Spring Data + JPA
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$version_springBoot"
+    implementation "org.springframework:spring-tx"
+    implementation "com.zaxxer:HikariCP"
+
+    // Jackson Kotlin support
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
+
+    // Access token generation
+    implementation "io.seruco.encoding:base62:$version_base62"
+    implementation "com.nimbusds:nimbus-jose-jwt:$version_nimbus_jose"
+    // endregion
 }

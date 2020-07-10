@@ -48,9 +48,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-undertow:$version_springBoot"
     implementation "org.springframework.boot:spring-boot-starter-actuator:$version_springBoot"
 
-    // Spring Data + JPA
-    implementation "org.springframework:spring-tx"
-    implementation "com.zaxxer:HikariCP"
+    // DBMS
     // Change this to your favourite database (and apply it to application.yml configuration file)
     implementation "com.h2database:h2"
 
