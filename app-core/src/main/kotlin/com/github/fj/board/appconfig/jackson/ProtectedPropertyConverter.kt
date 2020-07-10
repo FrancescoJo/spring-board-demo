@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.component.jackson
+package com.github.fj.board.appconfig.jackson
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
@@ -16,7 +16,8 @@ import java.io.IOException
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 08 - Nov - 2018
  */
-class ProtectedPropertyJacksonSerialiser : StdSerializer<ProtectedProperty<*>>(ProtectedProperty::class.java) {
+internal class ProtectedPropertyJacksonSerialiser
+    : StdSerializer<ProtectedProperty<*>>(ProtectedProperty::class.java) {
     override fun serialize(value: ProtectedProperty<*>, gen: JsonGenerator, serializers: SerializerProvider) {
         serializers.defaultSerializeValue(value.value, gen)
     }
@@ -26,7 +27,8 @@ class ProtectedPropertyJacksonSerialiser : StdSerializer<ProtectedProperty<*>>(P
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 08 - Nov - 2018
  */
-class ProtectedPropertyJacksonDeserialiser : JsonDeserializer<ProtectedProperty<*>>(), ContextualDeserializer {
+internal class ProtectedPropertyJacksonDeserialiser
+    : JsonDeserializer<ProtectedProperty<*>>(), ContextualDeserializer {
     private lateinit var valueType: JavaType
 
     override fun createContextual(ctxt: DeserializationContext, property: BeanProperty): JsonDeserializer<*> {
