@@ -22,6 +22,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-web:$version_springBoot") {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
     }
+    api "jakarta.servlet:jakarta.servlet-api:$version_springWeb_servlet"
 
     // semver
     api "de.skuzzle:semantic-version:$version_semVer"

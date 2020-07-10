@@ -9,7 +9,7 @@ import com.github.fj.board.endpoint.AbstractResponseDto
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.ErrorResponseDto
 import com.github.fj.board.exception.GeneralHttpException
-import com.github.fj.board.exception.IllegalRequestException
+import com.github.fj.board.exception.client.IllegalRequestException
 import org.slf4j.LoggerFactory
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.http.HttpStatus
@@ -87,7 +87,9 @@ class CustomErrorHandler : ErrorController {
                 ex.bindingResult.allErrors.forEach {
                     LOG.error(it.defaultMessage)
                 }
-                return handleError(req, IllegalRequestException("Illegal request from client.", ex))
+                return handleError(req,
+                    IllegalRequestException(cause = ex)
+                )
             }
             else -> {
                 if (ex.cause is Exception) {

@@ -11,6 +11,7 @@ buildscript {
 
         // Spring + infrastructure
         version_springBoot = "2.3.1.RELEASE"
+        version_springWeb_servlet = "4.0.3" // This version must be correspondent to spring version
 
         // 3rdparty
         version_semVer = "2.1.0"

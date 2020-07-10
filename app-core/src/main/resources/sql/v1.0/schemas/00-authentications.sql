@@ -10,5 +10,8 @@ CREATE TABLE IF NOT EXISTS `authentications`
     `last_active_platform_type`    VARCHAR(4)     NOT NULL DEFAULT '',
     `last_active_platform_version` VARCHAR(64)    NOT NULL DEFAULT '',
     `last_active_app_version`      VARCHAR(32)    NOT NULL DEFAULT '',
+    'refresh_token'                BLOB           NOT NULL,
+    'refresh_token_issued_at'      DATETIME       NOT NULL,
+    'refresh_token_expire_at'      DATETIME       NOT NULL,
     `version`                      BIGINT         NOT NULL
 );

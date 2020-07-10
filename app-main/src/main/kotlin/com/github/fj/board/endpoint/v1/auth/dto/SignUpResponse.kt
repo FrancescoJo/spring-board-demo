@@ -22,8 +22,15 @@ data class SignUpResponse(
 
     /**
      * An access token object for authentication. Users should keep this information carefully and do not expose it
-     * to other people.
+     * to public.
      */
     @JsonProperty
-    val accessToken: ProtectedProperty<String>
+    val accessToken: ProtectedProperty<String>,
+
+    /**
+     * An refresh access token object for authentication. Users should keep this information carefully and do not
+     * expose it to public. Refreshing [accessToken] requires this value as well.
+     */
+    @JsonProperty
+    val refreshToken: ProtectedProperty<String>
 )

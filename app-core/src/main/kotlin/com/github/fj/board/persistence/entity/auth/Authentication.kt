@@ -58,6 +58,15 @@ class Authentication : AbstractIncrementalLockableEntity() {
     @Column(name = "last_active_app_version", length = 32, nullable = false, columnDefinition = "VARCHAR(32)")
     var lastActiveAppVersion = de.skuzzle.semantic.Version.ZERO
 
+    @Column(name = "refresh_token", nullable = false, columnDefinition = "BLOB")
+    var refreshToken: ByteArray = ByteArray(0)
+
+    @Column(name = "refresh_token_issued_at", nullable = false)
+    var refreshTokenIssuedAt: LocalDateTime = LOCAL_DATE_TIME_MIN
+
+    @Column(name = "refresh_token_expire_at", nullable = false)
+    var refreshTokenExpireAt: LocalDateTime = LOCAL_DATE_TIME_MIN
+
     @OneToOne(cascade = [CascadeType.ALL], optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "id")
     lateinit var user: User
@@ -72,6 +81,9 @@ class Authentication : AbstractIncrementalLockableEntity() {
             "lastActivePlatformType=$lastActivePlatformType, " +
             "lastActivePlatformVersion='$lastActivePlatformVersion', " +
             "lastActiveAppVersion=$lastActiveAppVersion, " +
+            "refreshToken=[PROTECTED]" +
+            "refreshTokenIssuedAt=$refreshTokenIssuedAt, " +
+            "refreshTokenExpireAt=$refreshTokenExpireAt, " +
             "version=$version, " +
             "user=${user.id})"
 }
