@@ -58,3 +58,11 @@ logging:
     # All exceptions are handled and logged by com.github.fj.board.component.advice.CustomErrorHandler
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: OFF
     com.github.fj: DEBUG
+
+app:
+  authentication:
+    # 2 hours
+    auth-token-alive-secs: 7200
+    # 180 days
+    refresh-token-alive-days: 180
+    token-issuer: "com.github.fj.board"
