@@ -5,7 +5,6 @@
 package com.github.fj.board.appconfig
 
 import com.github.fj.board.component.property.AppAuthProperties
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component
@@ -18,6 +17,9 @@ import org.springframework.stereotype.Component
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "app.authentication")
 class AppAuthPropertiesConfig : AppAuthProperties {
+    // @Value("\${app.authentication.rsa-key-alive-hours}")
+    override var rsaKeyAliveHours: Int = AppAuthProperties.DEFAULT_RSA_KEY_ALIVE_HOURS
+
     // @Value("\${app.authentication.auth-token-alive-secs}")
     override var authTokenAliveSecs: Int = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS
 

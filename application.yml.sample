@@ -61,6 +61,8 @@ logging:
 
 app:
   authentication:
+    # 1 day
+    rsa-key-alive-hours: 24
     # 2 hours
     auth-token-alive-secs: 7200
     # 180 days
