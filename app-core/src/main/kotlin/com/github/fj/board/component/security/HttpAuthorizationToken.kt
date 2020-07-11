@@ -12,14 +12,9 @@ import org.springframework.security.authentication.AbstractAuthenticationToken
  */
 data class HttpAuthorizationToken(
     val scheme: HttpAuthScheme,
-    val token: String
+    private val token: String
 ) : AbstractAuthenticationToken(null) {
     override fun getPrincipal(): HttpAuthScheme = scheme
 
     override fun getCredentials(): String = token
-
-    companion object {
-        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-        const val HEADER_AUTHORIZATION = "Authorization"
-    }
 }

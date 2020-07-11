@@ -18,13 +18,13 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties(prefix = "app.authentication")
 class AppAuthPropertiesConfig : AppAuthProperties {
     // @Value("\${app.authentication.rsa-key-alive-hours}")
-    override var rsaKeyAliveHours: Int = AppAuthProperties.DEFAULT_RSA_KEY_ALIVE_HOURS
+    override var rsaKeyAliveHours: Long = AppAuthProperties.DEFAULT_RSA_KEY_ALIVE_HOURS
 
     // @Value("\${app.authentication.auth-token-alive-secs}")
-    override var authTokenAliveSecs: Int = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS
+    override var authTokenAliveSecs: Long = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS
 
     // @Value("\${app.authentication.refresh-token-alive-days}")
-    override var refreshTokenAliveDays: Int = AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS
+    override var refreshTokenAliveDays: Long = AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS
 
     // @Value("\${app.authentication.token-issuer}")
     override var tokenIssuer: String = ""

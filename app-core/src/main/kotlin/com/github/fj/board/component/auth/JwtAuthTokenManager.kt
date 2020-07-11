@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.text.ParseException
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.inject.Inject
 
@@ -38,16 +39,17 @@ internal class JwtAuthTokenManager @Inject constructor(
 ) : AuthTokenManager {
     override fun create(audience: String, subject: String, timestamp: LocalDateTime): HttpAuthorizationToken {
         val keyPair = rsaKeyPairManager.getLatest()
+        val normalisedTimestamp = timestamp.truncatedTo(ChronoUnit.SECONDS)
 
         val jwtObject = with(authProperties) {
             JwtObject(
-                id = keyPair.keyId,
+                id = UUID.randomUUID(),
                 issuer = tokenIssuer,
                 subject = subject,
                 audience = audience,
-                expiration = timestamp.plusSeconds(authTokenAliveSecs.toLong()),
-                notBefore = LOCAL_DATE_TIME_MIN,
-                issuedAt = timestamp
+                expiration = normalisedTimestamp.plusSeconds(authTokenAliveSecs),
+                notBefore = NOT_BEFORE_THAN,
+                issuedAt = normalisedTimestamp
             )
         }
         val jwsHeader = JWSHeader.Builder(JWSAlgorithm.RS256).type(JOSEObjectType.JWT)
@@ -83,7 +85,9 @@ internal class JwtAuthTokenManager @Inject constructor(
                 throw AuthTokenException()
             }
 
-            if (utcNow() > expiration) {
+            val tolerance = utcNow().plusMinutes(EXPIRY_TOLERANCE_CLOCK_SKEW_MINS)
+            if (expiration > tolerance) {
+                LOG.debug("Accessing with expired token: {} > {}", expiration, tolerance)
                 throw AuthTokenException()
             }
         }
@@ -136,6 +140,11 @@ internal class JwtAuthTokenManager @Inject constructor(
     )
 
     companion object {
+        @VisibleForTesting
+        val NOT_BEFORE_THAN = LOCAL_DATE_TIME_MIN
+        @VisibleForTesting
+        val EXPIRY_TOLERANCE_CLOCK_SKEW_MINS = 5L
+
         private const val JWT_ID = "jti"
         private const val ISSUER = "iss"
         private const val SUBJECT = "sub"

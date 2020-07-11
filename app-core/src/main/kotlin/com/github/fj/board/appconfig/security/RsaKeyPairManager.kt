@@ -12,6 +12,7 @@ import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.FastCollectedLruCache
 import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jose.crypto.RSASSAVerifier
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.springframework.stereotype.Component
 import java.security.Key
 import java.security.KeyPairGenerator
@@ -45,7 +46,7 @@ internal class RsaKeyPairManager @Inject constructor(
 
     private var latestKeyPair: JwtRsaKeyPair? = null
 
-    private val tokenLifetime = authProps.rsaKeyAliveHours.toLong()
+    private val tokenLifetime = authProps.rsaKeyAliveHours
 
     fun getLatest(): JwtRsaKeyPair {
         val now = utcNow()
@@ -61,7 +62,7 @@ internal class RsaKeyPairManager @Inject constructor(
                     return cache(deriveJwtRsaKeyPair(it))
                 }
 
-                val rawKeyPair = KeyPairGenerator.getInstance("RSA", "BC").run {
+                val rawKeyPair = KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME).run {
                     initialize(RSA_KEY_SIZE, SecureRandom())
                     return@run generateKeyPair()
                 }
@@ -104,7 +105,7 @@ internal class RsaKeyPairManager @Inject constructor(
             return false
         }
 
-        return now < expiredAt.minusMinutes(EXPIRY_TOLERANCE_CLOCK_SKEW_MINS)
+        return now < expiredAt
     }
 
     private fun cache(keyPair: JwtRsaKeyPair): JwtRsaKeyPair {
@@ -142,6 +143,5 @@ internal class RsaKeyPairManager @Inject constructor(
         /** The cache will take approx. 300KiB(4KiB * 75 + SoftReference) of memory. */
         private const val LRU_CACHE_CAPACITY = 100
         private const val RSA_KEY_SIZE = 2048
-        private const val EXPIRY_TOLERANCE_CLOCK_SKEW_MINS = 5L
     }
 }

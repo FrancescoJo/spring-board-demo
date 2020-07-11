@@ -1,9 +1,14 @@
 dependencies {
+    // JUnit5
     testImplementation "org.junit.jupiter:junit-jupiter-api:$version_junit5"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$version_junit5"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$version_junit5"
 
+    // Mockito
     testImplementation "org.mockito:mockito-core:$version_mockito"
+
+    // Hamcrest
+    testImplementation "org.hamcrest:hamcrest:$version_hamcrest"
 }
 
 check.dependsOn test

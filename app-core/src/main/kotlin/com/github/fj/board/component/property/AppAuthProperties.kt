@@ -17,14 +17,14 @@ interface AppAuthProperties {
      * RSA Key lifetime definition, which is used by JWT signing.
      * Shorter value increases security but consumes more CPU and memory, longer value takes counter effects.
      */
-    val rsaKeyAliveHours: Int
+    val rsaKeyAliveHours: Long
 
     /**
      * Valid authentication token lifespan. It is recommended to remain this value 'short' to prevent
      * token abuse. Range of 30 minutes to 2 hours is commonly used.
      * @see <a href="https://www.oauth.com/oauth2-servers/access-tokens/access-token-lifetime/">Access Token Lifetime</a>
      */
-    val authTokenAliveSecs: Int
+    val authTokenAliveSecs: Long
 
     /**
      * Valid refresh token lifespan. Refresh token could be lived relatively long compare to authentication tokens.
@@ -32,7 +32,7 @@ interface AppAuthProperties {
      *
      * @see <a href="https://www.oauth.com/oauth2-servers/access-tokens/access-token-lifetime/">Access Token Lifetime</a>
      */
-    val refreshTokenAliveDays: Int
+    val refreshTokenAliveDays: Long
 
     /**
      * Issuer name of authentication tokens.
@@ -40,10 +40,10 @@ interface AppAuthProperties {
     val tokenIssuer: String
 
     companion object {
-        val DEFAULT_RSA_KEY_ALIVE_HOURS = TimeUnit.HOURS.toSeconds(24L).toInt()
+        val DEFAULT_RSA_KEY_ALIVE_HOURS = TimeUnit.HOURS.toSeconds(24L)
 
-        val DEFAULT_AUTH_TOKEN_ALIVE_SECS = TimeUnit.HOURS.toSeconds(2L).toInt()
+        val DEFAULT_AUTH_TOKEN_ALIVE_SECS = TimeUnit.HOURS.toSeconds(2L)
 
-        val DEFAULT_REFRESH_TOKEN_ALIVE_DAYS = TimeUnit.DAYS.toSeconds(180).toInt()
+        val DEFAULT_REFRESH_TOKEN_ALIVE_DAYS = TimeUnit.DAYS.toSeconds(180)
     }
 }
