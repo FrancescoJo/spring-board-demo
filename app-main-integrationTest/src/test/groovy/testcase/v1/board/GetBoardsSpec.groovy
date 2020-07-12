@@ -23,8 +23,7 @@ class GetBoardsSpec extends IntegrationTestBase {
                 .get(ApiPaths.BOARDS)
 
         then:
-        final rawResponse = expectResponse(reqSpec.then().assertThat().statusCode(is(200)))
-        final response = extractResponse(rawResponse, BoardsResponse.class)
+        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardsResponse.class)
 
         expect:
         response.boards.size() == 1

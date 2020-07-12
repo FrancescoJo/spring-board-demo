@@ -5,6 +5,8 @@
 package com.github.fj.board.component.advice
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import com.github.fj.board.AppProfile
+import com.github.fj.board.Application
 import com.github.fj.board.endpoint.AbstractResponseDto
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.ErrorResponseDto
@@ -54,12 +56,16 @@ class CustomErrorHandler : ErrorController {
         val status: HttpStatus
         val response = when (ex) {
             is GeneralHttpException -> {
-                logError("Handled exception:", ex)
+                logError(req, "Handled exception:", ex)
                 status = ex.httpStatus
                 AbstractResponseDto.error(ex.message, ex::class.simpleName ?: "")
             }
             is HttpMediaTypeNotSupportedException -> {
-                logError("Spring handled exception:", ex)
+                if (ex.cause is Exception) {
+                    return handleError(req, ex.cause as Exception)
+                }
+
+                logError(req, "Spring handled exception:", ex)
                 status = HttpStatus.BAD_REQUEST
                 AbstractResponseDto.error(
                     "Cannot process given request.",
@@ -67,7 +73,11 @@ class CustomErrorHandler : ErrorController {
                 )
             }
             is HttpMessageNotReadableException -> {
-                logError("Spring handled exception:", ex)
+                if (ex.cause is Exception) {
+                    return handleError(req, ex.cause as Exception)
+                }
+
+                logError(req, "Spring handled exception:", ex)
                 status = HttpStatus.BAD_REQUEST
                 AbstractResponseDto.error(
                     "Cannot process given request.",
@@ -75,7 +85,11 @@ class CustomErrorHandler : ErrorController {
                 )
             }
             is JsonProcessingException -> {
-                logError("JSON parsing exception:", ex)
+                if (ex.cause is Exception) {
+                    return handleError(req, ex.cause as Exception)
+                }
+
+                logError(req, "JSON parsing exception:", ex)
                 status = HttpStatus.BAD_REQUEST
                 AbstractResponseDto.error(
                     "Cannot process given request.",
@@ -83,12 +97,19 @@ class CustomErrorHandler : ErrorController {
                 )
             }
             is MethodArgumentNotValidException -> {
-                LOG.error("Illegal request from client. Constraint violations are:")
-                ex.bindingResult.allErrors.forEach {
-                    LOG.error(it.defaultMessage)
+                LOG.error("{}: Illegal request from client. Constraint violations are:", req.requestURI)
+                val msgs = ex.bindingResult.allErrors.map {
+                    LOG.error("  {}", it.defaultMessage)
+                    return@map it.defaultMessage
                 }
-                return handleError(req,
-                    IllegalRequestException(cause = ex)
+                val msg = msgs.joinToString()
+                return handleError(
+                    req,
+                    if (msg.isEmpty()) {
+                        IllegalRequestException(cause = ex)
+                    } else {
+                        IllegalRequestException(msg, ex)
+                    }
                 )
             }
             else -> {
@@ -96,7 +117,7 @@ class CustomErrorHandler : ErrorController {
                     return handleError(req, ex.cause as Exception)
                 } else {
                     // is Exception is wrapped?
-                    logError("Unhandled exception:", ex)
+                    logError(req, "Unhandled exception:", ex)
                     status = getStatus(req)
                     AbstractResponseDto.error("Unhandled internal server error")
                 }
@@ -132,8 +153,28 @@ class CustomErrorHandler : ErrorController {
         return HttpStatus.SERVICE_UNAVAILABLE
     }
 
-    private fun logError(message: String, ex: Exception) {
-        LOG.error(message, ex)
+    private fun logError(req: HttpServletRequest, message: String, ex: Exception) {
+        if (Application.profile == AppProfile.RELEASE) {
+            // Minimise log outputs in RELEASE binary
+            LOG.error("{}: {}", req.requestURI, message)
+            logCauses(req, ex)
+        } else {
+            LOG.error("{}: {}", req.requestURI, message, ex)
+        }
+    }
+
+    private fun logCauses(req: HttpServletRequest, cause: Throwable?) {
+        if (cause == null) {
+            return
+        } else {
+            val superCause = cause.cause
+            if (superCause == null) {
+                LOG.error("""{}: {} ("{}")""", req.requestURI, cause::class, cause.message)
+            } else {
+                LOG.error("by {}", cause::class)
+                logCauses(req, superCause)
+            }
+        }
     }
 
     companion object {

@@ -47,6 +47,7 @@ dependencies {
     // Spring boot
     implementation "org.springframework.boot:spring-boot-starter-undertow:$version_springBoot"
     implementation "org.springframework.boot:spring-boot-starter-actuator:$version_springBoot"
+    implementation "org.springframework.boot:spring-boot-starter-validation:$version_springBoot"
 
     // DBMS
     // Change this to your favourite database (and apply it to application.yml configuration file)

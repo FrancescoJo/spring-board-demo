@@ -5,13 +5,13 @@
 package com.github.fj.board.endpoint.v1.auth.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.validation.ProtectedPropertySize
 import com.github.fj.lib.util.ProtectedProperty
 import de.skuzzle.semantic.Version
-import javax.validation.constraints.Size
+import javax.validation.constraints.Pattern
 
 /**
  * A sign-up request to create both Authentication and User object.
@@ -22,43 +22,46 @@ import javax.validation.constraints.Size
 @JsonDeserialize
 data class SignUpRequest(
     @JsonProperty
-    @Size(
-        min = LOGIN_NAME_SIZE_MIN,
-        max = LOGIN_NAME_SIZE_MAX,
-        message = "loginName must between $LOGIN_NAME_SIZE_MIN to $LOGIN_NAME_SIZE_MAX alphanumeric characters."
+    @JsonPropertyDescription(DESC_LOGIN_NAME)
+    @get:Pattern(
+        regexp = "^[A-Za-z0-9]{$LOGIN_NAME_SIZE_MIN,$LOGIN_NAME_SIZE_MAX}\$",
+        message = "`loginName` must between $LOGIN_NAME_SIZE_MIN to $LOGIN_NAME_SIZE_MAX alphanumeric characters."
     )
     val loginName: String,
 
     @JsonProperty
-    @ProtectedPropertySize(
+    @JsonPropertyDescription(DESC_PASSWORD)
+    @get:ProtectedPropertySize(
         min = PASSWORD_SIZE_MIN,
         max = PASSWORD_SIZE_MAX,
-        message = "password must between $PASSWORD_SIZE_MIN to $PASSWORD_SIZE_MAX characters."
+        message = "`password` must between $PASSWORD_SIZE_MIN to $PASSWORD_SIZE_MAX characters."
     )
     val password: ProtectedProperty<String>,
 
-    /**
-     * Client platform type
-     */
     @JsonProperty
+    @JsonPropertyDescription(DESC_PLATFORM_TYPE)
     val platformType: PlatformType,
 
-    /**
-     * Client platform version
-     */
     @JsonProperty
+    @JsonPropertyDescription(DESC_PLATFORM_VERSION)
     val platformVersion: String,
 
-    /**
-     * Client app version, encoded by Semantic versioning format
-     */
     @JsonProperty
+    @JsonPropertyDescription(DESC_APP_VERSION)
     val appVersion: Version
 ) {
     companion object {
         const val LOGIN_NAME_SIZE_MIN = 4
         const val LOGIN_NAME_SIZE_MAX = 16
-        const val PASSWORD_SIZE_MIN = 6
-        const val PASSWORD_SIZE_MAX = 32
+        const val PASSWORD_SIZE_MIN = 6L
+        const val PASSWORD_SIZE_MAX = 32L
+
+        const val DESC_LOGIN_NAME = "A unique login name to distinguish users. " +
+                "Must between $LOGIN_NAME_SIZE_MIN to $LOGIN_NAME_SIZE_MAX alphanumeric characters."
+        const val DESC_PASSWORD = "A password to get access to service. " +
+                "Must between $PASSWORD_SIZE_MIN to $PASSWORD_SIZE_MAX characters."
+        const val DESC_PLATFORM_TYPE = "Client platform type. Values are: [\"a\": ANDROID, \"i\": IOS, \"w\": WEB]"
+        const val DESC_PLATFORM_VERSION = "Version string of client system."
+        const val DESC_APP_VERSION = "Semantic versioning format encoded client app version. "
     }
 }

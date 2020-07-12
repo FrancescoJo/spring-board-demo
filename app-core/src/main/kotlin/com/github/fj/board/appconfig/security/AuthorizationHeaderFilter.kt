@@ -61,18 +61,20 @@ internal class AuthorizationHeaderFilter(
 
         private val LOG = LoggerFactory.getLogger(SecurityConfig::class.java)
 
-        private fun findAuthorizationHeader(req: HttpServletRequest): HttpAuthorizationToken? {
+        private fun findAuthorizationHeader(req: HttpServletRequest): HttpAuthorizationToken? =
             req.getHeader(HEADER_AUTHORIZATION).let { h ->
                 when {
+                    h.isNullOrEmpty()                 ->
+                        LOG.trace("{}: No {} header in the request.", req.requestURI, HEADER_AUTHORIZATION)
                     h.matchesIn(AUTHORIZATION_SYNTAX) -> return h.split(" ").let {
                         MaybeHttpAuthorizationToken(HttpAuthScheme.byTypeValue(it[0]), it[1])
                     }
-                    h.isNullOrEmpty() -> LOG.trace("No {} header in the request.", HEADER_AUTHORIZATION)
-                    else              ->
-                        LOG.trace("{} header does not match the syntax: '{}'", HEADER_AUTHORIZATION, h)
+                    else                              ->
+                        LOG.trace(
+                            "{}: {} header does not match the syntax: '{}'", req.requestURI, HEADER_AUTHORIZATION, h
+                        )
                 }
                 return null
             }
-        }
     }
 }

@@ -55,7 +55,7 @@ class Authentication : AbstractIncrementalLockableEntity() {
     @Column(name = "last_active_platform_type", length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
     var lastActivePlatformType: PlatformType = PlatformType.UNDEFINED
 
-    @Column(name = "last_active_platform_version", length = 64, nullable = false)
+    @Column(name = "last_active_platform_version", nullable = false, columnDefinition = "CLOB")
     var lastActivePlatformVersion: String = ""
 
     @Convert(converter = SemanticVersionConverter::class)
@@ -71,7 +71,7 @@ class Authentication : AbstractIncrementalLockableEntity() {
     @Column(name = "refresh_token_expire_at", nullable = false)
     var refreshTokenExpireAt: LocalDateTime = LOCAL_DATE_TIME_MIN
 
-    @OneToOne(cascade = [CascadeType.ALL], optional = false, fetch = FetchType.EAGER)
+    @OneToOne(cascade = [CascadeType.ALL], optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     lateinit var user: User
 
@@ -89,7 +89,11 @@ class Authentication : AbstractIncrementalLockableEntity() {
             "refreshTokenIssuedAt=$refreshTokenIssuedAt, " +
             "refreshTokenExpireAt=$refreshTokenExpireAt, " +
             "version=$version, " +
-            "user=${user.id})"
+            "user=${if (::user.isInitialized) {
+                user.id.toString()
+            } else {
+                "<uninitialised>"
+            }})"
 
     /**
      * Creates a refresh token for this authentication object and updates relative fields.

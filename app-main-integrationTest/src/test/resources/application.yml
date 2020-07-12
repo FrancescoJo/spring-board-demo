@@ -1,0 +1,54 @@
+# Configuration template file for integration test. Copy it by removing 'sample' extension to apply upon runtime.
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+  ssl:
+    enabled: false
+    key-store: keystore.p12
+    key-store-password:
+    keyStoreType:
+    keyAlias:
+
+spring:
+  application:
+    name: spring-board-demo-integration-test
+  profiles:
+    # Empty if 'default'.
+    active:
+  datasource:
+    # Automatic database initialisation. Maybe conflict to hibernate.
+    # https://docs.spring.io/spring-boot/docs/current/reference/html/howto-database-initialization.html
+    # initialization-mode: ALWAYS
+    # schema: classpath:/sql/v1.0/schemas/*.sql
+    # data: classpath:/sql/v1.0/data/*.sql
+    # type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: password
+  jpa:
+    open-in-view: false
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      # Better to use create-drop for integration tests
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  resources:
+    add-mappings: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+logging:
+  file:
+    path:
+  level:
+    ROOT: INFO
+    # All exceptions are handled and logged by com.github.fj.board.component.advice.CustomErrorHandler
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: OFF
+    com.github.fj: TRACE

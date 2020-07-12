@@ -7,6 +7,8 @@ package com.github.fj.board.endpoint.v1.auth
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.SignUpRequest
 import com.github.fj.board.endpoint.v1.auth.dto.SignUpResponse
+import com.github.fj.board.exception.client.IllegalRequestException
+import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.service.auth.SignUpService
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
@@ -40,9 +42,13 @@ interface SignUpController {
 @RestController
 internal class SignUpControllerImpl(
     private val svc: SignUpService
-): SignUpController {
+) : SignUpController {
     override fun signUp(req: SignUpRequest, httpReq: HttpServletRequest): SignUpResponse {
-        LOG.debug("Signup request: {}", req)
+        LOG.debug("{}: {}", httpReq.requestURI, req)
+
+        if (req.platformType == PlatformType.UNDEFINED) {
+            throw IllegalRequestException("`platformType` is not specified.")
+        }
 
         val result = svc.signUp(req, httpReq)
 

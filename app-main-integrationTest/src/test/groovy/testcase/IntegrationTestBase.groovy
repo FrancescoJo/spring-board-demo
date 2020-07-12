@@ -7,6 +7,7 @@ package testcase
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.fj.board.Application
 import com.github.fj.board.endpoint.AbstractResponseDto
+import com.github.fj.board.endpoint.ErrorResponseDto
 import io.restassured.RestAssured
 import io.restassured.builder.RequestSpecBuilder
 import io.restassured.config.ObjectMapperConfig
@@ -19,6 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.MediaType
 import org.springframework.restdocs.JUnitRestDocumentation
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import org.springframework.restdocs.snippet.Snippet
@@ -26,9 +29,12 @@ import spock.lang.Specification
 import test.com.github.fj.board.appconfig.TestConfigurations
 
 import javax.annotation.Nonnull
+import javax.annotation.Nullable
 
 import static io.restassured.RestAssured.given
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration
 
@@ -56,36 +62,39 @@ class IntegrationTestBase extends Specification {
     private RequestSpecification documentationSpec
 
     def setup() {
+        // There'll be groovyc error without this explicit local reference declaration
+        final mapper = defaultObjMapper
+
         this.documentationSpec = new RequestSpecBuilder()
                 .addFilter(documentationConfiguration(restDocumentation))
                 .build()
         RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
-                new ObjectMapperConfig().jackson2ObjectMapperFactory { cls, charset -> defaultObjMapper }
+                new ObjectMapperConfig().jackson2ObjectMapperFactory { cls, charset -> mapper }
         )
     }
 
-    protected final RequestSpecification jsonRequestSpec(final @Nonnull String documentId) {
+    final RequestSpecification jsonRequestSpec(final @Nonnull String documentId) {
         return jsonRequestSpec(documentId, null, null)
     }
 
-    protected final RequestSpecification jsonRequestSpec(
+    final RequestSpecification jsonRequestSpec(
             final @Nonnull String documentId,
             final @Nonnull RequestFieldsSnippet reqDoc
     ) {
         return jsonRequestSpec(documentId, reqDoc, null)
     }
 
-    protected final RequestSpecification jsonRequestSpec(
+    final RequestSpecification jsonRequestSpec(
             final @Nonnull String documentId,
             final @Nonnull ResponseFieldsSnippet respDoc
     ) {
         return jsonRequestSpec(documentId, null, respDoc)
     }
 
-    protected final RequestSpecification jsonRequestSpec(
+    final RequestSpecification jsonRequestSpec(
             final @Nonnull String documentId,
-            final @Nonnull RequestFieldsSnippet reqDoc,
-            final @Nonnull ResponseFieldsSnippet respDoc
+            final @Nullable RequestFieldsSnippet reqDoc,
+            final @Nullable ResponseFieldsSnippet respDoc
     ) {
         // TODO: [CONFIRMATION REQUIRED] check duplicated documentId if it is not empty
         final List<Snippet> snippets = new ArrayList()
@@ -120,9 +129,29 @@ class IntegrationTestBase extends Specification {
         }
     }
 
-    protected final AbstractResponseDto<Object> expectResponse(
-            final @Nonnull ValidatableResponse respSpec
+    final <T> T expectResponse(
+            final @Nonnull ValidatableResponse respSpec,
+            final @Nonnull Class<T> klass
     ) {
+        final responseDto = parseResponse(respSpec)
+        final body = responseDto.body
+
+        return defaultObjMapper.convertValue(body, klass)
+    }
+
+    final ErrorResponseDto expectError(final @Nonnull ValidatableResponse respSpec) {
+        final rawResponseDto = parseResponse(respSpec)
+
+        return new ErrorResponseDto(
+                defaultObjMapper.convertValue(rawResponseDto.body, ErrorResponseDto.Body.class)
+        )
+    }
+
+    final ObjectMapper getJsonMapper() {
+        return defaultObjMapper
+    }
+
+    private final AbstractResponseDto<Object> parseResponse(final @Nonnull ValidatableResponse respSpec) {
         final jsonResponse = respSpec.extract().body().asString()
         final Map<String, Object> map = defaultObjMapper.readValue(jsonResponse, Map.class)
 
@@ -134,15 +163,41 @@ class IntegrationTestBase extends Specification {
         return new AbstractResponseDto(type) {
             @Override
             final Object getBody() { return jsonBody }
+
+            @Override
+            String toString() {
+                return "AbstractResponseDto<Object>(type = '$strType', body = $jsonBody)"
+            }
         }
     }
 
-    protected final <T> T extractResponse(
-            final @Nonnull AbstractResponseDto<Object> rawResponse,
-            final @Nonnull Class<T> klass
-    ) {
-        final body = rawResponse.body
+    static List<FieldDescriptor> baseFieldDescriptors() {
+        return [
+                fieldWithPath("type")
+                        .type(JsonFieldType.STRING)
+                        .description(AbstractResponseDto.DESC_TYPE),
+                fieldWithPath("timestamp")
+                        .type(JsonFieldType.NUMBER)
+                        .description(AbstractResponseDto.DESC_TIMESTAMP),
+                fieldWithPath("body")
+                        .type(JsonFieldType.OBJECT)
+                        .description(AbstractResponseDto.DESC_BODY),
+        ]
+    }
 
-        return defaultObjMapper.convertValue(body, klass)
+    /**
+     * Since all API error are in same format({@link ErrorResponseDto}), this method could be handy for documenting error cases.
+     */
+    static ResponseFieldsSnippet getErrorResponseFields() {
+        final List<FieldDescriptor> fields = [
+                fieldWithPath("body.message")
+                        .type(JsonFieldType.STRING)
+                        .description(ErrorResponseDto.DESC_BODY_MESSAGE),
+                fieldWithPath("body.cause")
+                        .type(JsonFieldType.STRING)
+                        .description(ErrorResponseDto.DESC_BODY_CAUSE)
+        ]
+
+        return responseFields(baseFieldDescriptors() + fields)
     }
 }

@@ -26,7 +26,7 @@ enum class PlatformType(val key: String) {
     }
 
     companion object {
-        @JsonCreator
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         @JvmStatic
         fun byKey(key: String?) = values().firstOrNull { it.key == key } ?: UNDEFINED
     }

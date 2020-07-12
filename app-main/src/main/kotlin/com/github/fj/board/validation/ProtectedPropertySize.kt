@@ -4,6 +4,7 @@
  */
 package com.github.fj.board.validation
 
+import com.github.fj.lib.util.ProtectedProperty
 import javax.validation.Constraint
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
@@ -22,6 +23,7 @@ import javax.validation.constraints.Size
     AnnotationTarget.CLASS,
     AnnotationTarget.FIELD,
     AnnotationTarget.PROPERTY,
+    AnnotationTarget.PROPERTY_GETTER,
     AnnotationTarget.VALUE_PARAMETER
 )
 @Retention(AnnotationRetention.RUNTIME)
@@ -32,30 +34,30 @@ annotation class ProtectedPropertySize(
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = [],
 
-    val min: Int = 0,
-    val max: Int = Int.MAX_VALUE
+    val min: Long = 0,
+    val max: Long = Long.MAX_VALUE
 )
 
-private class ProtectedPropertySizeValidator : ConstraintValidator<ProtectedPropertySize, Any> {
-    private var min = 0
-    private var max = Int.MAX_VALUE
+private class ProtectedPropertySizeValidator : ConstraintValidator<ProtectedPropertySize, ProtectedProperty<*>> {
+    private var min = 0L
+    private var max = Long.MAX_VALUE
 
     override fun initialize(constraintAnnotation: ProtectedPropertySize?) = constraintAnnotation?.let {
         this.min = it.min
         this.max = it.max
     } ?: Unit
 
-    override fun isValid(value: Any?, context: ConstraintValidatorContext?): Boolean {
-        if (value == null) {
-            return true
-        }
+    override fun isValid(value: ProtectedProperty<*>?, context: ConstraintValidatorContext?): Boolean {
+        val enclosedValue = value?.value ?: return true
 
-        if (value !is String) {
-            throw UnsupportedOperationException(
-                "ProtectedProperty with generic type ${value::class} validation is not supported."
-            )
+        return when (enclosedValue) {
+            is String -> enclosedValue.length in (min + 1) until max
+            is Int    -> enclosedValue in (min + 1) until max
+            is Long   -> enclosedValue in (min + 1) until max
+            else      ->
+                throw UnsupportedOperationException(
+                    "ProtectedProperty with generic type ${value::class} validation is not supported."
+                )
         }
-
-        return value.length in (min + 1) until max
     }
 }

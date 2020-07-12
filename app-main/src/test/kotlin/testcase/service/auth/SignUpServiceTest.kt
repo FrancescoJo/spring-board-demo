@@ -65,7 +65,7 @@ class SignUpServiceTest {
         val request = SignUpRequest(
             loginName = loginName,
             password = ProtectedProperty(getRandomAlphaNumericString(16)),
-            // Change to random later on except UNDEFINED
+            // FIXME Change to random later on except UNDEFINED
             platformType = PlatformType.UNDEFINED,
             platformVersion = getRandomAlphaNumericString(16),
             appVersion = Version.COMPLIANCE

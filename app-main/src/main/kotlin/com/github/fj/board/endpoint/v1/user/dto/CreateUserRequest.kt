@@ -48,8 +48,8 @@ data class CreateUserRequest(
     val invitedBy: String?
 ) {
     companion object {
-        const val NICKNAME_SIZE_MIN = 2
-        const val NICKNAME_SIZE_MAX = 8
+        const val NICKNAME_SIZE_MIN = 2L
+        const val NICKNAME_SIZE_MAX = 8L
         const val EMAIL_SIZE_MAX = 128
     }
 }
