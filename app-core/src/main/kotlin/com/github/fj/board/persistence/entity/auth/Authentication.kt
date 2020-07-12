@@ -12,7 +12,10 @@ import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.lib.net.InetAddressExtensions
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
+import com.github.fj.lib.util.getSecureRandomBytes
+import io.seruco.encoding.base62.Base62
 import java.net.InetAddress
+import java.security.SecureRandom
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -86,4 +89,35 @@ class Authentication : AbstractIncrementalLockableEntity() {
             "refreshTokenExpireAt=$refreshTokenExpireAt, " +
             "version=$version, " +
             "user=${user.id})"
+
+    /**
+     * Creates a refresh token for this authentication object and updates relative fields.
+     *
+     * @throws IllegalStateException if [loginName] is an empty string.
+     */
+    fun createRefreshToken(timestamp: LocalDateTime, lifespanDays: Long) {
+        if (loginName.isEmpty()) {
+            throw IllegalStateException("LoginName must be specified for this operation.")
+        }
+
+        this.refreshToken = getSecureRandomBytes(REFRESH_TOKEN_LENGTH_BYTES)
+        this.refreshTokenIssuedAt = timestamp
+        this.refreshTokenExpireAt = timestamp.plusDays(lifespanDays)
+    }
+
+    fun validateRefreshToken(base62Codec: Base62, old: String): Boolean {
+        val oldBytes = old.toByteArray()
+        val decoded = try {
+            base62Codec.decode(oldBytes)
+        } catch (e: IllegalArgumentException) {
+            return false
+        }
+
+        return refreshToken.contentEquals(decoded)
+    }
+
+    companion object {
+        /** 256 bits */
+        const val REFRESH_TOKEN_LENGTH_BYTES = 32
+    }
 }

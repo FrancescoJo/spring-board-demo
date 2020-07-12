@@ -34,10 +34,10 @@ dependencies {
 
     // region Private dependency declarations
     // Spring security
-    implementation "org.springframework.boot:spring-boot-starter-security:$version_springBoot"
+    api "org.springframework.boot:spring-boot-starter-security:$version_springBoot"
 
     // Spring Data + JPA
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$version_springBoot"
+    api "org.springframework.boot:spring-boot-starter-data-jpa:$version_springBoot"
     implementation "org.springframework:spring-tx"
     implementation "com.zaxxer:HikariCP"
 
@@ -45,7 +45,7 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
 
     // Access token generation
-    implementation "io.seruco.encoding:base62:$version_base62"
+    api "io.seruco.encoding:base62:$version_base62"
     implementation "com.nimbusds:nimbus-jose-jwt:$version_nimbus_jose"
     // endregion
 }
