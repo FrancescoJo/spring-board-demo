@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.github.fj.board.vo.auth.SignUpResult
 import com.github.fj.lib.util.ProtectedProperty
+import java.time.LocalDateTime
 
 /**
  * A sign-up response to confirm user's last sign-up request was successful.
@@ -30,20 +31,26 @@ data class SignUpResponse(
     @JsonProperty
     val accessToken: ProtectedProperty<String>,
 
+    val accessTokenExpiresAfter: LocalDateTime,
+
     /**
      * An refresh access token object for authentication. Users should keep this information carefully and do not
      * expose it to public. Refreshing [accessToken] requires this value as well.
      */
     @JsonProperty
-    val refreshToken: ProtectedProperty<String>
+    val refreshToken: ProtectedProperty<String>,
+
+    val refreshTokenExpiresAfter: LocalDateTime
 ) {
     companion object {
-        fun from(vo: SignUpResult) = SignUpResponse(
-            loginName = vo.loginName,
-            accessToken = ProtectedProperty(String(vo.accessToken)),
-            refreshToken = ProtectedProperty(String(vo.refreshToken))
-        ).also {
-            vo.clearAll()
+        fun from(vo: SignUpResult) = with(vo) {
+            SignUpResponse(
+                loginName = loginName,
+                accessToken = ProtectedProperty(accessToken),
+                accessTokenExpiresAfter = accessTokenExpiresAfter,
+                refreshToken = ProtectedProperty(refreshToken),
+                refreshTokenExpiresAfter = refreshTokenExpiresAfter
+            )
         }
     }
 }

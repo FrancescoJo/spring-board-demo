@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.fj.board.appconfig.security.RsaKeyPairManager
 import com.github.fj.board.component.auth.AuthTokenManager.Companion.LOG
 import com.github.fj.board.component.property.AppAuthProperties
+import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.component.security.HttpAuthScheme
 import com.github.fj.board.component.security.HttpAuthorizationToken
 import com.github.fj.board.exception.client.AuthTokenException
@@ -37,7 +38,7 @@ internal class JwtAuthTokenManager @Inject constructor(
     private val rsaKeyPairManager: RsaKeyPairManager,
     private val jsonMapper: ObjectMapper
 ) : AuthTokenManager {
-    override fun create(audience: String, subject: String, timestamp: LocalDateTime): HttpAuthorizationToken {
+    override fun create(audience: String, subject: String, timestamp: LocalDateTime): FreshHttpAuthorizationToken {
         val keyPair = rsaKeyPairManager.getLatest()
         val normalisedTimestamp = timestamp.truncatedTo(ChronoUnit.SECONDS)
 
@@ -60,7 +61,7 @@ internal class JwtAuthTokenManager @Inject constructor(
             return@run serialize()
         }
 
-        return HttpAuthorizationToken(HttpAuthScheme.TOKEN, token)
+        return FreshHttpAuthorizationToken(token, jwtObject.expiration)
     }
 
     override fun validate(token: HttpAuthorizationToken): Authentication {
@@ -85,9 +86,10 @@ internal class JwtAuthTokenManager @Inject constructor(
                 throw AuthTokenException()
             }
 
-            val tolerance = utcNow().plusMinutes(EXPIRY_TOLERANCE_CLOCK_SKEW_MINS)
-            if (expiration > tolerance) {
-                LOG.debug("Accessing with expired token: {} > {}", expiration, tolerance)
+            val tolerance = utcNow().minusMinutes(EXPIRY_TOLERANCE_CLOCK_SKEW_MINS)
+
+            if (tolerance > expiration) {
+                LOG.debug("Accessing with expired token: {} > {}", tolerance, expiration)
                 throw AuthTokenException()
             }
         }
@@ -142,6 +144,7 @@ internal class JwtAuthTokenManager @Inject constructor(
     companion object {
         @VisibleForTesting
         val NOT_BEFORE_THAN = LOCAL_DATE_TIME_MIN
+
         @VisibleForTesting
         val EXPIRY_TOLERANCE_CLOCK_SKEW_MINS = 5L
 

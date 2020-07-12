@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.fj.board.component.auth.JwtAuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.HttpAuthScheme
-import com.github.fj.board.component.security.HttpAuthorizationToken
+import com.github.fj.board.component.security.MaybeHttpAuthorizationToken
 import com.github.fj.board.exception.client.AuthTokenException
 import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getRandomAlphaNumericString
@@ -65,20 +65,19 @@ class JwtAuthTokenManagerTest {
 
         // expect:
         with(jwtObject) {
-            assertThat(id, `is`(rsaKeyPairManager.getLatest().keyId))
-            assertThat(issuer, `is`(tokenIssuer))
-            assertThat(subject, `is`(subject))
-            assertThat(audience, `is`(audience))
-            assertThat(expiration, `is`(timestamp.plusSeconds(tokenAliveSecs)))
-            assertThat(issuedAt, `is`(timestamp))
-            assertThat(notBefore, `is`(JwtAuthTokenManager.NOT_BEFORE_THAN))
+            assertThat(this.issuer, `is`(tokenIssuer))
+            assertThat(this.subject, `is`(subject))
+            assertThat(this.audience, `is`(audience))
+            assertThat(this.expiration, `is`(timestamp.plusSeconds(tokenAliveSecs)))
+            assertThat(this.issuedAt, `is`(timestamp))
+            assertThat(this.notBefore, `is`(JwtAuthTokenManager.NOT_BEFORE_THAN))
         }
     }
 
     @Test
     fun `wrong token causes AuthTokenException`() {
         // given:
-        val wrongToken = HttpAuthorizationToken(HttpAuthScheme.TOKEN, getRandomAlphaNumericString(128))
+        val wrongToken = MaybeHttpAuthorizationToken(HttpAuthScheme.TOKEN, getRandomAlphaNumericString(128))
 
         // expect:
         assertThrows<AuthTokenException> { sut.validate(wrongToken) }
@@ -117,8 +116,8 @@ class JwtAuthTokenManagerTest {
     @Test
     fun `expired token causes AuthTokenException`() {
         // given:
-        val timestamp = utcNow().plusSeconds(tokenAliveSecs)
-            .plusMinutes(JwtAuthTokenManager.EXPIRY_TOLERANCE_CLOCK_SKEW_MINS)
+        val timestamp = utcNow().minusSeconds(tokenAliveSecs)
+            .minusMinutes(JwtAuthTokenManager.EXPIRY_TOLERANCE_CLOCK_SKEW_MINS)
 
         // when:
         val tamperedToken = sut.create("aud", "sub", timestamp)

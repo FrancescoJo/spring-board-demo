@@ -5,6 +5,7 @@
 package testcase.persistence.entity.auth
 
 import com.github.fj.board.appconfig.CodecConfig
+import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.entity.auth.Authentication.Companion.REFRESH_TOKEN_LENGTH_BYTES
 import com.github.fj.lib.time.utcNow
@@ -45,7 +46,7 @@ class RefreshTokenTest {
     fun `relative fields are filled after successful refreshToken creation`() = with(sut) {
         // given:
         val now = utcNow().truncatedTo(ChronoUnit.SECONDS)
-        val lifespan = getRandomPositiveLong(5L)
+        val lifespan = getRandomPositiveLong(1L, AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS)
         this.loginName = getRandomAlphaNumericString(8)
 
         // when:
@@ -55,6 +56,17 @@ class RefreshTokenTest {
         assertThat(refreshToken.size, `is`(REFRESH_TOKEN_LENGTH_BYTES))
         assertThat(refreshTokenIssuedAt, `is`(now))
         assertThat(refreshTokenExpireAt, `is`(now.plusDays(lifespan)))
+    }
+
+    @Test
+    fun `refreshToken validation would fail if checked too late`() = with(sut) {
+        this.refreshTokenExpireAt = utcNow().minusDays(AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS)
+
+        // given:
+        val actual = validateRefreshToken(base62Codec, "")
+
+        // expect:
+        assertFalse(actual)
     }
 
     @Test
@@ -82,7 +94,7 @@ class RefreshTokenTest {
     fun `refreshToken validation would success if #old matches saved one`() = with(sut) {
         // given:
         val now = utcNow().truncatedTo(ChronoUnit.SECONDS)
-        val lifespan = getRandomPositiveLong(5L)
+        val lifespan = getRandomPositiveLong(1L, AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS)
         this.loginName = getRandomAlphaNumericString(8)
 
         // when:

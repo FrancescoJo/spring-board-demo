@@ -12,6 +12,7 @@ import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.lib.net.InetAddressExtensions
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
+import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getSecureRandomBytes
 import io.seruco.encoding.base62.Base62
 import java.net.InetAddress
@@ -33,7 +34,7 @@ class Authentication : AbstractIncrementalLockableEntity() {
     @Column(name = "login_name", length = 32, nullable = false, columnDefinition = "VARCHAR(32)")
     var loginName: String = ""
 
-    @Column(length = 128, nullable = false, columnDefinition = "VARBINARY(128)")
+    @Column(length = 32, nullable = false, columnDefinition = "VARBINARY(32)")
     var password: ByteArray = ByteArray(0)
 
     @Column(name = "created_date", nullable = false)
@@ -59,7 +60,7 @@ class Authentication : AbstractIncrementalLockableEntity() {
 
     @Convert(converter = SemanticVersionConverter::class)
     @Column(name = "last_active_app_version", length = 32, nullable = false, columnDefinition = "VARCHAR(32)")
-    var lastActiveAppVersion = de.skuzzle.semantic.Version.ZERO
+    var lastActiveAppVersion: de.skuzzle.semantic.Version = de.skuzzle.semantic.Version.ZERO
 
     @Column(name = "refresh_token", nullable = false, columnDefinition = "BLOB")
     var refreshToken: ByteArray = ByteArray(0)
@@ -106,6 +107,11 @@ class Authentication : AbstractIncrementalLockableEntity() {
     }
 
     fun validateRefreshToken(base62Codec: Base62, old: String): Boolean {
+        // Rare cases
+        if (utcNow() > refreshTokenExpireAt) {
+            return false
+        }
+
         val oldBytes = old.toByteArray()
         val decoded = try {
             base62Codec.decode(oldBytes)

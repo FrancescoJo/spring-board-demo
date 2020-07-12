@@ -29,7 +29,7 @@ internal class HttpAuthenticationProvider(
             return null
         }
 
-        return when (httpAuthToken.scheme) {
+        return when (httpAuthToken.principal) {
             HttpAuthScheme.TOKEN -> getAuthentication(httpAuthToken)
             else                 ->
                 throw UnsupportedOperationException("$this type of authentication is not supported.")

@@ -38,8 +38,8 @@ fun getSecureRandomBytes(length: Int) = ByteArray(length).apply {
     SecureRandom().nextBytes(this)
 }
 
-fun getRandomPositiveInt(upperBound: Int = Integer.MAX_VALUE) =
-    ThreadLocalRandom.current().nextInt(upperBound)
+fun getRandomPositiveInt(lowerBound: Int = 0, upperBound: Int = Integer.MAX_VALUE) =
+    lowerBound + ThreadLocalRandom.current().nextInt(upperBound)
 
-fun getRandomPositiveLong(upperBound: Long = Long.MAX_VALUE) =
-    ThreadLocalRandom.current().nextLong(upperBound)
+fun getRandomPositiveLong(lowerBound: Long = 0L, upperBound: Long = Long.MAX_VALUE) =
+    lowerBound + ThreadLocalRandom.current().nextLong(upperBound)

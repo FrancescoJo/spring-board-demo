@@ -7,6 +7,7 @@ package com.github.fj.board.appconfig.security
 import com.github.fj.board.appconfig.SecurityConfig
 import com.github.fj.board.component.security.HttpAuthScheme
 import com.github.fj.board.component.security.HttpAuthorizationToken
+import com.github.fj.board.component.security.MaybeHttpAuthorizationToken
 import com.github.fj.lib.text.matchesIn
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
@@ -45,7 +46,7 @@ internal class AuthorizationHeaderFilter(
         }
 
         findAuthorizationHeader(req)?.let {
-            LOG.trace("HTTP Authorization header has been found with: ${it.scheme} scheme")
+            LOG.trace("HTTP Authorization header has been found with: ${it.principal} scheme")
             SecurityContextHolder.getContext().authentication = it
         }
 
@@ -64,7 +65,7 @@ internal class AuthorizationHeaderFilter(
             req.getHeader(HEADER_AUTHORIZATION).let { h ->
                 when {
                     h.matchesIn(AUTHORIZATION_SYNTAX) -> return h.split(" ").let {
-                        HttpAuthorizationToken(HttpAuthScheme.byTypeValue(it[0]), it[1])
+                        MaybeHttpAuthorizationToken(HttpAuthScheme.byTypeValue(it[0]), it[1])
                     }
                     h.isNullOrEmpty() -> LOG.trace("No {} header in the request.", HEADER_AUTHORIZATION)
                     else              ->

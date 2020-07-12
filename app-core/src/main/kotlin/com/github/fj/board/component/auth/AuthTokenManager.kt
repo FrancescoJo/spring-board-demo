@@ -4,6 +4,7 @@
  */
 package com.github.fj.board.component.auth
 
+import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.component.security.HttpAuthorizationToken
 import com.github.fj.board.exception.client.AuthTokenException
 import org.slf4j.Logger
@@ -16,7 +17,7 @@ import java.time.LocalDateTime
  * @since 27 - Oct - 2018
  */
 interface AuthTokenManager {
-    fun create(audience: String, subject: String, timestamp: LocalDateTime): HttpAuthorizationToken
+    fun create(audience: String, subject: String, timestamp: LocalDateTime): FreshHttpAuthorizationToken
 
     @Throws(AuthTokenException::class)
     fun validate(token: HttpAuthorizationToken): Authentication
