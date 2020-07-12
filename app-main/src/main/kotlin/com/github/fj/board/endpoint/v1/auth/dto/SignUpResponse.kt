@@ -6,6 +6,7 @@ package com.github.fj.board.endpoint.v1.auth.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.github.fj.board.vo.auth.SignUpResult
 import com.github.fj.lib.util.ProtectedProperty
 
 /**
@@ -35,4 +36,14 @@ data class SignUpResponse(
      */
     @JsonProperty
     val refreshToken: ProtectedProperty<String>
-)
+) {
+    companion object {
+        fun from(vo: SignUpResult) = SignUpResponse(
+            loginName = vo.loginName,
+            accessToken = ProtectedProperty(String(vo.accessToken)),
+            refreshToken = ProtectedProperty(String(vo.refreshToken))
+        ).also {
+            vo.clearAll()
+        }
+    }
+}

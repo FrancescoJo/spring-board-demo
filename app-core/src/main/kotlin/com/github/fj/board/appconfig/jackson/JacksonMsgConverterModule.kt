@@ -17,11 +17,7 @@ internal class JacksonMsgConverterModule : SimpleModule(JacksonMsgConverterModul
         addSerializer(ProtectedPropertyJacksonSerialiser())
         addSerializer(SemanticVersionJacksonSerialiser())
 
-        addDeserializer(ProtectedProperty::class.java,
-            ProtectedPropertyJacksonDeserialiser()
-        )
-        addDeserializer(Version::class.java,
-            SemanticVersionJacksonDeserialiser()
-        )
+        addDeserializer(ProtectedProperty::class.java, ProtectedPropertyJacksonDeserialiser())
+        addDeserializer(Version::class.java, SemanticVersionJacksonDeserialiser())
     }
 }

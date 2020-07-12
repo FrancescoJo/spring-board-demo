@@ -7,6 +7,7 @@ package com.github.fj.board.endpoint.v1.auth
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.SignUpRequest
 import com.github.fj.board.endpoint.v1.auth.dto.SignUpResponse
+import com.github.fj.board.service.auth.SignUpService
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestBody
@@ -29,7 +30,7 @@ interface SignUpController {
         path = [ApiPaths.AUTH],
         method = [RequestMethod.POST]
     )
-    fun signUp(@Valid @RequestBody req: SignUpRequest, httpServletReq: HttpServletRequest): SignUpResponse
+    fun signUp(@Valid @RequestBody req: SignUpRequest, httpReq: HttpServletRequest): SignUpResponse
 }
 
 /**
@@ -37,11 +38,15 @@ interface SignUpController {
  * @since 06 - Jul - 2020
  */
 @RestController
-internal class SignUpControllerImpl : SignUpController {
-    override fun signUp(req: SignUpRequest, httpServletReq: HttpServletRequest): SignUpResponse {
+internal class SignUpControllerImpl(
+    private val svc: SignUpService
+): SignUpController {
+    override fun signUp(req: SignUpRequest, httpReq: HttpServletRequest): SignUpResponse {
         LOG.debug("Signup request: {}", req)
 
-        TODO("Not yet implemented")
+        val result = svc.signUp(req, httpReq)
+
+        return SignUpResponse.from(result)
     }
 
     companion object {
