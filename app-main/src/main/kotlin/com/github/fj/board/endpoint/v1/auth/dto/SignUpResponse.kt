@@ -5,6 +5,7 @@
 package com.github.fj.board.endpoint.v1.auth.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.github.fj.lib.util.ProtectedProperty
 
 /**
@@ -13,6 +14,7 @@ import com.github.fj.lib.util.ProtectedProperty
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 29 - Jun - 2020
  */
+@JsonSerialize
 data class SignUpResponse(
     /**
      * 'user id' that specified by user.
