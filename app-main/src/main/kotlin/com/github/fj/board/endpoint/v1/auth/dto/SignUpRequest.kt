@@ -32,9 +32,9 @@ data class SignUpRequest(
     @JsonProperty
     @JsonPropertyDescription(DESC_PASSWORD)
     @get:ProtectedPropertySize(
-        min = PASSWORD_SIZE_MIN,
-        max = PASSWORD_SIZE_MAX,
-        message = "`password` must between $PASSWORD_SIZE_MIN to $PASSWORD_SIZE_MAX characters."
+        min = PASSWORD_SIZE,
+        max = PASSWORD_SIZE,
+        message = "`password` must be hex encoded, 40 characters long."
     )
     val password: ProtectedProperty<String>,
 
@@ -53,13 +53,12 @@ data class SignUpRequest(
     companion object {
         const val LOGIN_NAME_SIZE_MIN = 4
         const val LOGIN_NAME_SIZE_MAX = 16
-        const val PASSWORD_SIZE_MIN = 6L
-        const val PASSWORD_SIZE_MAX = 32L
+        const val PASSWORD_SIZE = 40L
 
         const val DESC_LOGIN_NAME = "A unique login name to distinguish users. " +
                 "Must between $LOGIN_NAME_SIZE_MIN to $LOGIN_NAME_SIZE_MAX alphanumeric characters."
-        const val DESC_PASSWORD = "A password to get access to service. " +
-                "Must between $PASSWORD_SIZE_MIN to $PASSWORD_SIZE_MAX characters."
+        const val DESC_PASSWORD = "A sha-1 encoded password to get access to service. Must be hex encoded, " +
+                "40 characters long. Do not send any plaintext for this field."
         const val DESC_PLATFORM_TYPE = "Client platform type. Values are: [\"a\": ANDROID, \"i\": IOS, \"w\": WEB]"
         const val DESC_PLATFORM_VERSION = "Version string of client system."
         const val DESC_APP_VERSION = "Semantic versioning format encoded client app version. "

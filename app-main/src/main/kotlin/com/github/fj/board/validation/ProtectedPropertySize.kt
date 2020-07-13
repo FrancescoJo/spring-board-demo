@@ -51,9 +51,9 @@ private class ProtectedPropertySizeValidator : ConstraintValidator<ProtectedProp
         val enclosedValue = value?.value ?: return true
 
         return when (enclosedValue) {
-            is String -> enclosedValue.length in (min + 1) until max
-            is Int    -> enclosedValue in (min + 1) until max
-            is Long   -> enclosedValue in (min + 1) until max
+            is String -> enclosedValue.length in min..max
+            is Int    -> enclosedValue in min..max
+            is Long   -> enclosedValue in min..max
             else      ->
                 throw UnsupportedOperationException(
                     "ProtectedProperty with generic type ${value::class} validation is not supported."

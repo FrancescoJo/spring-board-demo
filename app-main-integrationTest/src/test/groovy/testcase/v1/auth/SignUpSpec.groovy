@@ -60,7 +60,7 @@ class SignUpSpec extends AuthTestBase {
     }
 
     @Unroll
-    def "password('#password') must be 6 to 32 characters long"() {
+    def "password('#password') must be 40 characters long"() {
         given:
         final request = new SignUpRequestBuilder(SignUpRequestBuilder.createRandom())
                 .password(password)
@@ -76,10 +76,9 @@ class SignUpSpec extends AuthTestBase {
         errorBody.cause == IllegalRequestException.class.simpleName
 
         where:
-        password                            | docId
-        ""                                  | 1
-        "adaaa"                             | 2
-        "123456789012345678901234567890123" | 3
+        password                                  | docId
+        ""                                        | 1
+        "123456789012345678901234567890123456789" | 2
     }
 
     def "unknown client platformType is not allowed"() {

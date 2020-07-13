@@ -91,12 +91,7 @@ public final class SignUpRequestBuilder {
                 .loginName(getRandomAlphaNumericString(
                         getRandomPositiveInt(SignUpRequest.LOGIN_NAME_SIZE_MIN, SignUpRequest.LOGIN_NAME_SIZE_MAX)
                 ))
-                .password(getRandomAlphaNumericString(
-                        getRandomPositiveInt(
-                                (int) SignUpRequest.PASSWORD_SIZE_MIN,
-                                (int) SignUpRequest.PASSWORD_SIZE_MAX
-                        )
-                ))
+                .password(getRandomAlphaNumericString((int) SignUpRequest.PASSWORD_SIZE))
                 .platformType(randomEnumConst(PlatformType.class))
                 .platformVersion(getRandomAlphaNumericString(64))
                 .appVersion(Version.ZERO.toString())
