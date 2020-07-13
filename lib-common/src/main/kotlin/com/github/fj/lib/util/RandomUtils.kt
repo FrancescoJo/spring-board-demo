@@ -6,8 +6,8 @@
  */
 package com.github.fj.lib.util
 
+import java.lang.IllegalArgumentException
 import java.security.SecureRandom
-import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 private const val RANDOM_ALPHANUMERIC_CHARS = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890"
@@ -30,16 +30,29 @@ private fun getRandomAlphaNumericStringInternal(length: Int, pool: CharSequence)
     return sb.toString()
 }
 
+fun randomBoolean() = ThreadLocalRandom.current().nextInt(2) % 2 == 1
+
 fun getRandomBytes(length: Int) = ByteArray(length).apply {
-    Random().nextBytes(this)
+    ThreadLocalRandom.current().nextBytes(this)
 }
 
 fun getSecureRandomBytes(length: Int) = ByteArray(length).apply {
     SecureRandom().nextBytes(this)
 }
 
-fun getRandomPositiveInt(lowerBound: Int = 0, upperBound: Int = Integer.MAX_VALUE) =
-    lowerBound + ThreadLocalRandom.current().nextInt(upperBound - lowerBound)
+fun getRandomPositiveInt(lowerBound: Int = 0, upperBound: Int = Integer.MAX_VALUE): Int {
+    if (lowerBound < 0) {
+        throw IllegalArgumentException("lowerBound must be >= 0")
+    }
 
-fun getRandomPositiveLong(lowerBound: Long = 0L, upperBound: Long = Long.MAX_VALUE) =
-    lowerBound + ThreadLocalRandom.current().nextLong(upperBound - lowerBound)
+    return lowerBound + ThreadLocalRandom.current().nextInt(upperBound - lowerBound)
+}
+
+
+fun getRandomPositiveLong(lowerBound: Long = 0L, upperBound: Long = Long.MAX_VALUE): Long {
+    if (lowerBound < 0L) {
+        throw IllegalArgumentException("lowerBound must be >= 0")
+    }
+
+    return lowerBound + ThreadLocalRandom.current().nextLong(upperBound - lowerBound)
+}

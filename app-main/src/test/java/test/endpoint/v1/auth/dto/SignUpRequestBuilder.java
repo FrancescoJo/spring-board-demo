@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomPositiveInt;
+import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -96,8 +97,7 @@ public final class SignUpRequestBuilder {
                                 (int) SignUpRequest.PASSWORD_SIZE_MAX
                         )
                 ))
-                // FIXME implement this to work as pure random
-                .platformType(PlatformType.WEB)
+                .platformType(randomEnumConst(PlatformType.class))
                 .platformVersion(getRandomAlphaNumericString(64))
                 .appVersion(Version.ZERO.toString())
                 .build();

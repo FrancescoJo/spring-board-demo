@@ -30,6 +30,9 @@ dependencies {
     testRuntimeOnly "cglib:cglib-nodep:3.2.4"
     testRuntimeOnly "net.bytebuddy:byte-buddy:1.6.5"
     testRuntimeOnly "org.objenesis:objenesis:2.5.1"
+
+    testImplementation project(path: ":lib-common", configuration: "testArtifacts")
+    testImplementation project(path: ":app-main", configuration: "testArtifacts")
 }
 
 asciidoctor {

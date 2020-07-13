@@ -8,20 +8,17 @@ import com.github.fj.board.appconfig.CodecConfig
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.FreshHttpAuthorizationToken
-import com.github.fj.board.endpoint.v1.auth.dto.SignUpRequest
 import com.github.fj.board.exception.client.DuplicatedLoginNameException
 import com.github.fj.board.persistence.entity.auth.Authentication
-import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignUpService
 import com.github.fj.board.service.auth.SignUpServiceImpl
 import com.github.fj.lib.time.utcNow
-import com.github.fj.lib.util.ProtectedProperty
 import com.github.fj.lib.util.getRandomAlphaNumericString
 import com.nhaarman.mockitokotlin2.any
-import de.skuzzle.semantic.Version
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.lessThanOrEqualTo
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,6 +27,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import test.endpoint.v1.auth.dto.SignUpRequestBuilder
 import java.time.temporal.ChronoUnit
 import javax.servlet.http.HttpServletRequest
 
@@ -61,19 +59,11 @@ class SignUpServiceTest {
     @Test
     fun `signUp attempt with same loginName causes DuplicatedLoginNameException`() {
         // given:
-        val loginName = "DUPLICATED"
-        val request = SignUpRequest(
-            loginName = loginName,
-            password = ProtectedProperty(getRandomAlphaNumericString(16)),
-            // FIXME Change to random later on except UNDEFINED
-            platformType = PlatformType.UNDEFINED,
-            platformVersion = getRandomAlphaNumericString(16),
-            appVersion = Version.COMPLIANCE
-        )
+        val request = SignUpRequestBuilder.createRandom()
         val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
 
         // when:
-        `when`(authRepo.findByLoginName(loginName)).thenReturn(Authentication())
+        `when`(authRepo.findByLoginName(anyString())).thenReturn(Authentication())
 
         // then:
         assertThrows<DuplicatedLoginNameException> {
@@ -84,14 +74,7 @@ class SignUpServiceTest {
     @Test
     fun `successful signUp attempt is stored and backed as SignUpResult`() {
         // given:
-        val request = SignUpRequest(
-            loginName = getRandomAlphaNumericString(8),
-            password = ProtectedProperty(getRandomAlphaNumericString(16)),
-            // FIXME Change to random later on except UNDEFINED
-            platformType = PlatformType.UNDEFINED,
-            platformVersion = getRandomAlphaNumericString(16),
-            appVersion = Version.COMPLIANCE
-        )
+        val request = SignUpRequestBuilder.createRandom()
         val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
         val mockAccessToken = getRandomAlphaNumericString(128)
         val tokenLifespanSecs = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS

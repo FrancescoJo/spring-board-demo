@@ -54,6 +54,9 @@ dependencies {
     implementation "com.h2database:h2"
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$version_springBoot"
+
+    testImplementation project(path: ":lib-common", configuration: "testArtifacts")
+    testImplementation project(path: ":app-core", configuration: "testArtifacts")
 }
 
 dependencyManagement {

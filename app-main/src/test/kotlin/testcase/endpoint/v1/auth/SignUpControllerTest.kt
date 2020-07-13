@@ -6,19 +6,16 @@ package testcase.endpoint.v1.auth
 
 import com.github.fj.board.endpoint.v1.auth.SignUpController
 import com.github.fj.board.endpoint.v1.auth.SignUpControllerImpl
-import com.github.fj.board.endpoint.v1.auth.dto.SignUpRequest
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.service.auth.SignUpService
-import com.github.fj.lib.util.ProtectedProperty
-import com.github.fj.lib.util.getRandomAlphaNumericString
-import de.skuzzle.semantic.Version
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
+import test.endpoint.v1.auth.dto.SignUpRequestBuilder
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -41,14 +38,9 @@ class SignUpControllerTest {
     @Test
     fun `unspecified platformType will cause IllegalRequestException`() {
         // given:
-        // FIXME to utilise SignUpRequestBuilder
-        val request = SignUpRequest(
-            loginName = getRandomAlphaNumericString(8),
-            password = ProtectedProperty(getRandomAlphaNumericString(12)),
-            platformType = PlatformType.UNDEFINED,
-            platformVersion = getRandomAlphaNumericString(32),
-            appVersion = Version.COMPLIANCE
-        )
+        val request = SignUpRequestBuilder(SignUpRequestBuilder.createRandom())
+            .platformType(PlatformType.UNDEFINED)
+            .build()
         val httpRequest = mock(HttpServletRequest::class.java)
 
         // when:
