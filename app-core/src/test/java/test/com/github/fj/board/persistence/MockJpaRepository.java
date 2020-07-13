@@ -4,12 +4,11 @@
  */
 package test.com.github.fj.board.persistence;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.annotation.Nonnull;
 import javax.persistence.Id;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -152,32 +151,57 @@ public class MockJpaRepository<T, ID> implements JpaRepository<T, ID> {
 
     @Override
     public <S extends T> Optional<S> findOne(final Example<S> example) {
-        throw new UnsupportedOperationException("Mock is not implemented");
+        final List<S> maybe = findAll(example);
+        if (maybe.isEmpty()) {
+            return Optional.empty();
+        }
+
+        if (maybe.size() == 1) {
+            return Optional.of(maybe.get(0));
+        }
+
+        throw new IncorrectResultSizeDataAccessException(1, maybe.size());
     }
 
     @Override
     public <S extends T> List<S> findAll(final Example<S> example) {
-        throw new UnsupportedOperationException("Mock is not implemented");
+        return findAllExamples(example, findAll());
     }
 
     @Override
     public <S extends T> List<S> findAll(final Example<S> example, Sort sort) {
-        throw new UnsupportedOperationException("Mock is not implemented");
+        return findAllExamples(example, findAll(sort));
     }
 
     @Override
     public <S extends T> Page<S> findAll(final Example<S> example, Pageable pageable) {
-        throw new UnsupportedOperationException("Mock is not implemented");
+        return new PageImpl<>(findAllExamples(example, findAll(pageable)));
     }
 
     @Override
-    public <S extends T> long count(final Example<S> example) {
-        throw new UnsupportedOperationException("Mock is not implemented");
+    public <S extends T> long count(final @Nonnull Example<S> example) {
+        return findAll(example).size();
     }
 
     @Override
-    public <S extends T> boolean exists(final Example<S> example) {
-        throw new UnsupportedOperationException("Mock is not implemented");
+    public <S extends T> boolean exists(final @Nonnull Example<S> example) {
+        return !findAll(example).isEmpty();
+    }
+
+    private <S extends T> List<S> findAllExamples(
+            final @Nonnull Example<S> example,
+            final @Nonnull Iterable<T> entities
+    ) {
+        final List<S> list = new ArrayList<>();
+
+        for (final T entity : entities) {
+            if (entity.equals(example)) {
+                @SuppressWarnings("unchecked") final S castedEntity = (S) entity;
+                list.add(castedEntity);
+            }
+        }
+
+        return list;
     }
 
     private <S extends T> ID getIdFrom(final S entity) {

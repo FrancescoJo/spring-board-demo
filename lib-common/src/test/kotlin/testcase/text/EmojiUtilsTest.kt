@@ -17,7 +17,7 @@ import java.util.stream.Stream
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 19 - Nov - 2019
  */
-class UnicodeTextUtilsTest {
+class EmojiUtilsTest {
     @ParameterizedTest(name = "\"{1}\" glyph count must be: {0}")
     @MethodSource("testUnicodeGraphemeCountArgs")
     fun `unicodeGraphemeCount for various inputs`(length: Int, charSeq: String) {
