@@ -1,0 +1,20 @@
+group "com.github.fj.image"
+version "0.1.0"
+
+apply from: "$project.rootDir/gradle/scripts/java.gradle"
+apply from: "$project.rootDir/gradle/scripts/kotlin.gradle"
+apply from: "$project.rootDir/gradle/scripts/jacoco.gradle"
+apply from: "$project.rootDir/gradle/scripts/testing-junit.gradle"
+apply from: "$project.rootDir/gradle/scripts/detekt.gradle"
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    implementation project(":lib-common")
+
+    implementation "com.drewnoakes:metadata-extractor:2.14.0"
+
+    testImplementation project(path: ":lib-common", configuration: "testArtifacts")
+}
