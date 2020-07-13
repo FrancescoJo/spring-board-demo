@@ -35,6 +35,7 @@ internal class SemanticVersionJacksonDeserialiser : JsonDeserializer<Version>(),
 
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Version =
         // Happens only by client, thus we convert exception to IllegalRequestException here.
+        @Suppress("TooGenericExceptionCaught")
         try {
             Version.parseVersion(p.valueAsString)
         } catch (e: RuntimeException) {

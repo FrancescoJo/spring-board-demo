@@ -17,6 +17,8 @@ class SemanticVersionConverter : AttributeConverter<Version, String> {
     override fun convertToDatabaseColumn(attribute: Version?): String =
         attribute?.toString() ?: Version.ZERO.toString()
 
+    // All exception paths must be end up to same value
+    @Suppress("TooGenericExceptionCaught")
     override fun convertToEntityAttribute(dbData: String?): Version = try {
         Version.parseVersion(dbData, true)
     } catch (e: RuntimeException) {

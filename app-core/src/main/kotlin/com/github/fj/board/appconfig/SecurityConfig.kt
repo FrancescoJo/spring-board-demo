@@ -43,6 +43,8 @@ class SecurityConfig @Inject constructor(
         auth.authenticationProvider(tokenAuthProvider())
     }
 
+    // This logic is called only once.
+    @Suppress("SpreadOperator")
     override fun configure(http: HttpSecurity) {
         val bypassUris = checkBypassUris.toRequestMatcher()
 

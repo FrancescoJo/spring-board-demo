@@ -16,7 +16,6 @@ import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getSecureRandomBytes
 import io.seruco.encoding.base62.Base62
 import java.net.InetAddress
-import java.security.SecureRandom
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -117,13 +116,13 @@ class Authentication : AbstractIncrementalLockableEntity() {
         }
 
         val oldBytes = old.toByteArray()
-        val decoded = try {
-            base62Codec.decode(oldBytes)
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
+        return try {
+            val decoded = base62Codec.decode(oldBytes)
 
-        return refreshToken.contentEquals(decoded)
+            /* return try */ refreshToken.contentEquals(decoded)
+        } catch (e: IllegalArgumentException) {
+            false
+        }
     }
 
     companion object {

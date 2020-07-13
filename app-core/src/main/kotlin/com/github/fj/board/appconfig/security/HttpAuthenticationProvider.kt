@@ -18,6 +18,8 @@ import org.springframework.security.core.Authentication
  * @since 04 - Nov - 2018
  */
 internal class HttpAuthenticationProvider(
+    // Intended to name as this way: this logger should be reused to keep same log name
+    @SuppressWarnings("ConstructorParameterNaming")
     private val LOG: Logger,
     private val tokenMgr: AuthTokenManager
 ) : AuthenticationProvider {

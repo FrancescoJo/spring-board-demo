@@ -47,6 +47,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
         TestConfigurations.class
 ])
 class IntegrationTestBase extends Specification {
+    private static final Set<String> DECLARED_DOCUMENT_IDS = new HashSet()
     private static final String DEFAULT_HOST = "localhost"
     private static final int DEFAULT_PORT = 8000
 
@@ -96,7 +97,12 @@ class IntegrationTestBase extends Specification {
             final @Nullable RequestFieldsSnippet reqDoc,
             final @Nullable ResponseFieldsSnippet respDoc
     ) {
-        // TODO: [CONFIRMATION REQUIRED] check duplicated documentId if it is not empty
+        if (DECLARED_DOCUMENT_IDS.contains(documentId)) {
+            throw new IllegalArgumentException("Document id '$documentId' is already declared.")
+        } else {
+            DECLARED_DOCUMENT_IDS.add(documentId)
+        }
+
         final List<Snippet> snippets = new ArrayList()
         if (reqDoc != null) {
             snippets.add(reqDoc)

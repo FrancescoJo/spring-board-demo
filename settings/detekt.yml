@@ -560,7 +560,7 @@ style:
     maxLineLength: 120
     excludePackageStatements: true
     excludeImportStatements: true
-    excludeCommentStatements: false
+    excludeCommentStatements: true
   MayBeConst:
     active: true
   ModifierOrder:
@@ -649,4 +649,4 @@ style:
   WildcardImport:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
-    excludeImports: ['java.util.*', 'kotlinx.android.synthetic.*']
+    excludeImports: ['java.util.*', 'kotlinx.android.synthetic.*', 'javax.persistence.*']

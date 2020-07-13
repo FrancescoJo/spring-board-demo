@@ -48,6 +48,8 @@ internal class RsaKeyPairManager @Inject constructor(
 
     private val tokenLifetime = authProps.rsaKeyAliveHours
 
+    // Early returns for case reduction
+    @Suppress("ReturnCount")
     fun getLatest(): JwtRsaKeyPair {
         val now = utcNow()
         if (latestKeyPair.isValidAt(now)) {

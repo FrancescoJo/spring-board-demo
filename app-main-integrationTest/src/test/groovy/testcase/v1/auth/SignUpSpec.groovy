@@ -41,7 +41,7 @@ class SignUpSpec extends IntegrationTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest("signUp-error-wrongLoginName", request, getErrorResponseFields())
+        final reqSpec = sendRequest("signUp-error-wrongLoginName-#$docId", request, getErrorResponseFields())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -50,10 +50,10 @@ class SignUpSpec extends IntegrationTestBase {
         errorBody.cause == IllegalRequestException.class.simpleName
 
         where:
-        loginName              | _
-        "ad"                   | _
-        "asdfasdfasdfasdfadsf" | _
-        "n`o`n@lph@^um"        | _
+        loginName              | docId
+        "ad"                   | 1
+        "asdfasdfasdfasdfadsf" | 2
+        "n`o`n@lph@^um"        | 3
     }
 
     @Unroll
@@ -64,7 +64,7 @@ class SignUpSpec extends IntegrationTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest("signUp-error-wrongPassword", request, getErrorResponseFields())
+        final reqSpec = sendRequest("signUp-error-wrongPassword-#$docId", request, getErrorResponseFields())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -73,10 +73,10 @@ class SignUpSpec extends IntegrationTestBase {
         errorBody.cause == IllegalRequestException.class.simpleName
 
         where:
-        password                            | _
-        ""                                  | _
-        "adaaa"                             | _
-        "123456789012345678901234567890123" | _
+        password                            | docId
+        ""                                  | 1
+        "adaaa"                             | 2
+        "123456789012345678901234567890123" | 3
     }
 
     def "unknown client platformType is not allowed"() {
@@ -111,9 +111,9 @@ class SignUpSpec extends IntegrationTestBase {
         errorBody.cause == IllegalRequestException.class.simpleName
     }
 
-    // TODO "already occupied loginName cannot be used for signUp"
-
     // TODO "plain good sign-up request would be successful"
+
+    // TODO "already occupied loginName cannot be used for signUp"
 
     private Response sendRequest(final String documentId, final ResponseFieldsSnippet respDoc) {
         return sendSignUpRequest(this, documentId, respDoc)
