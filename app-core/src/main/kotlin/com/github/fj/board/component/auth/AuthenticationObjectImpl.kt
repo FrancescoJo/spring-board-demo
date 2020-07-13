@@ -1,8 +1,6 @@
 /*
- * Copyright 2020 Hyperconnect inc. All rights reserved.
- *
- * Hyperconnect inc. intellectual property.
- * Use of this software is subject to licence terms.
+ * spring-message-board-demo
+ * Refer to LICENCE.txt for licence details.
  */
 package com.github.fj.board.component.auth
 

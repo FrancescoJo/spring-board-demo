@@ -51,6 +51,9 @@ buildscript {
 }
 
 allprojects {
+    apply plugin: "idea"
+    apply plugin: "eclipse"
+
     repositories {
         jcenter()
         mavenCentral()

@@ -1,7 +1,6 @@
 group "com.github.fj.board.core"
 version "1.0"
 
-apply plugin: "idea"
 apply plugin: "io.spring.dependency-management"
 
 apply from: "$project.rootDir/gradle/scripts/java.gradle"
