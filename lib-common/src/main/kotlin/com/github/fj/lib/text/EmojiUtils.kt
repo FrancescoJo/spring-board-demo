@@ -30,6 +30,7 @@ private object EmojiIterator : EmojiParser() {
      *
      * See also: https://www.fileformat.info/info/unicode/category/Cf/list.htm
      */
+    @Suppress("MagicNumber", "SpreadOperator")
     private val INVISIBLE_UNICODE_CHARS = setOf(
         0x00AD,                                         // Soft hyphen
         0x115F, 0x1160,                                 // Hangul Jamo fillers

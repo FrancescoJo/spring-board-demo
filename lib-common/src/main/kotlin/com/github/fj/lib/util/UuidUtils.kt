@@ -14,14 +14,15 @@ import java.util.*
 private val EMPTY_UUID = UUID(0, 0)
 
 fun UUID.toByteArray(): ByteArray {
+    @Suppress("MagicNumber")
     val bb: ByteBuffer = ByteBuffer.wrap(ByteArray(16))
     bb.putLong(mostSignificantBits)
     bb.putLong(leastSignificantBits)
     return bb.array()
 }
 
-@Suppress("MagicNumber")
 fun ByteArray.toUUID(): UUID {
+    @Suppress("MagicNumber")
     if (this.size != 16) {
         throw IllegalArgumentException("Only 16-bytes long byte array could be cast to UUID.")
     }
@@ -32,8 +33,6 @@ fun ByteArray.toUUID(): UUID {
     return UUID(high, low)
 }
 
-class UuidExtensions {
-    companion object {
-        val EMPTY_UUID: UUID = com.github.fj.lib.util.EMPTY_UUID
-    }
+object UuidExtensions {
+    val EMPTY_UUID: UUID = com.github.fj.lib.util.EMPTY_UUID
 }

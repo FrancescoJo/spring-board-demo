@@ -44,10 +44,12 @@ interface FastCollectedLruCache<K, V> {
  * @since 23 - Nov - 2018
  */
 internal class FastCollectedLruCacheImpl<K, V>(maxCapacity: Int) : FastCollectedLruCache<K, V> {
+    @Suppress("MagicNumber")
     private val hardCacheSize = (maxCapacity * 0.75f).roundToInt()
     private val softCacheSize = maxCapacity - hardCacheSize
 
     @VisibleForTesting
+    @Suppress("MagicNumber")
     internal val hardCache = object : LinkedHashMap<K, V>(hardCacheSize, 0.75f, true) {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<K, V>): Boolean {
             if (size > hardCacheSize) {

@@ -14,13 +14,12 @@ import java.net.URI
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 09 - Mar - 2018
  */
+@SuppressWarnings("ReturnCount")
 fun URI.pathSegments(): List<String> {
     var path = this.path
     when {
         path.isNullOrEmpty() -> return emptyList()
-        path == "/"          -> return ArrayList<String>().apply {
-            add("/")
-        }
+        path == "/"          -> return listOf("/")
     }
 
     if (path.startsWith("/")) {

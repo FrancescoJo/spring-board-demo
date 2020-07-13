@@ -15,8 +15,11 @@ import kotlin.math.roundToLong
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 20 - Oct - 2016
  */
+@Suppress("MagicNumber")
 enum class FileSizeUnit constructor(
-    val min: Long, val max: Long, private val identifier: String
+    val min: Long,
+    val max: Long,
+    val identifier: String
 ) {
     BYTES(0L, 1024L, "B"),
     KIBIBYTES(1024L, 1024L * 1024L, "KiB"),

@@ -19,6 +19,7 @@ import kotlin.math.round
  */
 fun Double.roundToDecimal(decimals: Int): Double {
     var multiplier = 1.0
+    @Suppress("MagicNumber")
     repeat(decimals) { multiplier *= 10 }
     return round(this * multiplier) / multiplier
 }

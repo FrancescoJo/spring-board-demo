@@ -53,6 +53,7 @@ fun <T> List<T>.resize(desiredSize: Int, filler: ((Int) -> T)? = null): List<T> 
  * Finds the proper insertion position of given [input]
  * in a fully sorted [List].
  */
+@Suppress("LoopWithTooManyJumpStatements")
 fun <T : Comparable<T>> List<T>.findInsertPosition(input: T): Int {
     var low = 0
     var hi  = this.size

@@ -36,6 +36,7 @@ interface RandomStringGenerator : RandomValueGenerator<String> {
 }
 
 internal class RandomStringGeneratorImpl : RandomStringGenerator {
+    @Suppress("MagicNumber")
     override fun nextRandom(): String =
         nextRandom(1, 32)
 

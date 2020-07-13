@@ -20,9 +20,9 @@ private val EMPTY_INET_ADDRESS = InetAddress.getByName("0.0.0.0")
  * @since 09 - Mar - 2018
  */
 fun InetAddress.toIpV6AddressBytes(): ByteArray {
+    @Suppress("MagicNumber")
     return when (this) {
-        is Inet4Address -> byteArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0xFF.toByte(), 0xFF.toByte(),
+        is Inet4Address -> byteArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xFF.toByte(), 0xFF.toByte(),
             address[0], address[1], address[2], address[3]
         )
         is Inet6Address -> this.address
@@ -38,6 +38,7 @@ fun InetAddress.toIpV6AddressBytes(): ByteArray {
  * The operating [kotlin.ByteArray] size must be either 4 or 16.
  */
 fun ByteArray.toInetAddress(): InetAddress {
+    @Suppress("MagicNumber")
     return if (size != 4 && size != 16) {
         EMPTY_INET_ADDRESS
     } else {
@@ -52,20 +53,18 @@ fun InetAddress.isIpV4Address(): Boolean {
     return this is Inet4Address
 }
 
-class InetAddressExtensions {
-    companion object {
-        /**
-         * Workaround for
-         *
-         * ```
-         * fun InetAddress.Companion.empty(): InetAddress = EMPTY_INET_ADDRESS
-         * ```
-         *
-         * which is currently(Kotlin 1.0) impossible.
-         * Read [Kotlin Youtrack issues](https://youtrack.jetbrains.com/issue/KT-11968) for more information.
-         */
-        val EMPTY_INET_ADDRESS: InetAddress = com.github.fj.lib.net.EMPTY_INET_ADDRESS
-    }
+object InetAddressExtensions {
+    /**
+     * Workaround for
+     *
+     * ```
+     * fun InetAddress.Companion.empty(): InetAddress = EMPTY_INET_ADDRESS
+     * ```
+     *
+     * which is currently(Kotlin 1.0) impossible.
+     * Read [Kotlin Youtrack issues](https://youtrack.jetbrains.com/issue/KT-11968) for more information.
+     */
+    val EMPTY_INET_ADDRESS: InetAddress = com.github.fj.lib.net.EMPTY_INET_ADDRESS
 }
 
 fun InetAddress?.isNullOrEmpty(): Boolean = this == null || this == EMPTY_INET_ADDRESS

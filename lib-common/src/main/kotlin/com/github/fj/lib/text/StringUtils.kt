@@ -45,6 +45,7 @@ private val UNICODE_BLANK_CHARS: Set<Char> = setOf(
     '\u3000'  // IDEOGRAPHIC SPACE
 )
 
+@SuppressWarnings("ReturnCount")
 fun String?.isNullOrUnicodeBlank(): Boolean {
     if (isNullOrBlank()) {
         return true
