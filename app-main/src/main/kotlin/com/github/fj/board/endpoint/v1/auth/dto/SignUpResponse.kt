@@ -5,6 +5,7 @@
 package com.github.fj.board.endpoint.v1.auth.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.github.fj.board.vo.auth.SignUpResult
 import com.github.fj.lib.util.ProtectedProperty
@@ -18,31 +19,36 @@ import java.time.LocalDateTime
  */
 @JsonSerialize
 data class SignUpResponse(
-    /**
-     * 'user id' that specified by user.
-     */
     @JsonProperty
+    @JsonPropertyDescription(DESC_LOGIN_NAME)
     val loginName: String,
 
-    /**
-     * An access token object for authentication. Users should keep this information carefully and do not expose it
-     * to public.
-     */
     @JsonProperty
+    @JsonPropertyDescription(DESC_ACCESS_TOKEN)
     val accessToken: ProtectedProperty<String>,
 
+    @JsonProperty
+    @JsonPropertyDescription(DESC_ACCESS_TOKEN_EXPIRES_AFTER)
     val accessTokenExpiresAfter: LocalDateTime,
 
-    /**
-     * An refresh access token object for authentication. Users should keep this information carefully and do not
-     * expose it to public. Refreshing [accessToken] requires this value as well.
-     */
     @JsonProperty
+    @JsonPropertyDescription(DESC_REFRESH_TOKEN)
     val refreshToken: ProtectedProperty<String>,
 
+    @JsonProperty
+    @JsonPropertyDescription(DESC_REFRESH_TOKEN_EXPIRES_AFTER)
     val refreshTokenExpiresAfter: LocalDateTime
 ) {
     companion object {
+        const val DESC_LOGIN_NAME = "An 'user id' that specified by user."
+        const val DESC_ACCESS_TOKEN = "An access token object for authentication. " +
+                "Users should keep this information carefully and do not expose it to public."
+        const val DESC_ACCESS_TOKEN_EXPIRES_AFTER = "An UNIX timestamp for access token expiration. "
+        const val DESC_REFRESH_TOKEN = "A refresh access token object for authentication. " +
+                "Users should keep this information carefully and do not expose it to public. " +
+                "Both `accessToken` and `refreshToken` are used for extending login status."
+        const val DESC_REFRESH_TOKEN_EXPIRES_AFTER = "An UNIX timestamp for refresh token expiration."
+
         fun from(vo: SignUpResult) = with(vo) {
             SignUpResponse(
                 loginName = loginName,

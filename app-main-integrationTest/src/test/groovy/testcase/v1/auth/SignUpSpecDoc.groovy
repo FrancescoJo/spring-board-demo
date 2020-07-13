@@ -6,8 +6,10 @@ package testcase.v1.auth
 
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.SignUpRequest
+import com.github.fj.board.endpoint.v1.auth.dto.SignUpResponse
 import io.restassured.response.Response
 import io.restassured.specification.RequestSpecification
+import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
@@ -15,6 +17,8 @@ import testcase.IntegrationTestBase
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import static testcase.IntegrationTestBase.baseFieldDescriptors
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -67,5 +71,30 @@ class SignUpSpecDoc {
                         .type(JsonFieldType.STRING)
                         .description(SignUpRequest.DESC_APP_VERSION)
         )
+    }
+
+    /**
+     * Since all API error are in same format({@link com.github.fj.board.endpoint.ErrorResponseDto}), this method could be handy for documenting error cases.
+     */
+    static ResponseFieldsSnippet getSignUpResponseFields() {
+        final List<FieldDescriptor> fields = [
+                fieldWithPath("body.loginName")
+                        .type(JsonFieldType.STRING)
+                        .description(SignUpResponse.DESC_LOGIN_NAME),
+                fieldWithPath("body.accessToken")
+                        .type(JsonFieldType.STRING)
+                        .description(SignUpResponse.DESC_ACCESS_TOKEN),
+                fieldWithPath("body.accessTokenExpiresAfter")
+                        .type(JsonFieldType.STRING)
+                        .description(SignUpResponse.DESC_ACCESS_TOKEN_EXPIRES_AFTER),
+                fieldWithPath("body.refreshToken")
+                        .type(JsonFieldType.STRING)
+                        .description(SignUpResponse.DESC_REFRESH_TOKEN),
+                fieldWithPath("body.refreshTokenExpiresAfter")
+                        .type(JsonFieldType.STRING)
+                        .description(SignUpResponse.DESC_REFRESH_TOKEN_EXPIRES_AFTER)
+        ]
+
+        return responseFields(baseFieldDescriptors() + fields)
     }
 }

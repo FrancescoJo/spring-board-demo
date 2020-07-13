@@ -74,6 +74,10 @@ class IntegrationTestBase extends Specification {
         )
     }
 
+    final RequestSpecification jsonRequestSpec() {
+        return jsonRequestSpec("")
+    }
+
     final RequestSpecification jsonRequestSpec(final @Nonnull String documentId) {
         return jsonRequestSpec(documentId, null, null)
     }
