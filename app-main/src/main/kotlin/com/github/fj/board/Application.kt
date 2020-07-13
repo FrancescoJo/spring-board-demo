@@ -16,6 +16,7 @@ import java.security.Security
  * @since 01 - Jan - 2018
  */
 @SpringBootApplication
+@Suppress("UtilityClassWithPublicConstructor")
 class Application {
     companion object {
         val profile: AppProfile by lazy {

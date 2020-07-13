@@ -51,6 +51,8 @@ class CustomErrorHandler : ErrorController {
         )
     }
 
+    // Somebody please give us a redemption from this sin. No idea how to improve this.
+    @Suppress("LongMethod", "ReturnCount")
     @ExceptionHandler(Exception::class)
     fun handleError(req: HttpServletRequest, ex: Exception): ResponseEntity<ErrorResponseDto> {
         val status: HttpStatus
