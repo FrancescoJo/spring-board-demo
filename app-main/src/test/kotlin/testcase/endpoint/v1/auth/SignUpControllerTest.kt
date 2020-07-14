@@ -15,7 +15,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import test.endpoint.v1.auth.dto.SignUpRequestBuilder
+import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -38,7 +38,7 @@ class SignUpControllerTest {
     @Test
     fun `unspecified platformType will cause IllegalRequestException`() {
         // given:
-        val request = SignUpRequestBuilder(SignUpRequestBuilder.createRandom())
+        val request = AuthenticationRequestBuilder(AuthenticationRequestBuilder.createRandom())
             .platformType(PlatformType.UNDEFINED)
             .build()
         val httpRequest = mock(HttpServletRequest::class.java)

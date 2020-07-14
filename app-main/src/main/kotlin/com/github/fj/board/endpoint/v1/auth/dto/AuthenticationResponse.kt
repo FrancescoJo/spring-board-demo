@@ -7,7 +7,7 @@ package com.github.fj.board.endpoint.v1.auth.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.github.fj.board.vo.auth.SignUpResult
+import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.lib.util.ProtectedProperty
 import java.time.LocalDateTime
 
@@ -18,7 +18,7 @@ import java.time.LocalDateTime
  * @since 29 - Jun - 2020
  */
 @JsonSerialize
-data class SignUpResponse(
+data class AuthenticationResponse(
     @JsonProperty
     @JsonPropertyDescription(DESC_LOGIN_NAME)
     val loginName: String,
@@ -49,8 +49,8 @@ data class SignUpResponse(
                 "Both `accessToken` and `refreshToken` are used for extending login status."
         const val DESC_REFRESH_TOKEN_EXPIRES_AFTER = "An UNIX timestamp for refresh token expiration."
 
-        fun from(vo: SignUpResult) = with(vo) {
-            SignUpResponse(
+        fun from(vo: AuthenticationResult) = with(vo) {
+            AuthenticationResponse(
                 loginName = loginName,
                 accessToken = ProtectedProperty(accessToken),
                 accessTokenExpiresAfter = accessTokenExpiresAfter,

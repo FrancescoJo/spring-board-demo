@@ -12,7 +12,7 @@ import java.time.LocalDateTime
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 12 - Jul - 2020
  */
-data class SignUpResult(
+data class AuthenticationResult(
     val loginName: String,
     val accessToken: String,
     val accessTokenExpiresAfter: LocalDateTime,

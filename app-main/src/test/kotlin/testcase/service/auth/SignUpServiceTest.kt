@@ -27,7 +27,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import test.endpoint.v1.auth.dto.SignUpRequestBuilder
+import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import java.time.temporal.ChronoUnit
 import javax.servlet.http.HttpServletRequest
 
@@ -59,7 +59,7 @@ class SignUpServiceTest {
     @Test
     fun `signUp attempt with same loginName causes DuplicatedLoginNameException`() {
         // given:
-        val request = SignUpRequestBuilder.createRandom()
+        val request = AuthenticationRequestBuilder.createRandom()
         val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
 
         // when:
@@ -72,9 +72,9 @@ class SignUpServiceTest {
     }
 
     @Test
-    fun `successful signUp attempt is stored and backed as SignUpResult`() {
+    fun `successful signUp attempt is stored and backed as AuthenticationResult`() {
         // given:
-        val request = SignUpRequestBuilder.createRandom()
+        val request = AuthenticationRequestBuilder.createRandom()
         val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
         val mockAccessToken = getRandomAlphaNumericString(128)
         val tokenLifespanSecs = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS

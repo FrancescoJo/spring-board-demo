@@ -6,13 +6,12 @@ package com.github.fj.board.service.auth
 
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
-import com.github.fj.board.component.security.FreshHttpAuthorizationToken
-import com.github.fj.board.endpoint.v1.auth.dto.SignUpRequest
+import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
 import com.github.fj.board.exception.client.DuplicatedLoginNameException
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.util.extractInetAddress
-import com.github.fj.board.vo.auth.SignUpResult
+import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.lib.security.toSha256Bytes
 import com.github.fj.lib.time.utcNow
 import io.seruco.encoding.base62.Base62
@@ -32,15 +31,16 @@ internal class SignUpServiceImpl(
     private val authRepo: AuthenticationRepository,
     private val authTokenMgr: AuthTokenManager
 ) : SignUpService {
-    override fun signUp(req: SignUpRequest, httpReq: HttpServletRequest): SignUpResult {
+    override fun signUp(req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResult {
         if (authRepo.findByLoginName(req.loginName) != null) {
             throw DuplicatedLoginNameException()
         }
 
         val now = utcNow()
-        val (token, auth) = req.toAuthentication(now, httpReq.extractInetAddress())
+        val auth = req.toAuthentication(now, httpReq.extractInetAddress())
+        val token = authTokenMgr.create(auth.loginName, "", now)
 
-        return SignUpResult(
+        return AuthenticationResult(
             loginName = auth.loginName,
             accessToken = token.credentials,
             accessTokenExpiresAfter = token.expiration,
@@ -51,27 +51,21 @@ internal class SignUpServiceImpl(
         }
     }
 
-    private fun SignUpRequest.toAuthentication(
-        now: LocalDateTime,
-        ipAddr: InetAddress
-    ): Pair<FreshHttpAuthorizationToken, Authentication> {
+    private fun AuthenticationRequest.toAuthentication(now: LocalDateTime, ipAddr: InetAddress): Authentication {
         val req = this@toAuthentication
-        val token = authTokenMgr.create(loginName, "", now)
 
-        val auth = Authentication().apply {
-            this.loginName = req.loginName
-            this.password = req.password.value.toSha256Bytes()
-            this.createdDate = now
-            this.createdIp = ipAddr
-            this.lastActiveDate = now
-            this.lastActiveIp = ipAddr
-            this.lastActivePlatformType = req.platformType
-            this.lastActivePlatformVersion = req.platformVersion
-            this.lastActiveAppVersion = req.appVersion
+        return Authentication().apply {
+            loginName = req.loginName
+            password = req.password.value.toSha256Bytes()
+            createdDate = now
+            createdIp = ipAddr
+            lastActiveDate = now
+            lastActiveIp = ipAddr
+            lastActivePlatformType = req.platformType
+            lastActivePlatformVersion = req.platformVersion
+            lastActiveAppVersion = req.appVersion
 
-            this.createRefreshToken(now, authProps.refreshTokenAliveDays)
+            createRefreshToken(now, authProps.refreshTokenAliveDays)
         }
-
-        return Pair(token, auth)
     }
 }

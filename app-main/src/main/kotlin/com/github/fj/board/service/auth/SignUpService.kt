@@ -4,8 +4,8 @@
  */
 package com.github.fj.board.service.auth
 
-import com.github.fj.board.endpoint.v1.auth.dto.SignUpRequest
-import com.github.fj.board.vo.auth.SignUpResult
+import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
+import com.github.fj.board.vo.auth.AuthenticationResult
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -13,5 +13,5 @@ import javax.servlet.http.HttpServletRequest
  * @since 12 - Jul - 2020
  */
 interface SignUpService {
-    fun signUp(req: SignUpRequest, httpReq: HttpServletRequest): SignUpResult
+    fun signUp(req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResult
 }

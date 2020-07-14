@@ -5,7 +5,7 @@
 package test.endpoint.v1.auth.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fj.board.endpoint.v1.auth.dto.SignUpRequest;
+import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest;
 import com.github.fj.board.persistence.model.auth.PlatformType;
 import com.github.fj.lib.util.ProtectedProperty;
 import de.skuzzle.semantic.Version;
@@ -21,17 +21,17 @@ import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 12 - Jul - 2020
  */
-public final class SignUpRequestBuilder {
+public final class AuthenticationRequestBuilder {
     private String loginName;
     private String password;
     private PlatformType platformType;
     private String platformVersion;
     private String appVersion;
 
-    public SignUpRequestBuilder() {
+    public AuthenticationRequestBuilder() {
     }
 
-    public SignUpRequestBuilder(final SignUpRequest src) {
+    public AuthenticationRequestBuilder(final AuthenticationRequest src) {
         this.loginName = src.getLoginName();
         this.password = src.getPassword().getValue();
         this.platformType = src.getPlatformType();
@@ -39,33 +39,33 @@ public final class SignUpRequestBuilder {
         this.appVersion = src.getAppVersion().toString();
     }
 
-    public SignUpRequestBuilder loginName(final String loginName) {
+    public AuthenticationRequestBuilder loginName(final String loginName) {
         this.loginName = loginName;
         return this;
     }
 
-    public SignUpRequestBuilder password(final String password) {
+    public AuthenticationRequestBuilder password(final String password) {
         this.password = password;
         return this;
     }
 
-    public SignUpRequestBuilder platformType(final PlatformType platformType) {
+    public AuthenticationRequestBuilder platformType(final PlatformType platformType) {
         this.platformType = platformType;
         return this;
     }
 
-    public SignUpRequestBuilder platformVersion(final String platformVersion) {
+    public AuthenticationRequestBuilder platformVersion(final String platformVersion) {
         this.platformVersion = platformVersion;
         return this;
     }
 
-    public SignUpRequestBuilder appVersion(final String appVersion) {
+    public AuthenticationRequestBuilder appVersion(final String appVersion) {
         this.appVersion = appVersion;
         return this;
     }
 
-    public SignUpRequest build() {
-        return new SignUpRequest(
+    public AuthenticationRequest build() {
+        return new AuthenticationRequest(
                 /* loginName */       loginName,
                 /* password */        new ProtectedProperty<>(password),
                 /* platformType */    platformType,
@@ -86,12 +86,12 @@ public final class SignUpRequestBuilder {
         return jsonMapper.writeValueAsString(rawRequest);
     }
 
-    public static SignUpRequest createRandom() {
-        return new SignUpRequestBuilder()
+    public static AuthenticationRequest createRandom() {
+        return new AuthenticationRequestBuilder()
                 .loginName(getRandomAlphaNumericString(
-                        getRandomPositiveInt(SignUpRequest.LOGIN_NAME_SIZE_MIN, SignUpRequest.LOGIN_NAME_SIZE_MAX)
+                        getRandomPositiveInt(AuthenticationRequest.LOGIN_NAME_SIZE_MIN, AuthenticationRequest.LOGIN_NAME_SIZE_MAX)
                 ))
-                .password(getRandomAlphaNumericString((int) SignUpRequest.PASSWORD_SIZE))
+                .password(getRandomAlphaNumericString((int) AuthenticationRequest.PASSWORD_SIZE))
                 .platformType(randomEnumConst(PlatformType.class))
                 .platformVersion(getRandomAlphaNumericString(64))
                 .appVersion(Version.ZERO.toString())

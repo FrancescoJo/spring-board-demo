@@ -5,8 +5,8 @@
 package com.github.fj.board.endpoint.v1.auth
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.auth.dto.SignUpRequest
-import com.github.fj.board.endpoint.v1.auth.dto.SignUpResponse
+import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
+import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.service.auth.SignUpService
@@ -32,7 +32,7 @@ interface SignUpController {
         path = [ApiPaths.AUTH],
         method = [RequestMethod.POST]
     )
-    fun signUp(@Valid @RequestBody req: SignUpRequest, httpReq: HttpServletRequest): SignUpResponse
+    fun signUp(@Valid @RequestBody req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResponse
 }
 
 /**
@@ -43,7 +43,7 @@ interface SignUpController {
 internal class SignUpControllerImpl(
     private val svc: SignUpService
 ) : SignUpController {
-    override fun signUp(req: SignUpRequest, httpReq: HttpServletRequest): SignUpResponse {
+    override fun signUp(req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResponse {
         LOG.debug("{}: {}", httpReq.requestURI, req)
 
         if (req.platformType == PlatformType.UNDEFINED) {
@@ -52,7 +52,7 @@ internal class SignUpControllerImpl(
 
         val result = svc.signUp(req, httpReq)
 
-        return SignUpResponse.from(result)
+        return AuthenticationResponse.from(result)
     }
 
     companion object {

@@ -20,7 +20,7 @@ import javax.validation.constraints.Pattern
  * @since 29 - Jun - 2020
  */
 @JsonDeserialize
-data class SignUpRequest(
+data class AuthenticationRequest(
     @JsonProperty
     @JsonPropertyDescription(DESC_LOGIN_NAME)
     @get:Pattern(
