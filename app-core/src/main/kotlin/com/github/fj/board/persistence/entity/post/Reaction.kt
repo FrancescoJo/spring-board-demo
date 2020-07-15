@@ -40,7 +40,7 @@ class Reaction : AbstractIncrementalLockableEntity() {
      * when numbers Reaction users of this Post are sufficiently large
      */
     // @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
-    // var users: List<PostReactionUser> = empyList()
+    // var users: MutableList<PostReactionUser> = mutableListOf()
 
     var count: Long = 0L
 

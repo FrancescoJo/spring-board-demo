@@ -77,10 +77,10 @@ class Post : AbstractIncrementalLockableEntity() {
     var contents: String = ""
 
     @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
-    var attachments: List<Attachment> = emptyList()
+    var attachments: MutableList<Attachment> = mutableListOf()
 
     @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
-    var reactions: List<Reaction> = emptyList()
+    var reactions: MutableList<Reaction> = mutableListOf()
 
     override fun toString() = "Post(id=$id, " +
             "accessId=$accessId, " +

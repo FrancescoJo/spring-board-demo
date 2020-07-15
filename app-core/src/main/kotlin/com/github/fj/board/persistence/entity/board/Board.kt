@@ -46,7 +46,7 @@ class Board : AbstractIncrementalLockableEntity() {
      * when numbers Posts of this Board are sufficiently large
      */
     // @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
-    // lateinit var posts: List<Post>
+    // lateinit var posts: MutableList<Post>
 
     override fun toString() = "Board(id=$id, " +
             "accessId=$accessId, " +
