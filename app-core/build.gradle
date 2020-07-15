@@ -9,6 +9,12 @@ apply from: "$project.rootDir/gradle/scripts/jacoco.gradle"
 apply from: "$project.rootDir/gradle/scripts/testing-junit.gradle"
 apply from: "$project.rootDir/gradle/scripts/detekt.gradle"
 
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}
+
 dependencies {
     // region Transitive dependency declarations
     api project(":lib-common")

@@ -1,6 +1,7 @@
 // Kotlin for JVM supports java source level 1.8 currently (Jan 2018)
 apply plugin: "kotlin"
 apply plugin: "kotlin-spring"
+apply plugin: "kotlin-allopen"
 
 sourceCompatibility = version_jvm
 
