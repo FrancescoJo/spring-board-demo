@@ -29,7 +29,7 @@ import javax.validation.Valid
 )
 interface SignUpController {
     @RequestMapping(
-        path = [ApiPaths.AUTH],
+        path = [ApiPaths.ACCOUNT],
         method = [RequestMethod.POST]
     )
     fun signUp(@Valid @RequestBody req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResponse

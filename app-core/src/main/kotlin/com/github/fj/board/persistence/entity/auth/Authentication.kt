@@ -25,7 +25,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "authentications")
-class nAuthentication : AbstractIncrementalLockableEntity() {
+class Authentication : AbstractIncrementalLockableEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0L

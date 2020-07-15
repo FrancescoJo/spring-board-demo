@@ -18,7 +18,7 @@ object ApiPaths {
     const val V1 = "v1"
     const val LATEST_VERSION = V1
 
-    const val AUTH = "$LATEST_VERSION/auth"
+    const val ACCOUNT = "$LATEST_VERSION/account"
 
     const val USER = "$LATEST_VERSION/user"
 

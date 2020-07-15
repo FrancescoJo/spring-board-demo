@@ -20,7 +20,7 @@ import javax.validation.Valid
  */
 interface CreateUserController {
     @RequestMapping(
-        path = [ApiPaths.AUTH],
+        path = [ApiPaths.ACCOUNT],
         method = [RequestMethod.POST]
     )
     fun create(@Valid @RequestBody req: CreateUserRequest, httpServletReq: HttpServletRequest): CreateUserResponse

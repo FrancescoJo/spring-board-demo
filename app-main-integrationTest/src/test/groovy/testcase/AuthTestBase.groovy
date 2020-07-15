@@ -33,7 +33,7 @@ class AuthTestBase extends IntegrationTestBase {
         final reqSpec = jsonRequestSpec()
                 .when()
                 .body(request)
-                .post(ApiPaths.AUTH)
+                .post(ApiPaths.ACCOUNT)
 
         return expectResponse(reqSpec.then().assertThat().statusCode(is(200)), AuthenticationResponse.class)
     }
@@ -61,7 +61,7 @@ class AuthTestBase extends IntegrationTestBase {
                     .body(request)
         }
 
-        return reqSpec.post(ApiPaths.AUTH)
+        return reqSpec.post(ApiPaths.ACCOUNT)
     }
 
     static RequestFieldsSnippet authRequestFieldsDoc() {
