@@ -4,51 +4,85 @@
  */
 package testcase.service.auth
 
+import com.github.fj.board.appconfig.CodecConfig
+import com.github.fj.board.component.auth.AuthTokenManager
+import com.github.fj.board.component.property.AppAuthProperties
+import com.github.fj.board.exception.client.LoginNotAllowedException
+import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
+import com.github.fj.board.service.auth.SignInService
+import com.github.fj.board.service.auth.SignInServiceImpl
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.MockitoAnnotations
+import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
+import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
+import javax.servlet.http.HttpServletRequest
+
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 14 - Jul - 2020
  */
 class SignInServiceTest {
-//    private lateinit var sut: SignUpService
-//
-//    @BeforeEach
-//    internal fun setup() {
-//        MockitoAnnotations.initMocks(this)
-//
-//        this.sut = SignInServiceImpl()
-//    }
-//
-//    @Test
-//    fun `an attempt without nonexistent loginName causes LoginNotAllowedException`() {
+    private val base62Encoder = CodecConfig().base62()
+
+    @Mock
+    private lateinit var authProps: AppAuthProperties
+
+    @Mock
+    private lateinit var authRepo: AuthenticationRepository
+
+    @Mock
+    private lateinit var authTokenMgr: AuthTokenManager
+
+    private lateinit var sut: SignInService
+
+    @BeforeEach
+    internal fun setup() {
+        MockitoAnnotations.initMocks(this)
+
+        this.sut = SignInServiceImpl(base62Encoder, authProps, authRepo, authTokenMgr)
+    }
+
+    @Test
+    fun `an attempt without nonexistent loginName causes LoginNotAllowedException`() {
+        // given:
+        val request = AuthenticationRequestBuilder.createRandom()
+        val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
+
+        // when:
+        `when`(authRepo.findByLoginName(anyString())).thenReturn(null)
+
+        // then:
+        assertThrows<LoginNotAllowedException> {
+            sut.signIn(request, httpReq)
+        }
+    }
+
+    @Test
+    fun `an attempt with wrong password causes LoginNotAllowedException`() {
 //        // given:
 //        val request = AuthenticationRequestBuilder.createRandom()
 //        val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
-//
-//        // when:
-//        `when`(authRepo.findByLoginName(anyString())).thenReturn(null)
-//
-//        // then:
-//        assertThrows<LoginNotAllowedException> {
-//            sut.signIn(request, httpReq, utcNow())
-//        }
-//    }
-//
-//    @Test
-//    fun `an attempt with wrong password causes LoginNotAllowedException`() {
-//        // given:
-//        val request = AuthenticationRequestBuilder.createRandom()
-//        val mockAuthentication = AuthenticationBuilder(request.toAuthentication())
+//        val mockAuthentication = AuthenticationBuilder(base62Encoder, AuthenticationBuilder.createRandom())
 //                        .password("")
 //                        .build()
 //
+//        // when:
+//        `when`(authRepo.findByLoginName(request.loginName)).thenReturn(mockAuthentication)
+//
 //        // expect:
 //        assertThrows<LoginNotAllowedException> {
-//            sut.signIn(request, httpReq, utcNow())
+//            sut.signIn(request, httpReq)
 //        }
-//    }
-//
-//    @Test
-//    fun `successful signIn attempt updates old Authentication and backed as AuthenticationResult`() {
+    }
+
+    @Test
+    fun `successful signIn attempt updates old Authentication and backed as AuthenticationResult`() {
 //        // given:
 //        val request = AuthenticationRequestBuilder.createRandom()
 //        val mockAuthentication = AuthenticationBuilder(request.toAuthentication())
@@ -61,7 +95,7 @@ class SignInServiceTest {
 //        verify(authRepo, times(1)).save(any<Authentication>())
 //
 //        verify(mockAuthentication, times(1)).lastActiveDate = timestamp
-//    }
+    }
 
 //    private fun prepareSignIn(request: AuthRequest, savedAuth: Authentication) {
 //        // given:
