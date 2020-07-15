@@ -12,6 +12,6 @@ import javax.servlet.http.HttpServletRequest
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 12 - Jul - 2020
  */
-interface SignUpService {
+interface SignUpService : AuthenticationService {
     fun signUp(req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResult
 }

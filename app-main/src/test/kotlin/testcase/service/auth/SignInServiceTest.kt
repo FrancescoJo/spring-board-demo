@@ -7,19 +7,26 @@ package testcase.service.auth
 import com.github.fj.board.appconfig.CodecConfig
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
+import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.exception.client.LoginNotAllowedException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignInService
 import com.github.fj.board.service.auth.SignInServiceImpl
+import com.github.fj.board.util.extractInetAddress
+import com.github.fj.lib.time.utcNow
+import com.github.fj.lib.util.getRandomAlphaNumericString
+import com.nhaarman.mockitokotlin2.any
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
+import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import javax.servlet.http.HttpServletRequest
 
@@ -28,7 +35,10 @@ import javax.servlet.http.HttpServletRequest
  * @since 14 - Jul - 2020
  */
 class SignInServiceTest {
-    private val base62Encoder = CodecConfig().base62()
+    private val base62Codec = CodecConfig().base62()
+
+    @Mock
+    private lateinit var authTokenMgr: AuthTokenManager
 
     @Mock
     private lateinit var authProps: AppAuthProperties
@@ -36,30 +46,27 @@ class SignInServiceTest {
     @Mock
     private lateinit var authRepo: AuthenticationRepository
 
-    @Mock
-    private lateinit var authTokenMgr: AuthTokenManager
-
     private lateinit var sut: SignInService
 
     @BeforeEach
     internal fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        this.sut = SignInServiceImpl(base62Encoder, authProps, authRepo, authTokenMgr)
+        this.sut = SignInServiceImpl(authTokenMgr, base62Codec, authProps, authRepo)
     }
 
     @Test
     fun `an attempt without nonexistent loginName causes LoginNotAllowedException`() {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
-        val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
+        val httpReq = mock(HttpServletRequest::class.java)
 
         // when:
         `when`(authRepo.findByLoginName(anyString())).thenReturn(null)
 
         // then:
         assertThrows<LoginNotAllowedException> {
-            sut.signIn(request, httpReq)
+            sut.signIn(request, httpReq, utcNow())
         }
     }
 
@@ -67,61 +74,56 @@ class SignInServiceTest {
     fun `an attempt with wrong password causes LoginNotAllowedException`() {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
-        val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
+        val httpReq = mock(HttpServletRequest::class.java)
         val mockAuthentication = AuthenticationBuilder(AuthenticationBuilder.createRandom())
-                        .password("")
-                        .build()
+            .password("")
+            .build()
 
         // when:
         `when`(authRepo.findByLoginName(request.loginName)).thenReturn(mockAuthentication)
 
         // expect:
         assertThrows<LoginNotAllowedException> {
-            sut.signIn(request, httpReq)
+            sut.signIn(request, httpReq, utcNow())
         }
     }
 
     @Test
     fun `successful signIn attempt updates old Authentication and backed as AuthenticationResult`() {
-//        // given:
-//        val request = AuthenticationRequestBuilder.createRandom()
-//        val mockAuthentication = AuthenticationBuilder(request.toAuthentication())
-//        val timestamp = utcNow()
-//
-//        // when:
-//        val result = sut.signIn(request, httpReq, timestamp)
-//
-//        // then:
-//        verify(authRepo, times(1)).save(any<Authentication>())
-//
-//        verify(mockAuthentication, times(1)).lastActiveDate = timestamp
-    }
+        // given:
+        val request = AuthenticationRequestBuilder.createRandom()
+        val httpReq = mockLocalhostServletRequest()
+        val mockAuthentication = AuthenticationBuilder(AuthenticationBuilder.createRandom())
+            .password(request.password.value)
+            .build()
+        val mockAccessToken = getRandomAlphaNumericString(128)
+        val now = utcNow()
 
-//    private fun prepareSignIn(request: AuthRequest, savedAuth: Authentication) {
-//        // given:
-//        val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
-//        val mockAccessToken = getRandomAlphaNumericString(128)
-//        val tokenLifespanSecs = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS
-//        val refreshTokenLifespanDays = AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS
-//
-//        // when:
-//        `when`(httpReq.remoteAddr).thenReturn("localhost")
-//        `when`(authTokenMgr.create(anyString(), anyString(), any()))
-//            .thenReturn(
-//                FreshHttpAuthorizationToken(mockAccessToken, utcNow().plusSeconds(tokenLifespanSecs))
-//            )
-//        `when`(authProps.authTokenAliveSecs).thenReturn(tokenLifespanSecs)
-//        `when`(authProps.refreshTokenAliveDays).thenReturn(refreshTokenLifespanDays)
-//        `when`(authRepo.findByLoginName(anyString())).thenReturn(mockAuthentication)
-//    }
-//
-//    private fun AuthenticationRequest.toAuthentication() {
-//        return AuthenticationBuilder(AuthenticationBuilder.createRandom())
-//            .loginName(loginName)
-//            .password(password.value)
-//            .platformType(platformType)
-//            .platformVersion(platformVersion)
-//            .appVersion(appVersion)
-//            .build()
-//    }
+        // and:
+        val tokenLifespanSecs = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS
+        val refreshTokenLifespanDays = AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS
+
+        // when:
+        `when`(authProps.authTokenAliveSecs).thenReturn(tokenLifespanSecs)
+        `when`(authProps.refreshTokenAliveDays).thenReturn(refreshTokenLifespanDays)
+        `when`(authTokenMgr.create(anyString(), anyString(), any())).thenReturn(
+            FreshHttpAuthorizationToken(mockAccessToken, utcNow().plusSeconds(tokenLifespanSecs))
+        )
+        `when`(authRepo.findByLoginName(request.loginName)).thenReturn(mockAuthentication)
+
+        // then:
+        val result = sut.signIn(request, httpReq, now)
+
+        // expect:
+        with (mockAuthentication) {
+            assertThat(lastActiveDate, `is`(now))
+            assertThat(lastActiveIp, `is`(httpReq.extractInetAddress()))
+            assertThat(refreshToken, `is`(base62Codec.decode(result.refreshToken.toByteArray())))
+            assertThat(refreshTokenIssuedAt, `is`(now))
+            assertThat(refreshTokenExpireAt, `is`(now.plusDays(refreshTokenLifespanDays)))
+        }
+
+        // and:
+        verify(authRepo, times(1)).save(mockAuthentication)
+    }
 }

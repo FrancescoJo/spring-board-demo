@@ -86,7 +86,7 @@ class Authentication : AbstractIncrementalLockableEntity() {
             "lastActivePlatformType=$lastActivePlatformType, " +
             "lastActivePlatformVersion='$lastActivePlatformVersion', " +
             "lastActiveAppVersion=$lastActiveAppVersion, " +
-            "refreshToken=[PROTECTED]" +
+            "refreshToken=[PROTECTED], " +
             "refreshTokenIssuedAt=$refreshTokenIssuedAt, " +
             "refreshTokenExpireAt=$refreshTokenExpireAt, " +
             "version=$version, " +

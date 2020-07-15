@@ -27,6 +27,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
+import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import java.time.temporal.ChronoUnit
 import javax.servlet.http.HttpServletRequest
@@ -39,13 +40,13 @@ class SignUpServiceTest {
     private val base62Encoder = CodecConfig().base62()
 
     @Mock
+    private lateinit var authTokenMgr: AuthTokenManager
+
+    @Mock
     private lateinit var authProps: AppAuthProperties
 
     @Mock
     private lateinit var authRepo: AuthenticationRepository
-
-    @Mock
-    private lateinit var authTokenMgr: AuthTokenManager
 
     private lateinit var sut: SignUpService
 
@@ -53,7 +54,7 @@ class SignUpServiceTest {
     internal fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        this.sut = SignUpServiceImpl(base62Encoder, authProps, authRepo, authTokenMgr)
+        this.sut = SignUpServiceImpl(authTokenMgr, base62Encoder, authProps, authRepo)
     }
 
     @Test
@@ -75,13 +76,12 @@ class SignUpServiceTest {
     fun `successful signUp attempt is stored and backed as AuthenticationResult`() {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
-        val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
+        val httpReq = mockLocalhostServletRequest()
         val mockAccessToken = getRandomAlphaNumericString(128)
         val tokenLifespanSecs = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS
         val refreshTokenLifespanDays = AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS
 
         // when:
-        `when`(httpReq.remoteAddr).thenReturn("localhost")
         `when`(authProps.authTokenAliveSecs).thenReturn(tokenLifespanSecs)
         `when`(authProps.refreshTokenAliveDays).thenReturn(refreshTokenLifespanDays)
         `when`(authRepo.findByLoginName(anyString())).thenReturn(null)

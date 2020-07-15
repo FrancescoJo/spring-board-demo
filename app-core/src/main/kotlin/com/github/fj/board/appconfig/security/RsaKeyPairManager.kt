@@ -58,7 +58,7 @@ internal class RsaKeyPairManager @Inject constructor(
 
         synchronized(LATEST_ENTRY_WRITE_LOCK) {
             if (latestKeyPair == null) {
-                keyPairRepo.findLatestOneYoungerThan(now.minusSeconds(tokenLifetime)).takeIf {
+                keyPairRepo.findLatestOneYoungerThan(now.minusHours(tokenLifetime)).takeIf {
                     it != null
                 }?.let {
                     return cache(deriveJwtRsaKeyPair(it))

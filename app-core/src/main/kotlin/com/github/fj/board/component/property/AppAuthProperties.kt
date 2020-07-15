@@ -40,10 +40,10 @@ interface AppAuthProperties {
     val tokenIssuer: String
 
     companion object {
-        val DEFAULT_RSA_KEY_ALIVE_HOURS = TimeUnit.HOURS.toSeconds(24L)
+        val DEFAULT_RSA_KEY_ALIVE_HOURS = TimeUnit.HOURS.toHours(2)
 
         val DEFAULT_AUTH_TOKEN_ALIVE_SECS = TimeUnit.HOURS.toSeconds(2L)
 
-        val DEFAULT_REFRESH_TOKEN_ALIVE_DAYS = TimeUnit.DAYS.toSeconds(180)
+        val DEFAULT_REFRESH_TOKEN_ALIVE_DAYS = TimeUnit.DAYS.toDays(180)
     }
 }

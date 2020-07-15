@@ -26,10 +26,10 @@ import javax.servlet.http.HttpServletRequest
  */
 @Service
 internal class SignUpServiceImpl(
-    private val base62Encoder: Base62,
+    override val authTokenMgr: AuthTokenManager,
+    override val base62Encoder: Base62,
     private val authProps: AppAuthProperties,
-    private val authRepo: AuthenticationRepository,
-    private val authTokenMgr: AuthTokenManager
+    private val authRepo: AuthenticationRepository
 ) : SignUpService {
     override fun signUp(req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResult {
         if (authRepo.findByLoginName(req.loginName) != null) {
@@ -38,15 +38,9 @@ internal class SignUpServiceImpl(
 
         val now = utcNow()
         val auth = req.toAuthentication(now, httpReq.extractInetAddress())
-        val token = authTokenMgr.create(auth.loginName, "", now)
+        val token = auth.deriveAccessTokenAt(now)
 
-        return AuthenticationResult(
-            loginName = auth.loginName,
-            accessToken = token.credentials,
-            accessTokenExpiresAfter = token.expiration,
-            refreshToken = String(base62Encoder.encode(auth.refreshToken)),
-            refreshTokenExpiresAfter = auth.refreshTokenExpireAt
-        ).also {
+        return createAuthResultBy(auth, token).also {
             authRepo.save(auth)
         }
     }
