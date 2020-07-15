@@ -11,6 +11,7 @@ import com.github.fj.board.component.auth.AuthTokenManager.Companion.LOG
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.component.security.HttpAuthorizationToken
+import com.github.fj.board.exception.client.AccessTokenExpiredException
 import com.github.fj.board.exception.client.AuthTokenException
 import com.github.fj.board.exception.server.TokenValidationFailureException
 import com.github.fj.lib.annotation.VisibleForTesting
@@ -94,7 +95,7 @@ internal class JwtAuthTokenManager @Inject constructor(
 
             if (tolerance > expiration) {
                 LOG.debug("Accessing with expired token: {} > {}", tolerance, expiration)
-                throw AuthTokenException()
+                throw AccessTokenExpiredException()
             }
         }
 

@@ -5,13 +5,12 @@
 package com.github.fj.board.endpoint.v1.auth
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
-import com.github.fj.board.exception.client.IllegalRequestException
-import com.github.fj.board.persistence.model.auth.PlatformType
-import com.github.fj.board.service.auth.SignInService
+import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
+import com.github.fj.board.service.auth.RefreshAccessTokenService
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -27,12 +26,16 @@ import javax.validation.Valid
     produces = [MediaType.APPLICATION_JSON_VALUE],
     consumes = [MediaType.APPLICATION_JSON_VALUE]
 )
-interface SignInController {
+interface RefreshAccessTokenController {
     @RequestMapping(
-        path = [ApiPaths.ACCOUNT],
+        path = [ApiPaths.TOKEN],
         method = [RequestMethod.PATCH]
     )
-    fun signIn(@Valid @RequestBody req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResponse
+    fun refresh(
+        tokenAuth: Authentication,
+        @Valid @RequestBody req: RefreshTokenRequest,
+        httpReq: HttpServletRequest
+    ): AuthenticationResponse
 }
 
 /**
@@ -40,22 +43,18 @@ interface SignInController {
  * @since 15 - Jul - 2020
  */
 @RestController
-internal class SignInControllerImpl(
-    private val svc: SignInService
-) : SignInController {
-    override fun signIn(req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResponse {
-        LOG.debug("{}: {}", httpReq.requestURI, req)
-
-        if (req.platformType == PlatformType.UNDEFINED) {
-            throw IllegalRequestException("`platformType` is not specified.")
-        }
-
-        val result = svc.signIn(req, httpReq)
-
-        return AuthenticationResponse.from(result)
+internal class RefreshAccessTokenControllerImpl(
+    private val svc: RefreshAccessTokenService
+) : RefreshAccessTokenController {
+    override fun refresh(
+        tokenAuth: Authentication,
+        req: RefreshTokenRequest,
+        httpReq: HttpServletRequest
+    ): AuthenticationResponse {
+        TODO("Not yet implemented")
     }
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(SignInController::class.java)
+        private val LOG = LoggerFactory.getLogger(RefreshAccessTokenController::class.java)
     }
 }
