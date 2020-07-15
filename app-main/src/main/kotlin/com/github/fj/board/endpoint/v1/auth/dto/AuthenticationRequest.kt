@@ -7,6 +7,7 @@ package com.github.fj.board.endpoint.v1.auth.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.validation.ProtectedPropertySize
 import com.github.fj.lib.util.ProtectedProperty
@@ -51,9 +52,9 @@ data class AuthenticationRequest(
     val appVersion: Version
 ) {
     companion object {
-        const val LOGIN_NAME_SIZE_MIN = 4
-        const val LOGIN_NAME_SIZE_MAX = 16
-        const val PASSWORD_SIZE = 40L
+        const val LOGIN_NAME_SIZE_MIN = Authentication.LOGIN_NAME_SIZE_MIN
+        const val LOGIN_NAME_SIZE_MAX = Authentication.LOGIN_NAME_SIZE_MAX
+        const val PASSWORD_SIZE = Authentication.PASSWORD_SIZE
 
         const val DESC_LOGIN_NAME = "A unique login name to distinguish users. " +
                 "Must between $LOGIN_NAME_SIZE_MIN to $LOGIN_NAME_SIZE_MAX alphanumeric characters."

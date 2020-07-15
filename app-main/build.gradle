@@ -40,9 +40,6 @@ sourceSets {
 dependencies {
     api project(":app-core")
 
-    // JSR-380: javax.validation
-    implementation "javax.validation:validation-api:$version_javax_validation"
-
     // Spring boot
     implementation "org.springframework.boot:spring-boot-starter-undertow:$version_springBoot"
     implementation "org.springframework.boot:spring-boot-starter-actuator:$version_springBoot"

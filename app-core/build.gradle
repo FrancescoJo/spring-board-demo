@@ -21,6 +21,7 @@ dependencies {
 
     // JSR extensions
     api "javax.inject:javax.inject:1"
+    api "javax.validation:validation-api:$version_javax_validation"
 
     // Spring boot
     api "org.springframework.boot:spring-boot-starter:$version_springBoot"

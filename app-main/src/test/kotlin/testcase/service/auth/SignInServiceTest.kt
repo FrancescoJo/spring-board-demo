@@ -65,20 +65,20 @@ class SignInServiceTest {
 
     @Test
     fun `an attempt with wrong password causes LoginNotAllowedException`() {
-//        // given:
-//        val request = AuthenticationRequestBuilder.createRandom()
-//        val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
-//        val mockAuthentication = AuthenticationBuilder(base62Encoder, AuthenticationBuilder.createRandom())
-//                        .password("")
-//                        .build()
-//
-//        // when:
-//        `when`(authRepo.findByLoginName(request.loginName)).thenReturn(mockAuthentication)
-//
-//        // expect:
-//        assertThrows<LoginNotAllowedException> {
-//            sut.signIn(request, httpReq)
-//        }
+        // given:
+        val request = AuthenticationRequestBuilder.createRandom()
+        val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
+        val mockAuthentication = AuthenticationBuilder(AuthenticationBuilder.createRandom())
+                        .password("")
+                        .build()
+
+        // when:
+        `when`(authRepo.findByLoginName(request.loginName)).thenReturn(mockAuthentication)
+
+        // expect:
+        assertThrows<LoginNotAllowedException> {
+            sut.signIn(request, httpReq)
+        }
     }
 
     @Test

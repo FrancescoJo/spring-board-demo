@@ -10,6 +10,7 @@ import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
 import com.github.fj.board.exception.client.LoginNotAllowedException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.vo.auth.AuthenticationResult
+import com.github.fj.lib.security.toSha256Bytes
 import io.seruco.encoding.base62.Base62
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -34,12 +35,11 @@ internal class SignInServiceImpl(
             throw LoginNotAllowedException()
         }
 
-//        val expectedPassword = passwordEncoder.encode(req.password.value)
-//
-//        if (!auth.password.contentEquals(expectedPassword)) {
-//            LOG.info("Wrong password for user '{}'", req.loginName)
-//            throw LoginNotAllowedException()
-//        }
+        val expectedPassword = req.password.value.toSha256Bytes()
+        if (!auth.password.contentEquals(expectedPassword)) {
+            LOG.info("Wrong password for user '{}'", req.loginName)
+            throw LoginNotAllowedException()
+        }
 
         TODO("Not yet implemented")
     }

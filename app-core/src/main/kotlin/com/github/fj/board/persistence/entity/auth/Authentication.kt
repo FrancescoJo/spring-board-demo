@@ -18,6 +18,7 @@ import io.seruco.encoding.base62.Base62
 import java.net.InetAddress
 import java.time.LocalDateTime
 import javax.persistence.*
+import javax.validation.constraints.Size
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -31,6 +32,7 @@ class Authentication : AbstractIncrementalLockableEntity() {
     var id: Long = 0L
 
     @Column(name = "login_name", length = 32, nullable = false, columnDefinition = "VARCHAR(32)")
+    @Size(min = LOGIN_NAME_SIZE_MIN, max = LOGIN_NAME_SIZE_MAX)
     var loginName: String = ""
 
     @Column(length = 32, nullable = false, columnDefinition = "VARBINARY(32)")
@@ -128,5 +130,9 @@ class Authentication : AbstractIncrementalLockableEntity() {
     companion object {
         /** 256 bits */
         const val REFRESH_TOKEN_LENGTH_BYTES = 32
+
+        const val LOGIN_NAME_SIZE_MIN = 4
+        const val LOGIN_NAME_SIZE_MAX = 16
+        const val PASSWORD_SIZE = 40L
     }
 }
