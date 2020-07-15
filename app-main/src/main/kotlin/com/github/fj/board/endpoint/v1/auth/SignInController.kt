@@ -9,7 +9,7 @@ import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.persistence.model.auth.PlatformType
-import com.github.fj.board.service.auth.SignUpService
+import com.github.fj.board.service.auth.SignInService
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestBody
@@ -41,7 +41,7 @@ interface SignInController {
  */
 @RestController
 internal class SignInControllerImpl(
-    private val svc: SignUpService
+    private val svc: SignInService
 ) : SignInController {
     override fun signIn(req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResponse {
         LOG.debug("{}: {}", httpReq.requestURI, req)
@@ -50,7 +50,7 @@ internal class SignInControllerImpl(
             throw IllegalRequestException("`platformType` is not specified.")
         }
 
-        val result = svc.signUp(req, httpReq)
+        val result = svc.signIn(req, httpReq)
 
         return AuthenticationResponse.from(result)
     }
