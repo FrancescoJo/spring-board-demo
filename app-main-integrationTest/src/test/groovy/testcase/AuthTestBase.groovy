@@ -64,6 +64,32 @@ class AuthTestBase extends IntegrationTestBase {
         return reqSpec.post(ApiPaths.ACCOUNT)
     }
 
+    protected final Response sendSignInRequest(
+            final String documentId,
+            final ResponseFieldsSnippet respDoc
+    ) {
+        return sendSignUpRequest(documentId, null, respDoc)
+    }
+
+    protected final Response sendSignInRequest(
+            final String documentId,
+            final Object request,
+            final ResponseFieldsSnippet respDoc
+    ) {
+        final RequestSpecification reqSpec
+
+        if (request == null) {
+            reqSpec = jsonRequestSpec(documentId, respDoc)
+                    .when()
+        } else {
+            reqSpec = jsonRequestSpec(documentId, authRequestFieldsDoc(), respDoc)
+                    .when()
+                    .body(request)
+        }
+
+        return reqSpec.patch(ApiPaths.ACCOUNT)
+    }
+
     static RequestFieldsSnippet authRequestFieldsDoc() {
         return requestFields(
                 fieldWithPath("loginName")
@@ -106,6 +132,6 @@ class AuthTestBase extends IntegrationTestBase {
                         .description(AuthenticationResponse.DESC_REFRESH_TOKEN_EXPIRES_AFTER)
         ]
 
-        return responseFields(baseFieldDescriptors() + fields)
+        return responseFields(basicFieldsDoc() + fields)
     }
 }

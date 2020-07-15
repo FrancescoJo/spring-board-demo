@@ -23,7 +23,7 @@ import static org.hamcrest.CoreMatchers.is
 class SignUpSpec extends AuthTestBase {
     def "empty request payload does nothing"() {
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-emptyRequest", getErrorResponseFields())
+        final reqSpec = sendSignUpRequest("signUp-error-emptyRequest", getErrorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -40,7 +40,7 @@ class SignUpSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-wrongLoginName-#$docId", request, getErrorResponseFields())
+        final reqSpec = sendSignUpRequest("signUp-error-wrongLoginName-#$docId", request, getErrorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -63,7 +63,7 @@ class SignUpSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-wrongPassword-#$docId", request, getErrorResponseFields())
+        final reqSpec = sendSignUpRequest("signUp-error-wrongPassword-#$docId", request, getErrorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -84,7 +84,7 @@ class SignUpSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-unknownClientPlatform", request, getErrorResponseFields())
+        final reqSpec = sendSignUpRequest("signUp-error-unknownClientPlatform", request, getErrorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -100,7 +100,7 @@ class SignUpSpec extends AuthTestBase {
                 .buildAsJsonBy(getJsonMapper())
 
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-wrongClientAppVersion", request, getErrorResponseFields())
+        final reqSpec = sendSignUpRequest("signUp-error-wrongClientAppVersion", request, getErrorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -115,7 +115,7 @@ class SignUpSpec extends AuthTestBase {
         createAuthFor(request)
 
         when:
-        final reqSpec = sendSignUpRequest("signup-error-duplicatedLoginName", request, getErrorResponseFields())
+        final reqSpec = sendSignUpRequest("signup-error-duplicatedLoginName", request, getErrorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(409))).body
@@ -138,9 +138,9 @@ class SignUpSpec extends AuthTestBase {
         expect:
         response.loginName == request.loginName
         !response.accessToken.value.isEmpty()
-        response.accessTokenExpiresAfter > now
+        response.accessTokenExpiresAfter >= now
         !response.refreshToken.value.isEmpty()
-        response.refreshTokenExpiresAfter > now
-        response.refreshTokenExpiresAfter > response.accessTokenExpiresAfter
+        response.refreshTokenExpiresAfter >= now
+        response.refreshTokenExpiresAfter >= response.accessTokenExpiresAfter
     }
 }

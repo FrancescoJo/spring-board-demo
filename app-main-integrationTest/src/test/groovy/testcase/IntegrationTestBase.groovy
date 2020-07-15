@@ -104,7 +104,9 @@ class IntegrationTestBase extends Specification {
         if (DECLARED_DOCUMENT_IDS.contains(documentId)) {
             throw new IllegalArgumentException("Document id '$documentId' is already declared.")
         } else {
-            DECLARED_DOCUMENT_IDS.add(documentId)
+            if (!documentId.isEmpty()) {
+                DECLARED_DOCUMENT_IDS.add(documentId)
+            }
         }
 
         final List<Snippet> snippets = new ArrayList()
@@ -181,7 +183,7 @@ class IntegrationTestBase extends Specification {
         }
     }
 
-    static List<FieldDescriptor> baseFieldDescriptors() {
+    static List<FieldDescriptor> basicFieldsDoc() {
         return [
                 fieldWithPath("type")
                         .type(JsonFieldType.STRING)
@@ -198,7 +200,7 @@ class IntegrationTestBase extends Specification {
     /**
      * Since all API error are in same format({@link ErrorResponseDto}), this method could be handy for documenting error cases.
      */
-    static ResponseFieldsSnippet getErrorResponseFields() {
+    static ResponseFieldsSnippet getErrorResponseFieldsDoc() {
         final List<FieldDescriptor> fields = [
                 fieldWithPath("body.message")
                         .type(JsonFieldType.STRING)
@@ -208,6 +210,6 @@ class IntegrationTestBase extends Specification {
                         .description(ErrorResponseDto.DESC_BODY_CAUSE)
         ]
 
-        return responseFields(baseFieldDescriptors() + fields)
+        return responseFields(basicFieldsDoc() + fields)
     }
 }
