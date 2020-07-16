@@ -76,15 +76,7 @@ class ClientRequestInfoResolverTest {
         }
     }
 
-    // fail if NativeWebRequest object is not compatible to HttpServletRequest
-
-    // ClientRequestInfo is derived even if User-Agent is empty (warns it)
-
-    /*
-    // 0: loginName, 1: user-agent, 2: expected result
-    @ParameterizedTest(name = "ClientRequestInfo is derived from '{1}' to '{2}'")
-    @MethodSource("testSplitPathSegments")
-     */
+    // success
 
     @AfterEach
     fun teardown() {

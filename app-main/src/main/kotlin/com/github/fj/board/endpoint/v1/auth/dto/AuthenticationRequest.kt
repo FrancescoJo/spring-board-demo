@@ -54,13 +54,7 @@ data class AuthenticationRequest(
     @JsonPropertyDescription(DESC_APP_VERSION)
     val appVersion: Version
 ) {
-    fun createClientRequestInfoBy(httpReq: HttpServletRequest) = ClientRequestInfo.create(
-        loginName = loginName,
-        remoteAddr = httpReq.extractInetAddress(),
-        platformType = platformType,
-        platformVer = platformVersion,
-        appVer = appVersion
-    )
+    fun createClientRequestInfoBy(httpReq: HttpServletRequest) = ClientRequestInfo.create(loginName, httpReq)
 
     companion object {
         const val LOGIN_NAME_SIZE_MIN = Authentication.LOGIN_NAME_SIZE_MIN

@@ -17,6 +17,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 import javax.servlet.http.HttpServletRequest
 import com.github.fj.board.util.extractInetAddress
+import com.github.fj.board.vo.auth.UserAgent
 import de.skuzzle.semantic.Version
 
 /**
@@ -40,16 +41,7 @@ class ClientRequestInfoResolver : HandlerMethodArgumentResolver {
         val httpReq: HttpServletRequest = webReq.nativeRequest as? HttpServletRequest
             ?: throw NotImplementedException("HTTP Request processor has been changed.")
 
-        return ClientRequestInfo.create(
-            loginName = authObject.name,
-            remoteAddr = httpReq.extractInetAddress(),
-            platformType = PlatformType.UNDEFINED,
-            platformVer = "",
-            appVer = Version.ZERO
-//            platformType = platformType,
-//            platformVer = platformVersion,
-//            appVer = appVersion
-        )
+        return ClientRequestInfo.create(authObject.name, httpReq)
     }
 
     override fun supportsParameter(parameter: MethodParameter): Boolean =
