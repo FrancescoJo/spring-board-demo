@@ -39,19 +39,5 @@ interface ClientRequestInfo : UserAgent {
                 appVer = appVer
             )
         }
-
-        fun create(
-            loginName: String,
-            remoteAddr: InetAddress,
-            platformType: PlatformType,
-            platformVer: String,
-            appVer: Version
-        ): ClientRequestInfo = Dto(
-            loginName = loginName,
-            remoteAddr = remoteAddr,
-            platformType = platformType,
-            platformVer = platformVer,
-            appVer = appVer
-        )
     }
 }

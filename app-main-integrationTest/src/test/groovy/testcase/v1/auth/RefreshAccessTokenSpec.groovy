@@ -4,10 +4,12 @@
  */
 package testcase.v1.auth
 
+import com.github.fj.board.component.security.HttpAuthorizationToken
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
 import com.github.fj.board.exception.client.RefreshTokenMismatchException
 import com.github.fj.board.persistence.model.auth.PlatformType
+import com.github.fj.board.vo.auth.UserAgent
 import io.restassured.http.Header
 import testcase.AuthTestBase
 
@@ -26,13 +28,13 @@ class RefreshAccessTokenSpec extends AuthTestBase {
         when:
         final reqSpec = jsonRequestSpec()
                 .when()
-                .header(new Header("Authorization", "Token ${createdAuth.accessToken.value}"))
-                .header(new Header("User-Agent", "${PlatformType.WEB.userAgentName}; "))
+                .header(new Header(HttpAuthorizationToken.HEADER_NAME, "Token ${createdAuth.accessToken.value}"))
+                .header(new Header(UserAgent.HEADER_NAME, "${PlatformType.WEB.userAgentName}; "))
                 .body(request)
                 .patch(ApiPaths.TOKEN)
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(403))).body
 
         expect:
         errorBody.cause == RefreshTokenMismatchException.class.simpleName

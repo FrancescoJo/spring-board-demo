@@ -10,17 +10,14 @@ import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.exception.client.LoginNameNotFoundException
 import com.github.fj.board.exception.client.RefreshTokenMismatchException
-import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.RefreshAccessTokenService
 import com.github.fj.board.service.auth.RefreshAccessTokenServiceImpl
-import com.github.fj.board.util.extractInetAddress
 import com.github.fj.board.vo.auth.ClientRequestInfo
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getRandomAlphaNumericString
 import com.nhaarman.mockitokotlin2.any
-import de.skuzzle.semantic.Version
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.greaterThanOrEqualTo
 import org.hamcrest.Matchers.not
@@ -33,7 +30,6 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
 import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
-import test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst
 import test.endpoint.v1.auth.dto.RefreshTokenRequestBuilder
 
 /**
@@ -151,9 +147,6 @@ class RefreshAccessTokenServiceTest {
 
     private fun createClientRequestInfoBy(loginName: String) = ClientRequestInfo.create(
         loginName = loginName,
-        remoteAddr = mockLocalhostServletRequest().extractInetAddress(),
-        platformType = randomEnumConst(PlatformType::class.java),
-        platformVer = "",
-        appVer = Version.COMPLIANCE
+        httpReq = mockLocalhostServletRequest()
     )
 }

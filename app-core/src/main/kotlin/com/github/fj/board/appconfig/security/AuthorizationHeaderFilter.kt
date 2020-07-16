@@ -54,24 +54,23 @@ internal class AuthorizationHeaderFilter(
     }
 
     companion object {
-        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-        private const val HEADER_AUTHORIZATION = "Authorization"
+        private const val HEADER = HttpAuthorizationToken.HEADER_NAME
 
         private val AUTHORIZATION_SYNTAX = Pattern.compile("(?i)(Basic|Bearer|Token) [A-Za-z0-9.+_-]+")
 
         private val LOG = LoggerFactory.getLogger(SecurityConfig::class.java)
 
         private fun findAuthorizationHeader(req: HttpServletRequest): HttpAuthorizationToken? =
-            req.getHeader(HEADER_AUTHORIZATION).let { h ->
+            req.getHeader(HEADER).let { h ->
                 when {
                     h.isNullOrEmpty()                 ->
-                        LOG.trace("{}: No {} header in the request.", req.requestURI, HEADER_AUTHORIZATION)
+                        LOG.trace("{}: No {} header in the request.", req.requestURI, HEADER)
                     h.matchesIn(AUTHORIZATION_SYNTAX) -> return h.split(" ").let {
                         MaybeHttpAuthorizationToken(HttpAuthScheme.byTypeValue(it[0]), it[1])
                     }
                     else                              ->
                         LOG.trace(
-                            "{}: {} header does not match the syntax: '{}'", req.requestURI, HEADER_AUTHORIZATION, h
+                            "{}: {} header does not match the syntax: '{}'", req.requestURI, HEADER, h
                         )
                 }
                 return null

@@ -18,6 +18,11 @@ sealed class HttpAuthorizationToken(
     override fun getPrincipal(): HttpAuthScheme = scheme
 
     override fun getCredentials(): String = token
+
+    companion object {
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+        const val HEADER_NAME = "Authorization"
+    }
 }
 
 /**
