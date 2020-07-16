@@ -13,7 +13,7 @@ import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.component.security.HttpAuthorizationToken
 import com.github.fj.board.exception.client.AccessTokenExpiredException
 import com.github.fj.board.exception.client.AuthTokenException
-import com.github.fj.board.exception.server.TokenValidationFailureException
+import com.github.fj.board.exception.client.TokenValidationFailureException
 import com.github.fj.lib.annotation.VisibleForTesting
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.time.utcEpochSecond

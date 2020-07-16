@@ -13,11 +13,11 @@ import com.fasterxml.jackson.annotation.JsonValue
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 27 - Oct - 2018
  */
-enum class PlatformType(val key: String) {
-    ANDROID("a"),
-    IOS("i"),
-    WEB("w"),
-    UNDEFINED("");
+enum class PlatformType(val key: String, val userAgentName: String) {
+    ANDROID("a", "SpringBoard-Android"),
+    IOS("i", "SpringBoard-iOS"),
+    WEB("w", "SpringBoard-Web"),
+    UNDEFINED("", "");
 
     @JsonValue
     @Suppress("unused") // Used by Jackson upon serialising @JsonSerialize annotated classes
@@ -29,5 +29,9 @@ enum class PlatformType(val key: String) {
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         @JvmStatic
         fun byKey(key: String?) = values().firstOrNull { it.key == key } ?: UNDEFINED
+
+        fun byUserAgentName(name: String?) = values().firstOrNull {
+            it.userAgentName.equals(name, ignoreCase = true)
+        } ?: UNDEFINED
     }
 }

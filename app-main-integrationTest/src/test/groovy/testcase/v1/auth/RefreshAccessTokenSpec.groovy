@@ -4,14 +4,41 @@
  */
 package testcase.v1.auth
 
+import com.github.fj.board.endpoint.ApiPaths
+import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
+import com.github.fj.board.exception.client.RefreshTokenMismatchException
+import com.github.fj.board.persistence.model.auth.PlatformType
+import io.restassured.http.Header
+import testcase.AuthTestBase
+
+import static org.hamcrest.CoreMatchers.is
+
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 15 - Jul - 2020
  */
-class RefreshAccessTokenSpec {
-    // "will fail if there is no Authorization header"
+class RefreshAccessTokenSpec extends AuthTestBase {
+    def "fail if refreshToken mismatches"() {
+        given:
+        final createdAuth = createRandomAuth()
+        final request = new RefreshTokenRequest(createdAuth.refreshToken)
 
-    // "will fail if there is no corresponding refreshToken for loginName"
+        when:
+        final reqSpec = jsonRequestSpec()
+                .when()
+                .header(new Header("Authorization", "Token ${createdAuth.accessToken.value}"))
+                .header(new Header("User-Agent", "${PlatformType.WEB.userAgentName}; "))
+                .body(request)
+                .patch(ApiPaths.TOKEN)
 
-    // "will success if refreshToken is matched"
+        then:
+        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+
+        expect:
+        errorBody.cause == RefreshTokenMismatchException.class.simpleName
+    }
+
+    // "fail if given refreshToken is too old": RefreshTokenMismatchException
+
+    // "success if refreshToken is matched"
 }

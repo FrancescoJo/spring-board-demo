@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
- * @since 11 - Nov - 2018
+ * @since 16 - Jul - 2020
  */
-open class TokenValidationFailureException(
-    override val message: String = "Unable to verify token.",
+class NotImplementedException(
+    override val message: String = "An unavailable operation: not implemented.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.UNAUTHORIZED, message, cause)
+) : GeneralHttpException(HttpStatus.NOT_IMPLEMENTED, message, cause)
