@@ -6,7 +6,7 @@ package com.github.fj.board.component.auth
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.fj.board.appconfig.security.RsaKeyPairManager
+import com.github.fj.board.appconfig.security.auth.RsaKeyPairManager
 import com.github.fj.board.component.auth.AuthTokenManager.Companion.LOG
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.FreshHttpAuthorizationToken

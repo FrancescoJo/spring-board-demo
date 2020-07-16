@@ -5,20 +5,27 @@
 package com.github.fj.board.appconfig
 
 import com.github.fj.board.appconfig.security.AuthorizationHeaderFilter
+import com.github.fj.board.appconfig.security.auth.HttpAuthenticationProvider
+import com.github.fj.board.appconfig.security.web.AuthenticationEntryPointImpl
+import com.github.fj.board.appconfig.security.web.AuthenticationFailureHandler
+import com.github.fj.board.appconfig.security.web.SavedRequestAwareAuthenticationSuccessHandler
 import com.github.fj.board.component.auth.AuthTokenManager
-import com.github.fj.board.appconfig.security.HttpAuthenticationProvider
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.AuthenticationEntryPoint
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
@@ -39,26 +46,52 @@ class SecurityConfig @Inject constructor(
      */
     @Autowired(required = false) private val checkBypassUris: List<Pair<String, HttpMethod?>>?
 ) : WebSecurityConfigurerAdapter() {
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.authenticationProvider(tokenAuthProvider())
-    }
-
     // This logic is called only once.
     @Suppress("SpreadOperator")
     override fun configure(http: HttpSecurity) {
         val bypassUris = checkBypassUris.toRequestMatcher()
 
         http.addFilterBefore(AuthorizationHeaderFilter(bypassUris), BasicAuthenticationFilter::class.java)
+            .authenticationProvider(tokenAuthProvider())
             .cors().disable()
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+            .exceptionHandling().authenticationEntryPoint(authEntryPoint())
+            .and()
             .authorizeRequests()
             .requestMatchers(*bypassUris.toTypedArray()).permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .formLogin()
+            .successHandler(loginSuccessHandler())
+            .failureHandler(loginFailureHandler())
+            .and()
+            .logout()
+            .deleteCookies()
+            .invalidateHttpSession(true)
     }
 
     @Bean
     fun tokenAuthProvider(): AuthenticationProvider = HttpAuthenticationProvider(LOG, tokenMgr)
+
+    @Bean
+    fun authEntryPoint(): AuthenticationEntryPoint = AuthenticationEntryPointImpl()
+
+    @Bean
+    fun loginSuccessHandler(): SimpleUrlAuthenticationSuccessHandler = SavedRequestAwareAuthenticationSuccessHandler()
+
+    @Bean
+    fun loginFailureHandler(): SimpleUrlAuthenticationFailureHandler = AuthenticationFailureHandler()
+
+    /**
+     * According to [org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration],
+     * this configuration is must be provided to bypass Spring security default configuration.
+     */
+    @Bean
+    override fun authenticationManager(): AuthenticationManager {
+        return ProviderManager(listOf(tokenAuthProvider()))
+    }
 
     private fun List<Pair<String, HttpMethod?>>?.toRequestMatcher(): List<RequestMatcher> {
         if (this == null) {

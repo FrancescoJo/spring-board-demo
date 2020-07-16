@@ -18,6 +18,8 @@ class UrlAccessConfig {
     @Bean
     fun checkBypassUris(): List<Pair<String, HttpMethod?>> = listOf<Pair<String, HttpMethod?>>(
         // SignUp: SignUpController#signUp
-        ApiPaths.ACCOUNT to HttpMethod.POST
+        ApiPaths.ACCOUNT to HttpMethod.POST,
+        // SignIn: SignUpController#signUp
+        ApiPaths.ACCOUNT to HttpMethod.PATCH
     )
 }

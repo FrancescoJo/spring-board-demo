@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.appconfig.security
+package com.github.fj.board.appconfig.security.auth
 
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.security.HttpAuthScheme

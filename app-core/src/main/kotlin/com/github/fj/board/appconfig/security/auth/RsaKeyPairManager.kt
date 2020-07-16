@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.appconfig.security
+package com.github.fj.board.appconfig.security.auth
 
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.persistence.entity.auth.RsaKeyPair
@@ -39,7 +39,9 @@ internal class RsaKeyPairManager @Inject constructor(
     private val keyPairRepo: RsaKeyPairRepository
 ) {
     @VisibleForTesting
-    internal var lruCache = FastCollectedLruCache.create<UUID, JwtRsaKeyPair>(LRU_CACHE_CAPACITY)
+    internal var lruCache = FastCollectedLruCache.create<UUID, JwtRsaKeyPair>(
+        LRU_CACHE_CAPACITY
+    )
 
     @VisibleForTesting
     internal var pemHandler = PemKeyHandler()
@@ -127,7 +129,12 @@ internal class RsaKeyPairManager @Inject constructor(
     private fun deriveJwtRsaKeyPair(
         keyId: UUID, publicKey: RSAPublicKey, privateKey: RSAPrivateKey, expiredAt: LocalDateTime
     ): JwtRsaKeyPair {
-        return JwtRsaKeyPair(keyId, RSASSAVerifier(publicKey), RSASSASigner(privateKey), expiredAt)
+        return JwtRsaKeyPair(
+            keyId,
+            RSASSAVerifier(publicKey),
+            RSASSASigner(privateKey),
+            expiredAt
+        )
     }
 
     private fun saveRsaKeyPair(keyId: UUID, pubKey: Key, privKey: Key, issuedAt: LocalDateTime) =

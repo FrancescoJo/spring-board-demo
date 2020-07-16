@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.appconfig.security
+package com.github.fj.board.appconfig.security.auth
 
 import com.github.fj.lib.annotation.VisibleForTesting
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -33,7 +33,7 @@ internal open class PemKeyHandler {
             val keyFactory = KeyFactory.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME)
             return@run when (type) {
                 FORMAT_PKCS8 -> keyFactory.generatePrivate(PKCS8EncodedKeySpec(content))
-                FORMAT_X509  -> keyFactory.generatePublic(X509EncodedKeySpec(content))
+                FORMAT_X509 -> keyFactory.generatePublic(X509EncodedKeySpec(content))
                 else         -> throw UnsupportedOperationException("$type type of key generation is not supported.")
             }
         }

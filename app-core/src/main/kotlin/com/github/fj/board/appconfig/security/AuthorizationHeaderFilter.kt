@@ -57,7 +57,7 @@ internal class AuthorizationHeaderFilter(
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
         private const val HEADER_AUTHORIZATION = "Authorization"
 
-        private val AUTHORIZATION_SYNTAX = Pattern.compile("[A-Za-z]+ [A-Za-z0-9.+_-]+")
+        private val AUTHORIZATION_SYNTAX = Pattern.compile("(?i)(Basic|Bearer|Token) [A-Za-z0-9.+_-]+")
 
         private val LOG = LoggerFactory.getLogger(SecurityConfig::class.java)
 

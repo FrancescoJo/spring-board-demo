@@ -4,7 +4,7 @@
  */
 package test.com.github.fj.board.appconfig.security
 
-import com.github.fj.board.appconfig.security.RsaKeyPairManager
+import com.github.fj.board.appconfig.security.auth.RsaKeyPairManager
 import test.com.github.fj.board.component.property.MockAppAuthProperties
 import test.com.github.fj.board.persistence.repository.auth.MockRsaKeyPairRepository
 
