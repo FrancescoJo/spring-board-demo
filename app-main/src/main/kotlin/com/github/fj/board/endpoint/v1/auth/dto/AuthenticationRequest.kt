@@ -9,9 +9,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.model.auth.PlatformType
+import com.github.fj.board.util.extractInetAddress
 import com.github.fj.board.validation.ProtectedPropertySize
+import com.github.fj.board.vo.auth.ClientRequestInfo
 import com.github.fj.lib.util.ProtectedProperty
 import de.skuzzle.semantic.Version
+import javax.servlet.http.HttpServletRequest
 import javax.validation.constraints.Pattern
 
 /**
@@ -51,6 +54,14 @@ data class AuthenticationRequest(
     @JsonPropertyDescription(DESC_APP_VERSION)
     val appVersion: Version
 ) {
+    fun createClientRequestInfoBy(httpReq: HttpServletRequest) = ClientRequestInfo.create(
+        loginName = loginName,
+        remoteAddr = httpReq.extractInetAddress(),
+        platformType = platformType,
+        platformVer = platformVersion,
+        appVer = appVersion
+    )
+
     companion object {
         const val LOGIN_NAME_SIZE_MIN = Authentication.LOGIN_NAME_SIZE_MIN
         const val LOGIN_NAME_SIZE_MAX = Authentication.LOGIN_NAME_SIZE_MAX

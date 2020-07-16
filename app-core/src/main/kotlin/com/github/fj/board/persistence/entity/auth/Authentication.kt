@@ -5,8 +5,8 @@
 package com.github.fj.board.persistence.entity.auth
 
 import com.github.fj.board.persistence.converter.ByteArrayInetAddressConverter
-import com.github.fj.board.persistence.converter.auth.PlatformTypeConverter
 import com.github.fj.board.persistence.converter.SemanticVersionConverter
+import com.github.fj.board.persistence.converter.auth.PlatformTypeConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.auth.PlatformType
@@ -14,7 +14,6 @@ import com.github.fj.lib.net.InetAddressExtensions
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getSecureRandomBytes
-import io.seruco.encoding.base62.Base62
 import java.net.InetAddress
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -111,20 +110,13 @@ class Authentication : AbstractIncrementalLockableEntity() {
         this.refreshTokenExpireAt = timestamp.plusDays(lifespanDays)
     }
 
-    fun validateRefreshToken(base62Codec: Base62, old: String): Boolean {
+    fun validateRefreshToken(oldToken: ByteArray): Boolean {
         // Rare cases
         if (utcNow() > refreshTokenExpireAt) {
             return false
         }
 
-        val oldBytes = old.toByteArray()
-        return try {
-            val decoded = base62Codec.decode(oldBytes)
-
-            /* return try */ refreshToken.contentEquals(decoded)
-        } catch (e: IllegalArgumentException) {
-            false
-        }
+        return refreshToken.contentEquals(oldToken)
     }
 
     companion object {

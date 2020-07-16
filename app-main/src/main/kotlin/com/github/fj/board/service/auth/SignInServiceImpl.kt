@@ -9,14 +9,13 @@ import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
 import com.github.fj.board.exception.client.LoginNotAllowedException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
-import com.github.fj.board.util.extractInetAddress
 import com.github.fj.board.vo.auth.AuthenticationResult
+import com.github.fj.board.vo.auth.ClientRequestInfo
 import com.github.fj.lib.security.toSha256Bytes
 import io.seruco.encoding.base62.Base62
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import javax.servlet.http.HttpServletRequest
 import javax.transaction.Transactional
 
 /**
@@ -26,14 +25,14 @@ import javax.transaction.Transactional
 @Service
 internal class SignInServiceImpl(
     override val authTokenMgr: AuthTokenManager,
-    override val base62Encoder: Base62,
-    private val authProps: AppAuthProperties,
+    override val base62Codec: Base62,
+    override val authProps: AppAuthProperties,
     private val authRepo: AuthenticationRepository
 ) : SignInService {
     @Transactional
     override fun signIn(
         req: AuthenticationRequest,
-        httpReq: HttpServletRequest,
+        clientInfo: ClientRequestInfo,
         timestamp: LocalDateTime
     ): AuthenticationResult {
         val auth = authRepo.findByLoginName(req.loginName) ?: run {
@@ -47,17 +46,7 @@ internal class SignInServiceImpl(
             throw LoginNotAllowedException()
         }
 
-        val token = auth.deriveAccessTokenAt(timestamp)
-
-        auth.apply {
-            createRefreshToken(timestamp, authProps.refreshTokenAliveDays)
-
-            lastActiveDate = timestamp
-            lastActiveIp = httpReq.extractInetAddress()
-            lastActivePlatformType = req.platformType
-            lastActivePlatformVersion = req.platformVersion
-            lastActiveAppVersion = req.appVersion
-        }
+        val token = auth.updateTokens(timestamp, clientInfo)
 
         return createAuthResultBy(auth, token).also {
             authRepo.save(auth)

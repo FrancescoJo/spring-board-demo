@@ -7,18 +7,18 @@ package com.github.fj.board.service.auth
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
-import com.github.fj.board.exception.client.DuplicatedLoginNameException
+import com.github.fj.board.exception.client.LoginNotAllowedException
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
-import com.github.fj.board.util.extractInetAddress
 import com.github.fj.board.vo.auth.AuthenticationResult
+import com.github.fj.board.vo.auth.ClientRequestInfo
 import com.github.fj.lib.security.toSha256Bytes
 import com.github.fj.lib.time.utcNow
 import io.seruco.encoding.base62.Base62
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.net.InetAddress
 import java.time.LocalDateTime
-import javax.servlet.http.HttpServletRequest
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -27,18 +27,19 @@ import javax.servlet.http.HttpServletRequest
 @Service
 internal class SignUpServiceImpl(
     override val authTokenMgr: AuthTokenManager,
-    override val base62Encoder: Base62,
-    private val authProps: AppAuthProperties,
+    override val base62Codec: Base62,
+    override val authProps: AppAuthProperties,
     private val authRepo: AuthenticationRepository
 ) : SignUpService {
-    override fun signUp(req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResult {
+    override fun signUp(req: AuthenticationRequest, clientInfo: ClientRequestInfo): AuthenticationResult {
         if (authRepo.findByLoginName(req.loginName) != null) {
-            throw DuplicatedLoginNameException()
+            LOG.info("Duplicated login name: {}", req.loginName)
+            throw LoginNotAllowedException()
         }
 
         val now = utcNow()
-        val auth = req.toAuthentication(now, httpReq.extractInetAddress())
-        val token = auth.deriveAccessTokenAt(now)
+        val auth = req.toAuthentication(now, clientInfo.remoteAddr)
+        val token = auth.updateTokens(now, clientInfo)
 
         return createAuthResultBy(auth, token).also {
             authRepo.save(auth)
@@ -53,13 +54,10 @@ internal class SignUpServiceImpl(
             password = req.password.value.toSha256Bytes()
             createdDate = now
             createdIp = ipAddr
-            lastActiveDate = now
-            lastActiveIp = ipAddr
-            lastActivePlatformType = req.platformType
-            lastActivePlatformVersion = req.platformVersion
-            lastActiveAppVersion = req.appVersion
-
-            createRefreshToken(now, authProps.refreshTokenAliveDays)
         }
+    }
+
+    companion object {
+        private val LOG = LoggerFactory.getLogger(SignUpService::class.java)
     }
 }

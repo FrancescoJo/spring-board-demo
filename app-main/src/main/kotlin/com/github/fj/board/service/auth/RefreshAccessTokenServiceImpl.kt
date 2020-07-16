@@ -5,12 +5,16 @@
 package com.github.fj.board.service.auth
 
 import com.github.fj.board.component.auth.AuthTokenManager
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
+import com.github.fj.board.component.property.AppAuthProperties
+import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
+import com.github.fj.board.exception.client.LoginNameNotFoundException
+import com.github.fj.board.exception.client.RefreshTokenMismatchException
+import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.vo.auth.AuthenticationResult
+import com.github.fj.board.vo.auth.ClientRequestInfo
 import io.seruco.encoding.base62.Base62
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import javax.servlet.http.HttpServletRequest
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -19,14 +23,30 @@ import javax.servlet.http.HttpServletRequest
 @Service
 class RefreshAccessTokenServiceImpl(
     override val authTokenMgr: AuthTokenManager,
-    override val base62Encoder: Base62
+    override val base62Codec: Base62,
+    override val authProps: AppAuthProperties,
+    private val authRepo: AuthenticationRepository
 ) : RefreshAccessTokenService {
     override fun refreshAuthToken(
-        loginName: String,
-        req: AuthenticationRequest,
-        httpReq: HttpServletRequest,
+        req: RefreshTokenRequest,
+        clientInfo: ClientRequestInfo,
         timestamp: LocalDateTime
     ): AuthenticationResult {
-        TODO("Not yet implemented")
+        val auth = authRepo.findByLoginName(clientInfo.loginName) ?: run {
+            // Guard case
+            throw LoginNameNotFoundException()
+        }
+
+        val givenRefreshToken = req.oldRefreshToken.value.toByteArray()
+
+        if (!auth.validateRefreshToken(givenRefreshToken)) {
+            throw RefreshTokenMismatchException()
+        }
+
+        val token = auth.updateTokens(timestamp, clientInfo)
+
+        return createAuthResultBy(auth, token).also {
+            authRepo.save(auth)
+        }
     }
 }

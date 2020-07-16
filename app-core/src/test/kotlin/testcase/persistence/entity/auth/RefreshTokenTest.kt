@@ -63,7 +63,7 @@ class RefreshTokenTest {
         this.refreshTokenExpireAt = utcNow().minusDays(AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS)
 
         // given:
-        val actual = validateRefreshToken(base62Codec, "")
+        val actual = validateRefreshToken("".toByteArray())
 
         // expect:
         assertFalse(actual)
@@ -72,7 +72,7 @@ class RefreshTokenTest {
     @Test
     fun `refreshToken validation would fail if #old is undecodable base62 format`() = with(sut) {
         // given:
-        val actual = validateRefreshToken(base62Codec, "!@#$%^&*()")
+        val actual = validateRefreshToken("!@#$%^&*()".toByteArray())
 
         // expect:
         assertFalse(actual)
@@ -81,10 +81,10 @@ class RefreshTokenTest {
     @Test
     fun `refreshToken validation would fail if #old mismatches saved one`() = with(sut) {
         // given:
-        val fakeOld = String(base62Codec.encode(getRandomAlphaNumericString(16).toByteArray()))
+        val fakeOld = base62Codec.encode(getRandomAlphaNumericString(16).toByteArray())
 
         // when:
-        val actual = validateRefreshToken(base62Codec, fakeOld)
+        val actual = validateRefreshToken(fakeOld)
 
         // then:
         assertFalse(actual)
@@ -101,12 +101,9 @@ class RefreshTokenTest {
         createRefreshToken(now, lifespan)
 
         // then:
-        val encodedToken = String(base62Codec.encode(this.refreshToken))
+        val actual = validateRefreshToken(this.refreshToken)
 
-        // when:
-        val actual = validateRefreshToken(base62Codec, encodedToken)
-
-        // then:
+        // expect:
         assertTrue(actual)
     }
 }

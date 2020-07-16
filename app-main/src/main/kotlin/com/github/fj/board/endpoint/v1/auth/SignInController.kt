@@ -50,7 +50,8 @@ internal class SignInControllerImpl(
             throw IllegalRequestException("`platformType` is not specified.")
         }
 
-        val result = svc.signIn(req, httpReq)
+        val clientInfo = req.createClientRequestInfoBy(httpReq)
+        val result = svc.signIn(req, clientInfo)
 
         return AuthenticationResponse.from(result)
     }

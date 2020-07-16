@@ -8,7 +8,7 @@ import com.github.fj.board.appconfig.CodecConfig
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.FreshHttpAuthorizationToken
-import com.github.fj.board.exception.client.DuplicatedLoginNameException
+import com.github.fj.board.exception.client.LoginNotAllowedException
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignUpService
@@ -25,12 +25,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import java.time.temporal.ChronoUnit
-import javax.servlet.http.HttpServletRequest
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -61,14 +62,15 @@ class SignUpServiceTest {
     fun `signUp attempt with same loginName causes DuplicatedLoginNameException`() {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
-        val httpReq: HttpServletRequest = mock(HttpServletRequest::class.java)
+        val httpReq = mockLocalhostServletRequest()
+        val clientInfo = request.createClientRequestInfoBy(httpReq)
 
         // when:
         `when`(authRepo.findByLoginName(anyString())).thenReturn(Authentication())
 
         // then:
-        assertThrows<DuplicatedLoginNameException> {
-            sut.signUp(request, httpReq)
+        assertThrows<LoginNotAllowedException> {
+            sut.signUp(request, clientInfo)
         }
     }
 
@@ -77,6 +79,7 @@ class SignUpServiceTest {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
         val httpReq = mockLocalhostServletRequest()
+        val clientInfo = request.createClientRequestInfoBy(httpReq)
         val mockAccessToken = getRandomAlphaNumericString(128)
         val tokenLifespanSecs = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS
         val refreshTokenLifespanDays = AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS
@@ -90,7 +93,7 @@ class SignUpServiceTest {
         )
 
         // then:
-        val result = sut.signUp(request, httpReq)
+        val result = sut.signUp(request, clientInfo)
 
         // expect:
         verify(authRepo, times(1)).save(any<Authentication>())

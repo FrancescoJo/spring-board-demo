@@ -32,7 +32,7 @@ class SignInSpec extends AuthTestBase {
         errorBody.cause == HttpMessageNotReadableException.class.simpleName
     }
 
-    def "would fail if no matching loginName is found"() {
+    def "fail if no matching loginName is found"() {
         given:
         final request = AuthenticationRequestBuilder.createRandom()
 
@@ -46,7 +46,7 @@ class SignInSpec extends AuthTestBase {
         errorBody.cause == LoginNotAllowedException.class.simpleName
     }
 
-    def "would fail if wrong password is given"() {
+    def "fail if wrong password is given"() {
         given: "Preoccupy a user"
         final preRequest = AuthenticationRequestBuilder.createRandom()
         createAuthFor(preRequest)

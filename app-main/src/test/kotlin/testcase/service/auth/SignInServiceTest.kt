@@ -28,7 +28,6 @@ import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
 import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
-import javax.servlet.http.HttpServletRequest
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -59,14 +58,15 @@ class SignInServiceTest {
     fun `an attempt without nonexistent loginName causes LoginNotAllowedException`() {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
-        val httpReq = mock(HttpServletRequest::class.java)
+        val httpReq = mockLocalhostServletRequest()
+        val clientInfo = request.createClientRequestInfoBy(httpReq)
 
         // when:
         `when`(authRepo.findByLoginName(anyString())).thenReturn(null)
 
         // then:
         assertThrows<LoginNotAllowedException> {
-            sut.signIn(request, httpReq, utcNow())
+            sut.signIn(request, clientInfo, utcNow())
         }
     }
 
@@ -74,7 +74,8 @@ class SignInServiceTest {
     fun `an attempt with wrong password causes LoginNotAllowedException`() {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
-        val httpReq = mock(HttpServletRequest::class.java)
+        val httpReq = mockLocalhostServletRequest()
+        val clientInfo = request.createClientRequestInfoBy(httpReq)
         val mockAuthentication = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .password("")
             .build()
@@ -84,7 +85,7 @@ class SignInServiceTest {
 
         // expect:
         assertThrows<LoginNotAllowedException> {
-            sut.signIn(request, httpReq, utcNow())
+            sut.signIn(request, clientInfo, utcNow())
         }
     }
 
@@ -93,6 +94,7 @@ class SignInServiceTest {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
         val httpReq = mockLocalhostServletRequest()
+        val clientInfo = request.createClientRequestInfoBy(httpReq)
         val mockAuthentication = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .password(request.password.value)
             .build()
@@ -112,7 +114,7 @@ class SignInServiceTest {
         `when`(authRepo.findByLoginName(request.loginName)).thenReturn(mockAuthentication)
 
         // then:
-        val result = sut.signIn(request, httpReq, now)
+        val result = sut.signIn(request, clientInfo, now)
 
         // expect:
         with (mockAuthentication) {

@@ -5,8 +5,8 @@
 package testcase.v1.auth
 
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
-import com.github.fj.board.exception.client.DuplicatedLoginNameException
 import com.github.fj.board.exception.client.IllegalRequestException
+import com.github.fj.board.exception.client.LoginNotAllowedException
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.lib.time.DateTimeUtilsKt
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -118,10 +118,10 @@ class SignUpSpec extends AuthTestBase {
         final reqSpec = sendSignUpRequest("signup-error-duplicatedLoginName", request, getErrorResponseFieldsDoc())
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(409))).body
+        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
 
         expect:
-        errorBody.cause == DuplicatedLoginNameException.class.simpleName
+        errorBody.cause == LoginNotAllowedException.class.simpleName
     }
 
     def "plain good sign-up request would be successful"() {

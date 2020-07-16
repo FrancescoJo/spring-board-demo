@@ -50,7 +50,8 @@ internal class SignUpControllerImpl(
             throw IllegalRequestException("`platformType` is not specified.")
         }
 
-        val result = svc.signUp(req, httpReq)
+        val clientInfo = req.createClientRequestInfoBy(httpReq)
+        val result = svc.signUp(req, clientInfo)
 
         return AuthenticationResponse.from(result)
     }
