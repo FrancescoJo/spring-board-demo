@@ -121,7 +121,7 @@ class RefreshAccessTokenServiceTest {
         val req = RefreshTokenRequestBuilder.createRandom()
         val mockAuth = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .loginName(loginName)
-            .refreshToken(req.oldRefreshToken.value.toByteArray())
+            .refreshToken(base62Codec.decode(req.oldRefreshToken.value.toByteArray()))
             .build()
         val clientInfo = createClientRequestInfoBy(loginName)
         val now = utcNow()

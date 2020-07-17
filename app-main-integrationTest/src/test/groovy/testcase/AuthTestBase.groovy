@@ -4,9 +4,11 @@
  */
 package testcase
 
+import com.github.fj.board.component.security.HttpAuthorizationToken
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
+import io.restassured.http.Header
 import io.restassured.response.Response
 import io.restassured.specification.RequestSpecification
 import org.springframework.restdocs.payload.FieldDescriptor
@@ -88,6 +90,33 @@ class AuthTestBase extends IntegrationTestBase {
         }
 
         return reqSpec.patch(ApiPaths.ACCOUNT)
+    }
+
+    protected final RequestSpecification authenticatedRequest(
+            final String documentId,
+            final String accessToken,
+            final RequestFieldsSnippet reqDoc
+    ) {
+        return authenticatedRequest(documentId, accessToken, reqDoc, null)
+    }
+
+    protected final RequestSpecification authenticatedRequest(
+            final String documentId,
+            final String accessToken,
+            final ResponseFieldsSnippet respDoc
+    ) {
+        return authenticatedRequest(documentId, accessToken, null, respDoc)
+    }
+
+    protected final RequestSpecification authenticatedRequest(
+            final String documentId,
+            final String accessToken,
+            final RequestFieldsSnippet reqDoc,
+            final ResponseFieldsSnippet respDoc
+    ) {
+        return jsonRequestSpec(documentId, reqDoc, respDoc)
+                .when()
+                .header(new Header(HttpAuthorizationToken.HEADER_NAME, "Token $accessToken"))
     }
 
     static RequestFieldsSnippet authRequestFieldsDoc() {

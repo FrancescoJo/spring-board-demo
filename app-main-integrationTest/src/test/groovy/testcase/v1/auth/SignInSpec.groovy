@@ -23,7 +23,7 @@ import static org.hamcrest.CoreMatchers.is
 class SignInSpec extends AuthTestBase {
     def "empty request payload does nothing"() {
         when:
-        final reqSpec = sendSignInRequest("signIn-error-emptyRequest", getErrorResponseFieldsDoc())
+        final reqSpec = sendSignInRequest("signIn-error-emptyRequest", errorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -37,7 +37,7 @@ class SignInSpec extends AuthTestBase {
         final request = AuthenticationRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendSignInRequest("signIn-error-loginNameNotFound", request, getErrorResponseFieldsDoc())
+        final reqSpec = sendSignInRequest("signIn-error-loginNameNotFound", request, errorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -57,7 +57,7 @@ class SignInSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendSignInRequest("signIn-error-wrongPassword", request, getErrorResponseFieldsDoc())
+        final reqSpec = sendSignInRequest("signIn-error-wrongPassword", request, errorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -73,7 +73,7 @@ class SignInSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendSignInRequest("signIn-error-unknownClientPlatform", request, getErrorResponseFieldsDoc())
+        final reqSpec = sendSignInRequest("signIn-error-unknownClientPlatform", request, errorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
@@ -89,7 +89,7 @@ class SignInSpec extends AuthTestBase {
                 .buildAsJsonBy(getJsonMapper())
 
         when:
-        final reqSpec = sendSignInRequest("signIn-error-wrongClientAppVersion", request, getErrorResponseFieldsDoc())
+        final reqSpec = sendSignInRequest("signIn-error-wrongClientAppVersion", request, errorResponseFieldsDoc())
 
         then:
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body

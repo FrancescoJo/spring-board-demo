@@ -58,19 +58,7 @@ class TestRecord {
 
 allprojects {
     tasks.withType(Test) { testTask ->
-        testTask.testLogging { logging ->
-            events TestLogEvent.FAILED
-//                    TestLogEvent.SKIPPED,
-//                    TestLogEvent.STANDARD_OUT,
-//                    TestLogEvent.STANDARD_ERROR
-
-            exceptionFormat TestExceptionFormat.FULL
-            showExceptions true
-            showCauses true
-            showStackTraces true
-        }
-
-        // Always try to run all tests for all modules. Build will fail on printing phase,
+        // Always try to run all tests for all modules. Build will fail on printing phase.
         ignoreFailures = true
 
         afterSuite { desc, result ->

@@ -37,7 +37,7 @@ class RefreshAccessTokenServiceImpl(
             throw LoginNameNotFoundException()
         }
 
-        val givenRefreshToken = req.oldRefreshToken.value.toByteArray()
+        val givenRefreshToken = base62Codec.decode(req.oldRefreshToken.value.toByteArray())
 
         if (!auth.validateRefreshToken(givenRefreshToken)) {
             throw RefreshTokenMismatchException()

@@ -8,10 +8,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.fj.board.Application
 import com.github.fj.board.endpoint.AbstractResponseDto
 import com.github.fj.board.endpoint.ErrorResponseDto
+import com.github.fj.board.persistence.model.auth.PlatformType
+import com.github.fj.board.vo.auth.UserAgent
+import de.skuzzle.semantic.Version
 import io.restassured.RestAssured
 import io.restassured.builder.RequestSpecBuilder
 import io.restassured.config.ObjectMapperConfig
 import io.restassured.config.RestAssuredConfig
+import io.restassured.http.Header
 import io.restassured.response.ValidatableResponse
 import io.restassured.specification.RequestSpecification
 import org.junit.Rule
@@ -47,6 +51,8 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
         TestConfigurations.class
 ])
 class IntegrationTestBase extends Specification {
+    static Version TEST_CLIENT_VERSION = Version.parseVersion("1.0.0")
+
     private static final Set<String> DECLARED_DOCUMENT_IDS = new HashSet()
     private static final String DEFAULT_HOST = "localhost"
     private static final int DEFAULT_PORT = 8000
@@ -118,10 +124,16 @@ class IntegrationTestBase extends Specification {
         }
         final Snippet[] snippetsArray = snippets.toArray(new Snippet[snippets.size()]) as Snippet[]
 
+        final String platformInfo = "'${System.getProperty("os.name")}' " +
+                "${System.getProperty("os.version")} " +
+                "${System.getProperty("os.arch")}"
+
         final baseReqSpec = given(this.documentationSpec).log().all()
                 .port(port)
                 .contentType(MediaType.APPLICATION_JSON.toString())
                 .accept(MediaType.APPLICATION_JSON.toString())
+                .header(new Header(UserAgent.HEADER_NAME,
+                        "${PlatformType.WEB.userAgentName}; $TEST_CLIENT_VERSION; $platformInfo"))
 
         if (documentId.isEmpty()) {
             return baseReqSpec
@@ -183,7 +195,7 @@ class IntegrationTestBase extends Specification {
         }
     }
 
-    static List<FieldDescriptor> basicFieldsDoc() {
+    protected static List<FieldDescriptor> basicFieldsDoc() {
         return [
                 fieldWithPath("type")
                         .type(JsonFieldType.STRING)
@@ -200,7 +212,7 @@ class IntegrationTestBase extends Specification {
     /**
      * Since all API error are in same format({@link ErrorResponseDto}), this method could be handy for documenting error cases.
      */
-    static ResponseFieldsSnippet getErrorResponseFieldsDoc() {
+    static ResponseFieldsSnippet errorResponseFieldsDoc() {
         final List<FieldDescriptor> fields = [
                 fieldWithPath("body.message")
                         .type(JsonFieldType.STRING)
