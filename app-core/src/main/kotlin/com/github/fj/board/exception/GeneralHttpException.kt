@@ -4,6 +4,8 @@
  */
 package com.github.fj.board.exception
 
+import com.github.fj.board.exception.generic.ResourceNotFoundException
+import com.github.fj.board.exception.generic.UnauthorisedException
 import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpStatusCodeException
 
@@ -23,11 +25,15 @@ open class GeneralHttpException protected constructor(
     override val cause: Throwable? = null
 ) : RuntimeException(message, cause) {
     companion object {
-        fun create(httpStatus: HttpStatus, resourceName: String = "", cause: Throwable? = null) =
-            if (resourceName.isEmpty()) {
+        fun create(httpStatus: HttpStatus, resourceName: String = "", cause: Throwable? = null) = when (httpStatus) {
+            HttpStatus.NOT_FOUND    -> ResourceNotFoundException(resourceName, cause)
+            HttpStatus.UNAUTHORIZED -> UnauthorisedException(cause = cause)
+            else                    -> if (resourceName.isEmpty()) {
                 GeneralHttpException(httpStatus, httpStatus.reasonPhrase, cause)
             } else {
                 GeneralHttpException(httpStatus, httpStatus.reasonPhrase + ": $resourceName", cause)
             }
+        }
+
     }
 }

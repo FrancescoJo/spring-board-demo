@@ -6,7 +6,7 @@ package testcase.appconfig.controllerParam
 
 import com.github.fj.board.appconfig.controllerParam.ClientRequestInfoResolver
 import com.github.fj.board.component.auth.AuthenticationObjectImpl
-import com.github.fj.board.exception.client.UnauthorisedException
+import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.exception.server.NotImplementedException
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.vo.auth.ClientRequestInfo

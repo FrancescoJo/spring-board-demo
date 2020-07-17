@@ -8,6 +8,7 @@ import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
 import com.github.fj.board.exception.client.RefreshTokenMismatchException
+import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.lib.time.DateTimeUtilsKt
 import com.github.fj.lib.util.ProtectedProperty
@@ -31,7 +32,21 @@ class RefreshAccessTokenSpec extends AuthTestBase {
     private AuthenticationRepository authRepo
 
     def "fail if not authenticated"() {
+        given:
+        final createdAuth = createRandomAuth()
+        final request = new RefreshTokenRequest(createdAuth.refreshToken)
 
+        when:
+        final reqSpec = jsonRequestSpec("refreshAccessToken-error-unauthorised", requestFieldsDoc(), errorResponseFieldsDoc())
+                .when()
+                .body(request)
+                .patch(ApiPaths.TOKEN)
+
+        then:
+        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+
+        expect:
+        errorBody.cause == UnauthorisedException.class.simpleName
     }
 
     def "fail if refreshToken mismatches"() {

@@ -5,9 +5,8 @@
 package com.github.fj.board.appconfig.controllerParam
 
 import com.github.fj.board.component.auth.AuthenticationObjectImpl
-import com.github.fj.board.exception.client.UnauthorisedException
+import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.exception.server.NotImplementedException
-import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.vo.auth.ClientRequestInfo
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder
@@ -16,9 +15,6 @@ import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 import javax.servlet.http.HttpServletRequest
-import com.github.fj.board.util.extractInetAddress
-import com.github.fj.board.vo.auth.UserAgent
-import de.skuzzle.semantic.Version
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
