@@ -95,6 +95,7 @@ fun Boolean.toYn(): String {
     }
 }
 
+@SuppressWarnings("MagicNumber")
 fun ByteArray.toHexString(): String {
     val hexChars = CharArray(this.size * 2)
     for (j in this.indices) {
