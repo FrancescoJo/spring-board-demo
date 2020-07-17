@@ -59,10 +59,10 @@ class TestRecord {
 allprojects {
     tasks.withType(Test) { testTask ->
         testTask.testLogging { logging ->
-            events TestLogEvent.FAILED,
-                    TestLogEvent.SKIPPED,
-                    TestLogEvent.STANDARD_OUT,
-                    TestLogEvent.STANDARD_ERROR
+            events TestLogEvent.FAILED
+//                    TestLogEvent.SKIPPED,
+//                    TestLogEvent.STANDARD_OUT,
+//                    TestLogEvent.STANDARD_ERROR
 
             exceptionFormat TestExceptionFormat.FULL
             showExceptions true
