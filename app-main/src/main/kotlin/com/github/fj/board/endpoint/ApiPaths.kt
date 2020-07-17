@@ -20,6 +20,7 @@ object ApiPaths {
 
     const val ACCOUNT = "$LATEST_VERSION/account"
     const val TOKEN = "$LATEST_VERSION/token"
+    const val PASSWORD = "$LATEST_VERSION/password"
 
     const val USER = "$LATEST_VERSION/user"
 

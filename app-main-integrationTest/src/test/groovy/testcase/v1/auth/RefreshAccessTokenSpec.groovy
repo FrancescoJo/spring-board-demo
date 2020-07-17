@@ -30,6 +30,10 @@ class RefreshAccessTokenSpec extends AuthTestBase {
     @Autowired
     private AuthenticationRepository authRepo
 
+    def "fail if not authenticated"() {
+
+    }
+
     def "fail if refreshToken mismatches"() {
         given:
         final createdAuth = createRandomAuth()

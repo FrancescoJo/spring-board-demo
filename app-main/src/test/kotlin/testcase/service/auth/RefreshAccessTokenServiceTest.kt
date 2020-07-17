@@ -58,7 +58,7 @@ class RefreshAccessTokenServiceTest {
     }
 
     @Test
-    fun `fail if there is auth found for loginName`() {
+    fun `fail if there is no auth found for loginName`() {
         // given:
         val loginName = getRandomAlphaNumericString(8)
         val req = RefreshTokenRequestBuilder.createRandom()
