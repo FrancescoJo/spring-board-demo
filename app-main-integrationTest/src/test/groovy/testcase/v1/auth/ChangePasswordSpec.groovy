@@ -13,6 +13,10 @@ class ChangePasswordSpec {
 
     }
 
+    def "fail if old password mismatches saved one"() {
+
+    }
+
     def "fail if password is not actually changed"() {
 
     }

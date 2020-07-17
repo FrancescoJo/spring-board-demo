@@ -13,7 +13,7 @@ import java.util.*
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 19 - Nov - 2018
  */
-internal data class JwtRsaKeyPair(
+data class JwtRsaKeyPair(
     val keyId: UUID,
 
     /** Must be derived from public key */

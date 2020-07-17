@@ -34,7 +34,7 @@ import javax.inject.Inject
  * @since 19 - Nov - 2018
  */
 @Component
-internal class RsaKeyPairManager @Inject constructor(
+class RsaKeyPairManager @Inject constructor(
     authProps: AppAuthProperties,
     private val keyPairRepo: RsaKeyPairRepository
 ) {
