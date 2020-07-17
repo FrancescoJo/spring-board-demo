@@ -32,11 +32,7 @@ interface RefreshAccessTokenController {
         path = [ApiPaths.TOKEN],
         method = [RequestMethod.PATCH]
     )
-    fun refresh(
-        @Valid @RequestBody req: RefreshTokenRequest,
-        httpReq: HttpServletRequest,
-        clientInfo: ClientRequestInfo
-    ): AuthenticationResponse
+    fun refresh(@Valid @RequestBody req: RefreshTokenRequest, clientInfo: ClientRequestInfo): AuthenticationResponse
 }
 
 /**
@@ -47,12 +43,8 @@ interface RefreshAccessTokenController {
 internal class RefreshAccessTokenControllerImpl(
     private val svc: RefreshAccessTokenService
 ) : RefreshAccessTokenController {
-    override fun refresh(
-        req: RefreshTokenRequest,
-        httpReq: HttpServletRequest,
-        clientInfo: ClientRequestInfo
-    ): AuthenticationResponse {
-        LOG.debug("{}: {}", httpReq.requestURI, req)
+    override fun refresh(req: RefreshTokenRequest, clientInfo: ClientRequestInfo): AuthenticationResponse {
+        LOG.debug("{}: {}", clientInfo.requestUri, req)
 
         val result = svc.refreshAuthToken(req, clientInfo, utcNow())
 

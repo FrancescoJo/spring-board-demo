@@ -11,7 +11,6 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 /**
@@ -27,9 +26,5 @@ interface ChangePasswordController {
         path = [ApiPaths.PASSWORD],
         method = [RequestMethod.PATCH]
     )
-    fun refresh(
-        @Valid @RequestBody req: ChangePasswordRequest,
-        httpReq: HttpServletRequest,
-        clientInfo: ClientRequestInfo
-    )
+    fun refresh(@Valid @RequestBody req: ChangePasswordRequest, clientInfo: ClientRequestInfo)
 }
