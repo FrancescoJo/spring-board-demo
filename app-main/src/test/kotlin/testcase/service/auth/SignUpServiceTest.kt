@@ -12,7 +12,7 @@ import com.github.fj.board.exception.client.LoginNotAllowedException
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignUpService
-import com.github.fj.board.service.auth.SignUpServiceImpl
+import com.github.fj.board.service.auth.impl.SignUpServiceImpl
 import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getRandomAlphaNumericString
 import com.nhaarman.mockitokotlin2.any
@@ -55,7 +55,12 @@ class SignUpServiceTest {
     internal fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        this.sut = SignUpServiceImpl(authTokenMgr, base62Encoder, authProps, authRepo)
+        this.sut = SignUpServiceImpl(
+            authTokenMgr,
+            base62Encoder,
+            authProps,
+            authRepo
+        )
     }
 
     @Test

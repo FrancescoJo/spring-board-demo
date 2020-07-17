@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 
 /**
- * This class wraps all [com.fasterxml.jackson.databind.annotation.JsonSerialize] annotated values within [com.github.fj.restapi.endpoint.OkResponseDto].
+ * This class wraps all [com.fasterxml.jackson.databind.annotation.JsonSerialize] annotated values within [com.github.fj.board.endpoint.OkResponseDto].
  *
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 22 - Oct - 2018

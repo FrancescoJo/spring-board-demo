@@ -12,8 +12,7 @@ import com.github.fj.board.exception.client.LoginNameNotFoundException
 import com.github.fj.board.exception.client.RefreshTokenMismatchException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.RefreshAccessTokenService
-import com.github.fj.board.service.auth.RefreshAccessTokenServiceImpl
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.service.auth.impl.RefreshAccessTokenServiceImpl
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getRandomAlphaNumericString
@@ -29,7 +28,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
-import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
+import test.com.github.fj.board.vo.auth.ClientRequestInfoBuilder
 import test.endpoint.v1.auth.dto.RefreshTokenRequestBuilder
 
 /**
@@ -60,9 +59,8 @@ class RefreshAccessTokenServiceTest {
     @Test
     fun `fail if there is no auth found for loginName`() {
         // given:
-        val loginName = getRandomAlphaNumericString(8)
+        val clientInfo = ClientRequestInfoBuilder.createRandom()
         val req = RefreshTokenRequestBuilder.createRandom()
-        val clientInfo = createClientRequestInfoBy(loginName)
         val now = utcNow()
 
         // expect:
@@ -74,16 +72,15 @@ class RefreshAccessTokenServiceTest {
     @Test
     fun `fail if refreshToken mismatches`() {
         // given:
-        val loginName = getRandomAlphaNumericString(8)
+        val clientInfo = ClientRequestInfoBuilder.createRandom()
         val req = RefreshTokenRequestBuilder.createRandom()
         val mockAuth = AuthenticationBuilder(AuthenticationBuilder.createRandom())
-            .loginName(loginName)
+            .loginName(clientInfo.loginName)
             .build()
-        val clientInfo = createClientRequestInfoBy(loginName)
         val now = utcNow()
 
         // when:
-        `when`(authRepo.findByLoginName(loginName)).thenReturn(mockAuth)
+        `when`(authRepo.findByLoginName(clientInfo.loginName)).thenReturn(mockAuth)
 
         // then:
         assertThrows<RefreshTokenMismatchException> {
@@ -94,19 +91,18 @@ class RefreshAccessTokenServiceTest {
     @Test
     fun `fail if given refreshToken is too old`() {
         // given:
-        val loginName = getRandomAlphaNumericString(8)
+        val clientInfo = ClientRequestInfoBuilder.createRandom()
         val req = RefreshTokenRequestBuilder.createRandom()
         val mockAuth = AuthenticationBuilder(AuthenticationBuilder.createRandom())
-            .loginName(loginName)
+            .loginName(clientInfo.loginName)
             .refreshTokenExpireAt(LOCAL_DATE_TIME_MIN)
             .refreshTokenIssuedAt(LOCAL_DATE_TIME_MIN)
             .build()
 
-        val clientInfo = createClientRequestInfoBy(loginName)
         val now = utcNow()
 
         // when:
-        `when`(authRepo.findByLoginName(loginName)).thenReturn(mockAuth)
+        `when`(authRepo.findByLoginName(clientInfo.loginName)).thenReturn(mockAuth)
 
         // then:
         assertThrows<RefreshTokenMismatchException> {
@@ -117,13 +113,12 @@ class RefreshAccessTokenServiceTest {
     @Test
     fun `success if refreshToken is matched`() {
         // given:
-        val loginName = getRandomAlphaNumericString(8)
+        val clientInfo = ClientRequestInfoBuilder.createRandom()
         val req = RefreshTokenRequestBuilder.createRandom()
         val mockAuth = AuthenticationBuilder(AuthenticationBuilder.createRandom())
-            .loginName(loginName)
+            .loginName(clientInfo.loginName)
             .refreshToken(base62Codec.decode(req.oldRefreshToken.value.toByteArray()))
             .build()
-        val clientInfo = createClientRequestInfoBy(loginName)
         val now = utcNow()
 
         // and:
@@ -131,7 +126,7 @@ class RefreshAccessTokenServiceTest {
         val refreshTokenLifespanDays = AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS
 
         // when:
-        `when`(authRepo.findByLoginName(loginName)).thenReturn(mockAuth)
+        `when`(authRepo.findByLoginName(clientInfo.loginName)).thenReturn(mockAuth)
         `when`(authTokenMgr.create(anyString(), anyString(), any())).thenReturn(
             FreshHttpAuthorizationToken(getRandomAlphaNumericString(128), utcNow().plusSeconds(tokenLifespanSecs))
         )
@@ -144,9 +139,4 @@ class RefreshAccessTokenServiceTest {
         assertThat(result.refreshToken.toByteArray(), not(mockAuth.refreshToken))
         assertThat(result.refreshTokenExpiresAfter, greaterThanOrEqualTo(now))
     }
-
-    private fun createClientRequestInfoBy(loginName: String) = ClientRequestInfo.create(
-        loginName = loginName,
-        httpReq = mockLocalhostServletRequest()
-    )
 }

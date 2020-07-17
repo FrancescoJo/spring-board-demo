@@ -11,7 +11,7 @@ import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.exception.client.LoginNotAllowedException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignInService
-import com.github.fj.board.service.auth.SignInServiceImpl
+import com.github.fj.board.service.auth.impl.SignInServiceImpl
 import com.github.fj.board.util.extractInetAddress
 import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getRandomAlphaNumericString
@@ -51,7 +51,12 @@ class SignInServiceTest {
     internal fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        this.sut = SignInServiceImpl(authTokenMgr, base62Codec, authProps, authRepo)
+        this.sut = SignInServiceImpl(
+            authTokenMgr,
+            base62Codec,
+            authProps,
+            authRepo
+        )
     }
 
     @Test

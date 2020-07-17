@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.service.auth
+package com.github.fj.board.service.auth.impl
 
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
@@ -10,6 +10,7 @@ import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
 import com.github.fj.board.exception.client.LoginNotAllowedException
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
+import com.github.fj.board.service.auth.SignUpService
 import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.board.vo.auth.ClientRequestInfo
 import com.github.fj.lib.security.toSha256Bytes
@@ -51,7 +52,7 @@ internal class SignUpServiceImpl(
 
         return Authentication().apply {
             loginName = req.loginName
-            password = req.password.value.toSha256Bytes()
+            password = hash(req.password)
             createdDate = now
             createdIp = ipAddr
         }

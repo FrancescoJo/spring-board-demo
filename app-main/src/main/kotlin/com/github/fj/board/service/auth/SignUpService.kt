@@ -13,6 +13,6 @@ import javax.servlet.http.HttpServletRequest
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 12 - Jul - 2020
  */
-interface SignUpService : AuthenticationService {
+interface SignUpService : AuthenticationService, PasswordService {
     fun signUp(req: AuthenticationRequest, clientInfo: ClientRequestInfo): AuthenticationResult
 }
