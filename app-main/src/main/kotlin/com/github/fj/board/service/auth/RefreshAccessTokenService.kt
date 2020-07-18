@@ -14,7 +14,7 @@ import java.time.LocalDateTime
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 15 - Jul - 2020
  */
-interface RefreshAccessTokenService : AuthenticationService {
+interface RefreshAccessTokenService : AuthenticationServiceMixin {
     fun refreshAuthToken(
         req: RefreshTokenRequest,
         clientInfo: ClientRequestInfo,

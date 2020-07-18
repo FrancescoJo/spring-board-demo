@@ -2,17 +2,15 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package testcase.persistence.entity.auth
+package testcase.service.auth
 
-import com.github.fj.board.appconfig.CodecConfig
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.persistence.entity.auth.Authentication
-import com.github.fj.board.persistence.entity.auth.Authentication.Companion.REFRESH_TOKEN_LENGTH_BYTES
 import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getRandomAlphaNumericString
 import com.github.fj.lib.util.getRandomPositiveLong
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -24,13 +22,12 @@ import java.time.temporal.ChronoUnit
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 29 - Jun - 2020
  */
-class RefreshTokenTest {
-    private val base62Codec = CodecConfig().base62()
-
+class AuthenticationServiceTest : AbstractAuthenticationTestTemplate() {
     private lateinit var sut: Authentication
 
     @BeforeEach
-    fun setup() {
+    override fun setup() {
+        super.setup()
         this.sut = Authentication()
     }
 
@@ -53,9 +50,9 @@ class RefreshTokenTest {
         createRefreshToken(now, lifespan)
 
         // then:
-        assertThat(refreshToken.size, `is`(REFRESH_TOKEN_LENGTH_BYTES))
-        assertThat(refreshTokenIssuedAt, `is`(now))
-        assertThat(refreshTokenExpireAt, `is`(now.plusDays(lifespan)))
+        MatcherAssert.assertThat(refreshToken.size, Matchers.`is`(Authentication.REFRESH_TOKEN_LENGTH_BYTES))
+        MatcherAssert.assertThat(refreshTokenIssuedAt, Matchers.`is`(now))
+        MatcherAssert.assertThat(refreshTokenExpireAt, Matchers.`is`(now.plusDays(lifespan)))
     }
 
     @Test

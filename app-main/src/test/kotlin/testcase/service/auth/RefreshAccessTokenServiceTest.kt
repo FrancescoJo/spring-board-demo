@@ -27,8 +27,6 @@ import test.endpoint.v1.auth.dto.RefreshTokenRequestBuilder
  * @since 15 - Jul - 2020
  */
 class RefreshAccessTokenServiceTest : AbstractAuthenticationTestTemplate() {
-    private val base62Codec = CodecConfig().base62()
-
     private lateinit var sut: RefreshAccessTokenService
 
     @BeforeEach

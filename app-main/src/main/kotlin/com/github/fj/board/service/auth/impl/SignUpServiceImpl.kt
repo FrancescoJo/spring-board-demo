@@ -13,13 +13,10 @@ import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignUpService
 import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.board.vo.auth.ClientRequestInfo
-import com.github.fj.lib.security.toSha256Bytes
 import com.github.fj.lib.time.utcNow
 import io.seruco.encoding.base62.Base62
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.net.InetAddress
-import java.time.LocalDateTime
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -39,22 +36,14 @@ internal class SignUpServiceImpl(
         }
 
         val now = utcNow()
-        val auth = req.toAuthentication(now, clientInfo.remoteAddr)
+        val auth = Authentication().apply {
+            loginName = req.loginName
+            password = hash(req.password)
+        }
         val token = auth.updateTokens(now, clientInfo)
 
         return createAuthResultBy(auth, token).also {
             authRepo.save(auth)
-        }
-    }
-
-    private fun AuthenticationRequest.toAuthentication(now: LocalDateTime, ipAddr: InetAddress): Authentication {
-        val req = this@toAuthentication
-
-        return Authentication().apply {
-            loginName = req.loginName
-            password = hash(req.password)
-            createdDate = now
-            createdIp = ipAddr
         }
     }
 

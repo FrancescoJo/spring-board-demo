@@ -4,12 +4,18 @@
  */
 package com.github.fj.board.persistence.entity.user
 
-import com.github.fj.board.persistence.converter.user.GenderConverter
+import com.github.fj.board.persistence.converter.ByteArrayInetAddressConverter
+import com.github.fj.board.persistence.converter.SemanticVersionConverter
+import com.github.fj.board.persistence.converter.auth.PlatformTypeConverter
 import com.github.fj.board.persistence.converter.user.StatusConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.auth.Authentication
-import com.github.fj.board.persistence.model.user.Gender
+import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.persistence.model.user.Status
+import com.github.fj.lib.net.InetAddressExtensions
+import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
+import java.net.InetAddress
+import java.time.LocalDateTime
 import javax.persistence.*
 
 /**
@@ -37,19 +43,46 @@ class User : AbstractIncrementalLockableEntity() {
     @Column(length = 128, nullable = false, columnDefinition = "VARCHAR(128)")
     var email: String = ""
 
+    @Column(name = "created_date", nullable = false)
+    var createdDate: LocalDateTime = LOCAL_DATE_TIME_MIN
+
+    @Convert(converter = ByteArrayInetAddressConverter::class)
+    @Column(name = "created_ip", nullable = false, columnDefinition = "VARBINARY(16)")
+    var createdIp: InetAddress = InetAddressExtensions.EMPTY_INET_ADDRESS
+
+    @Column(name = "last_active_date", nullable = false)
+    var lastActiveDate: LocalDateTime = LOCAL_DATE_TIME_MIN
+
+    @Convert(converter = ByteArrayInetAddressConverter::class)
+    @Column(name = "last_active_ip", nullable = false, columnDefinition = "VARBINARY(16)")
+    var lastActiveIp: InetAddress = InetAddressExtensions.EMPTY_INET_ADDRESS
+
+    @Convert(converter = PlatformTypeConverter::class)
+    @Column(name = "last_active_platform_type", length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
+    var lastActivePlatformType: PlatformType = PlatformType.UNDEFINED
+
+    @Column(name = "last_active_platform_version", nullable = false, columnDefinition = "CLOB")
+    var lastActivePlatformVersion: String = ""
+
+    @Convert(converter = SemanticVersionConverter::class)
+    @Column(name = "last_active_app_version", length = 32, nullable = false, columnDefinition = "VARCHAR(32)")
+    var lastActiveAppVersion: de.skuzzle.semantic.Version = de.skuzzle.semantic.Version.ZERO
+
     @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "invited_by", nullable = true)
     var invitedBy: User? = null
-
-    @Convert(converter = GenderConverter::class)
-    @Column(length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
-    var gender: Gender = Gender.UNDEFINED
 
     override fun toString() = "User(id=$id, " +
             "authentication=<lazy> " +
             "nickname='$nickname', " +
             "status=$status, " +
             "email='$email', " +
-            "invitedBy=$invitedBy " +
-            "gender=$gender)"
+            "createdDate=$createdDate, " +
+            "createdIp=$createdIp, " +
+            "lastActiveDate=$lastActiveDate, " +
+            "lastActiveIp=$lastActiveIp, " +
+            "lastActivePlatformType=$lastActivePlatformType, " +
+            "lastActivePlatformVersion='$lastActivePlatformVersion', " +
+            "lastActiveAppVersion=$lastActiveAppVersion, " +
+            "invitedBy=$invitedBy)"
 }

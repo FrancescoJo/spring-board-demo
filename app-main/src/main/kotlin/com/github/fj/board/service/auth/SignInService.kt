@@ -9,13 +9,12 @@ import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.board.vo.auth.ClientRequestInfo
 import com.github.fj.lib.time.utcNow
 import java.time.LocalDateTime
-import javax.servlet.http.HttpServletRequest
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 15 - Jul - 2020
  */
-interface SignInService : AuthenticationService, PasswordService {
+interface SignInService : AuthenticationServiceMixin, PasswordServiceMixin {
     fun signIn(
         req: AuthenticationRequest,
         clientInfo: ClientRequestInfo,

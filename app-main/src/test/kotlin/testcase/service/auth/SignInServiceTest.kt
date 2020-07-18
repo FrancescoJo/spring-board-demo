@@ -51,12 +51,7 @@ class SignInServiceTest {
     internal fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        this.sut = SignInServiceImpl(
-            authTokenMgr,
-            base62Codec,
-            authProps,
-            authRepo
-        )
+        this.sut = SignInServiceImpl(authTokenMgr, base62Codec, authProps, authRepo)
     }
 
     @Test
@@ -123,8 +118,6 @@ class SignInServiceTest {
 
         // expect:
         with (mockAuthentication) {
-            assertThat(lastActiveDate, `is`(now))
-            assertThat(lastActiveIp, `is`(httpReq.extractInetAddress()))
             assertThat(refreshToken, `is`(base62Codec.decode(result.refreshToken.toByteArray())))
             assertThat(refreshTokenIssuedAt, `is`(now))
             assertThat(refreshTokenExpireAt, `is`(now.plusDays(refreshTokenLifespanDays)))

@@ -14,7 +14,7 @@ import com.github.fj.lib.util.ProtectedProperty
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 17 - Jul - 2020
  */
-interface PasswordService {
+interface PasswordServiceMixin {
     fun hash(password: ProtectedProperty<String>): ByteArray =
         password.value.toSha256Bytes()
 

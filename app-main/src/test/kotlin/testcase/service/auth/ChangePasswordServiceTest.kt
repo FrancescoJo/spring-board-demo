@@ -4,7 +4,6 @@
  */
 package testcase.service.auth
 
-import com.github.fj.board.appconfig.CodecConfig
 import com.github.fj.board.exception.client.DuplicatedPasswordException
 import com.github.fj.board.exception.client.LoginNameNotFoundException
 import com.github.fj.board.exception.client.WrongPasswordException
@@ -30,8 +29,6 @@ import test.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
  * @since 17 - Jul - 2020
  */
 class ChangePasswordServiceTest : AbstractAuthenticationTestTemplate() {
-    private val base62Codec = CodecConfig().base62()
-
     private lateinit var sut: ChangePasswordService
 
     @BeforeEach

@@ -4,11 +4,13 @@
  */
 package testcase.service.auth
 
+import com.github.fj.board.appconfig.CodecConfig
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
+import com.github.fj.board.service.auth.AuthenticationServiceMixin
 import com.github.fj.board.vo.auth.ClientRequestInfo
 import com.github.fj.lib.annotation.CallSuper
 import com.github.fj.lib.util.getRandomAlphaNumericString
@@ -26,12 +28,14 @@ import java.time.LocalDateTime
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 18 - Jul - 2020
  */
-abstract class AbstractAuthenticationTestTemplate {
-    @Mock
-    protected lateinit var authTokenMgr: AuthTokenManager
+abstract class AbstractAuthenticationTestTemplate : AuthenticationServiceMixin {
+    override val base62Codec = CodecConfig().base62()
 
     @Mock
-    protected lateinit var authProps: AppAuthProperties
+    override lateinit var authTokenMgr: AuthTokenManager
+
+    @Mock
+    override lateinit var authProps: AppAuthProperties
 
     @Mock
     protected lateinit var authRepo: AuthenticationRepository
