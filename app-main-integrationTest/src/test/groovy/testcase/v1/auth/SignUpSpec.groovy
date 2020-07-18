@@ -6,7 +6,7 @@ package testcase.v1.auth
 
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import com.github.fj.board.exception.client.IllegalRequestException
-import com.github.fj.board.exception.client.LoginNotAllowedException
+import com.github.fj.board.exception.client.auth.LoginNotAllowedException
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.lib.time.DateTimeUtilsKt
 import org.springframework.http.converter.HttpMessageNotReadableException

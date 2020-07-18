@@ -53,10 +53,10 @@ private class UnicodeCharsLengthValidator : ConstraintValidator<UnicodeCharsLeng
         this.max = it.max
     } ?: Unit
 
-    override fun isValid(value: CharSequence?, context: ConstraintValidatorContext?): Boolean {
-        val str = value?.toString() ?: return true
-        val graphemeCnt = str.unicodeGraphemeCount()
-
-        return graphemeCnt in min..max
-    }
+    override fun isValid(value: CharSequence?, context: ConstraintValidatorContext?): Boolean =
+        if (value !is String) {
+            true
+        } else {
+            value.unicodeGraphemeCount() in min..max
+        }
 }

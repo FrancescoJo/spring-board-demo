@@ -8,7 +8,7 @@ import com.github.fj.board.appconfig.CodecConfig
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.FreshHttpAuthorizationToken
-import com.github.fj.board.exception.client.LoginNotAllowedException
+import com.github.fj.board.exception.client.auth.LoginNotAllowedException
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignUpService

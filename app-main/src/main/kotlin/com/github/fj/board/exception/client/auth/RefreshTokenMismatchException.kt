@@ -2,16 +2,16 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.exception.client
+package com.github.fj.board.exception.client.auth
 
 import com.github.fj.board.exception.GeneralHttpException
 import org.springframework.http.HttpStatus
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
- * @since 18 - Jul - 2020
+ * @since 16 - Jul - 2020
  */
-class WrongPasswordException(
-    override val message: String = "Wrong password.",
+class RefreshTokenMismatchException(
+    override val message: String = "Refresh token mismatch.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.BAD_REQUEST, message, cause)
+) : GeneralHttpException(HttpStatus.FORBIDDEN, message, cause)

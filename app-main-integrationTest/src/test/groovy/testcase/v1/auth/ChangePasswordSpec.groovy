@@ -7,8 +7,8 @@ package testcase.v1.auth
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequest
-import com.github.fj.board.exception.client.DuplicatedPasswordException
-import com.github.fj.board.exception.client.WrongPasswordException
+import com.github.fj.board.exception.client.auth.DuplicatedPasswordException
+import com.github.fj.board.exception.client.auth.WrongPasswordException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import io.restassured.response.Response
 import org.springframework.restdocs.payload.JsonFieldType

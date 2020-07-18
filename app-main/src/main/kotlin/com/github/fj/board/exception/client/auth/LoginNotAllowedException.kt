@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.exception.client
+package com.github.fj.board.exception.client.auth
 
 import com.github.fj.board.exception.GeneralHttpException
 import org.springframework.http.HttpStatus

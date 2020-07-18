@@ -73,7 +73,11 @@ class User : AbstractIncrementalLockableEntity() {
     var invitedBy: User? = null
 
     override fun toString() = "User(id=$id, " +
-            "authentication=<lazy> " +
+            "authentication=${if (::authentication.isInitialized) {
+                "'${authentication.loginName}'"
+            } else {
+                "<uninitialised>"
+            }} " +
             "nickname='$nickname', " +
             "status=$status, " +
             "email='$email', " +
@@ -84,5 +88,5 @@ class User : AbstractIncrementalLockableEntity() {
             "lastActivePlatformType=$lastActivePlatformType, " +
             "lastActivePlatformVersion='$lastActivePlatformVersion', " +
             "lastActiveAppVersion=$lastActiveAppVersion, " +
-            "invitedBy=$invitedBy)"
+            "invitedBy=${invitedBy?.let { "'${it.nickname}'" }})"
 }

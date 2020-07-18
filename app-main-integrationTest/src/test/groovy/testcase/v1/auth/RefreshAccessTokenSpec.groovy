@@ -7,7 +7,7 @@ package testcase.v1.auth
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
-import com.github.fj.board.exception.client.RefreshTokenMismatchException
+import com.github.fj.board.exception.client.auth.RefreshTokenMismatchException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.lib.time.DateTimeUtilsKt

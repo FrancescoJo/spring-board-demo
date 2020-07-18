@@ -4,9 +4,8 @@
  */
 package testcase.service.auth
 
-import com.github.fj.board.appconfig.CodecConfig
-import com.github.fj.board.exception.client.LoginNameNotFoundException
-import com.github.fj.board.exception.client.RefreshTokenMismatchException
+import com.github.fj.board.exception.client.auth.LoginNameNotFoundException
+import com.github.fj.board.exception.client.auth.RefreshTokenMismatchException
 import com.github.fj.board.service.auth.RefreshAccessTokenService
 import com.github.fj.board.service.auth.impl.RefreshAccessTokenServiceImpl
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN

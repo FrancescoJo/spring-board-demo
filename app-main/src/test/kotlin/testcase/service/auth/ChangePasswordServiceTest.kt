@@ -4,9 +4,9 @@
  */
 package testcase.service.auth
 
-import com.github.fj.board.exception.client.DuplicatedPasswordException
-import com.github.fj.board.exception.client.LoginNameNotFoundException
-import com.github.fj.board.exception.client.WrongPasswordException
+import com.github.fj.board.exception.client.auth.DuplicatedPasswordException
+import com.github.fj.board.exception.client.auth.LoginNameNotFoundException
+import com.github.fj.board.exception.client.auth.WrongPasswordException
 import com.github.fj.board.service.auth.ChangePasswordService
 import com.github.fj.board.service.auth.impl.ChangePasswordServiceImpl
 import com.github.fj.lib.security.toSha1Bytes

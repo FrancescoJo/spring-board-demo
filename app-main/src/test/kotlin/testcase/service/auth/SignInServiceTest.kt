@@ -8,11 +8,10 @@ import com.github.fj.board.appconfig.CodecConfig
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.FreshHttpAuthorizationToken
-import com.github.fj.board.exception.client.LoginNotAllowedException
+import com.github.fj.board.exception.client.auth.LoginNotAllowedException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignInService
 import com.github.fj.board.service.auth.impl.SignInServiceImpl
-import com.github.fj.board.util.extractInetAddress
 import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getRandomAlphaNumericString
 import com.nhaarman.mockitokotlin2.any

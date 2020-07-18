@@ -7,9 +7,9 @@ package com.github.fj.board.service.auth.impl
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequest
-import com.github.fj.board.exception.client.DuplicatedPasswordException
-import com.github.fj.board.exception.client.LoginNameNotFoundException
-import com.github.fj.board.exception.client.WrongPasswordException
+import com.github.fj.board.exception.client.auth.DuplicatedPasswordException
+import com.github.fj.board.exception.client.auth.LoginNameNotFoundException
+import com.github.fj.board.exception.client.auth.WrongPasswordException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.ChangePasswordService
 import com.github.fj.board.vo.auth.AuthenticationResult

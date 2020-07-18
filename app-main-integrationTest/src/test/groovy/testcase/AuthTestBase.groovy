@@ -92,6 +92,12 @@ class AuthTestBase extends IntegrationTestBase {
         return reqSpec.patch(ApiPaths.ACCOUNT)
     }
 
+    protected final RequestSpecification authenticatedRequest(final String accessToken) {
+        return jsonRequestSpec()
+                .when()
+                .header(tokenAuthHeader(accessToken))
+    }
+
     protected final RequestSpecification authenticatedRequest(
             final String documentId,
             final String accessToken,
@@ -116,7 +122,11 @@ class AuthTestBase extends IntegrationTestBase {
     ) {
         return jsonRequestSpec(documentId, reqDoc, respDoc)
                 .when()
-                .header(new Header(HttpAuthorizationToken.HEADER_NAME, "Token $accessToken"))
+                .header(tokenAuthHeader(accessToken))
+    }
+
+    private static final Header tokenAuthHeader(final String accessToken) {
+        return new Header(HttpAuthorizationToken.HEADER_NAME, "Token $accessToken")
     }
 
     static RequestFieldsSnippet authRequestFieldsDoc() {
