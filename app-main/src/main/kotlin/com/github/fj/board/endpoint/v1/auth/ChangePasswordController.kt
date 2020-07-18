@@ -5,9 +5,12 @@
 package com.github.fj.board.endpoint.v1.auth
 
 import com.github.fj.board.endpoint.ApiPaths
+import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequest
 import com.github.fj.board.service.auth.ChangePasswordService
+import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.lib.time.utcNow
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestBody
@@ -29,7 +32,7 @@ interface ChangePasswordController {
         path = [ApiPaths.PASSWORD],
         method = [RequestMethod.PATCH]
     )
-    fun refresh(@Valid @RequestBody req: ChangePasswordRequest, clientInfo: ClientRequestInfo)
+    fun refresh(@Valid @RequestBody req: ChangePasswordRequest, clientInfo: ClientRequestInfo): AuthenticationResponse
 }
 
 /**
@@ -40,12 +43,12 @@ interface ChangePasswordController {
 internal class ChangePasswordControllerImpl(
     private val svc: ChangePasswordService
 ) : ChangePasswordController {
-    override fun refresh(req: ChangePasswordRequest, clientInfo: ClientRequestInfo) {
+    override fun refresh(req: ChangePasswordRequest, clientInfo: ClientRequestInfo): AuthenticationResponse {
         LOG.debug("{}: {}", clientInfo.requestUri, req)
 
-        svc.changePassword(req, clientInfo)
+        val result = svc.changePassword(req, clientInfo, utcNow())
 
-        return
+        return AuthenticationResponse.from(result)
     }
 
     companion object {

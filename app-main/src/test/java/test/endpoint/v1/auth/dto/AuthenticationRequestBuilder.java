@@ -7,6 +7,8 @@ package test.endpoint.v1.auth.dto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest;
 import com.github.fj.board.persistence.model.auth.PlatformType;
+import com.github.fj.lib.security.HashUtilsKt;
+import com.github.fj.lib.text.StringUtilsKt;
 import com.github.fj.lib.util.ProtectedProperty;
 import de.skuzzle.semantic.Version;
 
@@ -46,6 +48,11 @@ public final class AuthenticationRequestBuilder {
 
     public AuthenticationRequestBuilder password(final String password) {
         this.password = password;
+        return this;
+    }
+
+    public AuthenticationRequestBuilder passwordHashed(final String password) {
+        this.password = StringUtilsKt.toHexString(HashUtilsKt.toSha1Bytes(password));
         return this;
     }
 

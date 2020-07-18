@@ -4,14 +4,19 @@
  */
 package com.github.fj.board.service.auth.impl
 
+import com.github.fj.board.component.auth.AuthTokenManager
+import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequest
 import com.github.fj.board.exception.client.DuplicatedPasswordException
 import com.github.fj.board.exception.client.LoginNameNotFoundException
 import com.github.fj.board.exception.client.WrongPasswordException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.ChangePasswordService
+import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.board.vo.auth.ClientRequestInfo
+import io.seruco.encoding.base62.Base62
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 import javax.transaction.Transactional
 
 /**
@@ -20,10 +25,17 @@ import javax.transaction.Transactional
  */
 @Service
 internal class ChangePasswordServiceImpl(
+    override val authTokenMgr: AuthTokenManager,
+    override val base62Codec: Base62,
+    override val authProps: AppAuthProperties,
     private val authRepo: AuthenticationRepository
 ) : ChangePasswordService {
     @Transactional
-    override fun changePassword(req: ChangePasswordRequest, clientInfo: ClientRequestInfo) {
+    override fun changePassword(
+        req: ChangePasswordRequest,
+        clientInfo: ClientRequestInfo,
+        timestamp: LocalDateTime
+    ): AuthenticationResult {
         val auth = authRepo.findByLoginName(clientInfo.loginName) ?: run {
             // Guard case
             throw LoginNameNotFoundException()
@@ -34,8 +46,14 @@ internal class ChangePasswordServiceImpl(
             auth.isMatch(req.newPassword)  -> throw DuplicatedPasswordException()
         }
 
-        authRepo.save(auth.apply {
+        val token = with(auth) {
             password = hash(req.newPassword)
-        })
+
+            return@with updateTokens(timestamp, clientInfo)
+        }
+
+        return createAuthResultBy(auth, token).also {
+            authRepo.save(auth)
+        }
     }
 }

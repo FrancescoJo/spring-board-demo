@@ -19,6 +19,14 @@ public final class ChangePasswordRequestBuilder {
     private String oldPassword = "";
     private String newPassword = "";
 
+    public ChangePasswordRequestBuilder() {
+    }
+
+    public ChangePasswordRequestBuilder(final ChangePasswordRequest src) {
+        this.oldPassword = src.getOldPassword().getValue();
+        this.newPassword = src.getNewPassword().getValue();
+    }
+
     public ChangePasswordRequestBuilder oldPassword(final String value) {
         this.oldPassword = value;
         return this;

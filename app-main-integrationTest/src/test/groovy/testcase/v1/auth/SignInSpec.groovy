@@ -53,7 +53,7 @@ class SignInSpec extends AuthTestBase {
 
         and:
         final request = new AuthenticationRequestBuilder(preRequest)
-                .password(StringUtilsKt.toHexString(HashUtilsKt.toSha1Bytes("")))
+                .passwordHashed("")
                 .build()
 
         when:

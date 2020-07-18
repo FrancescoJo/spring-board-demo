@@ -4,22 +4,23 @@
  */
 package testcase.service.auth
 
+import com.github.fj.board.appconfig.CodecConfig
 import com.github.fj.board.exception.client.DuplicatedPasswordException
 import com.github.fj.board.exception.client.LoginNameNotFoundException
 import com.github.fj.board.exception.client.WrongPasswordException
-import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.ChangePasswordService
 import com.github.fj.board.service.auth.impl.ChangePasswordServiceImpl
 import com.github.fj.lib.security.toSha1Bytes
 import com.github.fj.lib.text.toHexString
+import com.github.fj.lib.time.utcNow
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mock
 import org.mockito.Mockito.*
-import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
 import test.com.github.fj.board.vo.auth.ClientRequestInfoBuilder
 import test.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
@@ -28,17 +29,15 @@ import test.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 17 - Jul - 2020
  */
-class ChangePasswordServiceTest {
-    @Mock
-    private lateinit var authRepo: AuthenticationRepository
+class ChangePasswordServiceTest : AbstractAuthenticationTestTemplate() {
+    private val base62Codec = CodecConfig().base62()
 
     private lateinit var sut: ChangePasswordService
 
     @BeforeEach
-    internal fun setup() {
-        MockitoAnnotations.initMocks(this)
-
-        this.sut = ChangePasswordServiceImpl(authRepo)
+    override fun setup() {
+        super.setup()
+        this.sut = ChangePasswordServiceImpl(authTokenMgr, base62Codec, authProps, authRepo)
     }
 
     @Test
@@ -49,7 +48,7 @@ class ChangePasswordServiceTest {
 
         // expect:
         assertThrows<LoginNameNotFoundException> {
-            sut.changePassword(req, clientInfo)
+            sut.changePassword(req, clientInfo, utcNow())
         }
     }
 
@@ -64,7 +63,7 @@ class ChangePasswordServiceTest {
 
         // then:
         assertThrows<WrongPasswordException> {
-            sut.changePassword(req, clientInfo)
+            sut.changePassword(req, clientInfo, utcNow())
         }
     }
 
@@ -88,7 +87,7 @@ class ChangePasswordServiceTest {
 
         // then:
         assertThrows<DuplicatedPasswordException> {
-            sut.changePassword(req, clientInfo)
+            sut.changePassword(req, clientInfo, utcNow())
         }
     }
 
@@ -97,21 +96,25 @@ class ChangePasswordServiceTest {
         // given:
         val clientInfo = ClientRequestInfoBuilder.createRandom()
         val req = ChangePasswordRequestBuilder.createRandom()
-
-        // and:
         val mockAuth = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .password(req.oldPassword.value)
             .build()
+        val now = utcNow()
+        val oldRefreshToken = mockAuth.refreshToken
 
         // when:
-        `when`(authRepo.findByLoginName(clientInfo.loginName)).thenReturn(mockAuth)
+        setupDefaultTokenGenerationStrategy(clientInfo, mockAuth, now)
 
         // then:
-        sut.changePassword(req, clientInfo)
+        val result = sut.changePassword(req, clientInfo, now)
         val hashedNewPw = sut.hash(req.newPassword)
 
         // expect:
         assertThat(mockAuth.password, `is`(hashedNewPw))
         verify(authRepo, times(1)).save(mockAuth)
+
+        // and: "Access token is also updated"
+        assertThat(mockAuth.refreshToken, not(oldRefreshToken))
+        assertThat(result.refreshTokenExpiresAfter, Matchers.greaterThanOrEqualTo(now))
     }
 }
