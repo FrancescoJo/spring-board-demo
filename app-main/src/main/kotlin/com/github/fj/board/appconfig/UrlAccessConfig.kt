@@ -16,7 +16,10 @@ import org.springframework.http.HttpMethod
 @Configuration
 class UrlAccessConfig {
     @Bean
-    fun checkBypassUris(): List<Pair<String, HttpMethod?>> = listOf<Pair<String, HttpMethod?>>(
+    fun checkBypassUris(): List<Pair<String, HttpMethod?>> = listOf(
+        // ERROR
+        ApiPaths.ERROR to null,
+
         // SignUp: SignUpController#signUp
         ApiPaths.ACCOUNT to HttpMethod.POST,
         // SignIn: SignUpController#signUp

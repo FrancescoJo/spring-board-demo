@@ -40,7 +40,7 @@ internal class AuthorizationHeaderFilter(
         }
 
         if (exclusions.any { it.matches(request) }) {
-            LOG.trace("This request does not seems requiring any authentication.")
+            LOG.trace("{}: This request does not seems requiring any authentication.", request.requestURI)
             chain.doFilter(req, resp)
             return
         }
