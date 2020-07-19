@@ -4,12 +4,12 @@
  */
 package testcase.appconfig.controllerParam
 
-import com.github.fj.board.appconfig.controllerParam.ClientRequestInfoResolver
+import com.github.fj.board.appconfig.controllerParam.ClientAuthInfoResolver
 import com.github.fj.board.component.auth.AuthenticationObjectImpl
 import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.exception.server.NotImplementedException
 import com.github.fj.board.persistence.model.auth.PlatformType
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.auth.UserAgent
 import com.github.fj.lib.util.getRandomAlphaNumericString
 import de.skuzzle.semantic.Version
@@ -34,12 +34,12 @@ import test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 16 - Jul - 2020
  */
-class ClientRequestInfoResolverTest {
-    private lateinit var sut: ClientRequestInfoResolver
+class ClientAuthInfoResolverTest {
+    private lateinit var sut: ClientAuthInfoResolver
 
     @BeforeEach
     fun setup() {
-        this.sut = ClientRequestInfoResolver()
+        this.sut = ClientAuthInfoResolver()
     }
 
     @Test
@@ -119,9 +119,9 @@ class ClientRequestInfoResolverTest {
         SecurityContextHolder.getContext().authentication = null
     }
 
-    private fun testResolveArgument(webReq: NativeWebRequest): ClientRequestInfo {
+    private fun testResolveArgument(webReq: NativeWebRequest): ClientAuthInfo {
         val param = mock(MethodParameter::class.java)
 
-        return sut.resolveArgument(param, null, webReq, null) as ClientRequestInfo
+        return sut.resolveArgument(param, null, webReq, null) as ClientAuthInfo
     }
 }

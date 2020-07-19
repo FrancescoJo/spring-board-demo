@@ -12,7 +12,7 @@ import com.github.fj.board.exception.client.auth.RefreshTokenMismatchException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.RefreshAccessTokenService
 import com.github.fj.board.vo.auth.AuthenticationResult
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import io.seruco.encoding.base62.Base62
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -32,7 +32,7 @@ internal class RefreshAccessTokenServiceImpl(
     @Transactional
     override fun refreshAuthToken(
         req: RefreshTokenRequest,
-        clientInfo: ClientRequestInfo,
+        clientInfo: ClientAuthInfo,
         timestamp: LocalDateTime
     ): AuthenticationResult {
         val auth = authRepo.findByLoginName(clientInfo.loginName) ?: run {

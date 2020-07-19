@@ -7,7 +7,7 @@ package com.github.fj.board.appconfig.controllerParam
 import com.github.fj.board.component.auth.AuthenticationObjectImpl
 import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.exception.server.NotImplementedException
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 16 - Jul - 2020
  */
-class ClientRequestInfoResolver : HandlerMethodArgumentResolver {
+class ClientAuthInfoResolver : HandlerMethodArgumentResolver {
     override fun resolveArgument(
         param: MethodParameter,
         mavContainer: ModelAndViewContainer?,
@@ -37,9 +37,9 @@ class ClientRequestInfoResolver : HandlerMethodArgumentResolver {
         val httpReq: HttpServletRequest = webReq.nativeRequest as? HttpServletRequest
             ?: throw NotImplementedException("HTTP Request processor has been changed.")
 
-        return ClientRequestInfo.create(authObject.name, httpReq)
+        return ClientAuthInfo.create(authObject.name, httpReq)
     }
 
     override fun supportsParameter(parameter: MethodParameter): Boolean =
-        parameter.parameterType == ClientRequestInfo::class.java
+        parameter.parameterType == ClientAuthInfo::class.java
 }

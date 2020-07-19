@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 16 - Jul - 2020
  */
-interface ClientRequestInfo : UserAgent {
+interface ClientAuthInfo : UserAgent {
     val loginName: String
     val remoteAddr: InetAddress
     val requestUri: String
@@ -27,12 +27,12 @@ interface ClientRequestInfo : UserAgent {
             override val platformType: PlatformType,
             override val platformVer: String,
             override val appVer: Version
-        ) : ClientRequestInfo
+        ) : ClientAuthInfo
 
         fun create(
             loginName: String,
             httpReq: HttpServletRequest
-        ): ClientRequestInfo = with(UserAgent.from(httpReq)) {
+        ): ClientAuthInfo = with(UserAgent.from(httpReq)) {
             Dto(
                 loginName = loginName,
                 remoteAddr = httpReq.extractInetAddress(),

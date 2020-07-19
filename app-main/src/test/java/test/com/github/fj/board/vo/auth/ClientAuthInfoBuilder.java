@@ -4,7 +4,7 @@
  */
 package test.com.github.fj.board.vo.auth;
 
-import com.github.fj.board.vo.auth.ClientRequestInfo;
+import com.github.fj.board.vo.auth.ClientAuthInfo;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,26 +15,26 @@ import static test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServle
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 18 - Jul - 2020
  */
-public final class ClientRequestInfoBuilder {
+public final class ClientAuthInfoBuilder {
     private String loginName = "";
     private HttpServletRequest httpServletRequest = mockLocalhostServletRequest();
 
-    public ClientRequestInfoBuilder loginName(final String value) {
+    public ClientAuthInfoBuilder loginName(final String value) {
         this.loginName = value;
         return this;
     }
 
-    public ClientRequestInfoBuilder httpServletRequest(final HttpServletRequest value) {
+    public ClientAuthInfoBuilder httpServletRequest(final HttpServletRequest value) {
         this.httpServletRequest = value;
         return this;
     }
 
-    public ClientRequestInfo build() {
-        return ClientRequestInfo.Companion.create(loginName, httpServletRequest);
+    public ClientAuthInfo build() {
+        return ClientAuthInfo.Companion.create(loginName, httpServletRequest);
     }
 
-    public static ClientRequestInfo createRandom() {
-        return new ClientRequestInfoBuilder()
+    public static ClientAuthInfo createRandom() {
+        return new ClientAuthInfoBuilder()
                 .loginName(getRandomAlphaNumericString(8))
                 .httpServletRequest(mockLocalhostServletRequest())
                 .build();

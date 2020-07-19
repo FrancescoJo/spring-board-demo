@@ -68,7 +68,7 @@ class SignUpServiceTest {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
         val httpReq = mockLocalhostServletRequest()
-        val clientInfo = request.createClientRequestInfoBy(httpReq)
+        val clientInfo = request.createClientAuthInfoBy(httpReq)
 
         // when:
         `when`(authRepo.findByLoginName(anyString())).thenReturn(Authentication())
@@ -84,7 +84,7 @@ class SignUpServiceTest {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
         val httpReq = mockLocalhostServletRequest()
-        val clientInfo = request.createClientRequestInfoBy(httpReq)
+        val clientInfo = request.createClientAuthInfoBy(httpReq)
         val mockAccessToken = getRandomAlphaNumericString(128)
         val tokenLifespanSecs = AppAuthProperties.DEFAULT_AUTH_TOKEN_ALIVE_SECS
         val refreshTokenLifespanDays = AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS

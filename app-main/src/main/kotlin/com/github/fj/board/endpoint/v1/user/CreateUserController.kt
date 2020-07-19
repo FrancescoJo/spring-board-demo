@@ -8,7 +8,7 @@ import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.user.dto.CreateUserRequest
 import com.github.fj.board.endpoint.v1.user.dto.CreateUserResponse
 import com.github.fj.board.service.user.CreateUserService
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestBody
@@ -30,7 +30,7 @@ interface CreateUserController {
         path = [ApiPaths.USER],
         method = [RequestMethod.POST]
     )
-    fun create(@Valid @RequestBody req: CreateUserRequest, clientInfo: ClientRequestInfo): CreateUserResponse
+    fun create(@Valid @RequestBody req: CreateUserRequest, clientInfo: ClientAuthInfo): CreateUserResponse
 }
 
 /**
@@ -41,7 +41,7 @@ interface CreateUserController {
 internal class CreateUserControllerImpl(
     private val svc: CreateUserService
 ) : CreateUserController {
-    override fun create(req: CreateUserRequest, clientInfo: ClientRequestInfo): CreateUserResponse {
+    override fun create(req: CreateUserRequest, clientInfo: ClientAuthInfo): CreateUserResponse {
         LOG.debug("{}: {}", clientInfo.requestUri, req)
 
         svc.create(req, clientInfo)

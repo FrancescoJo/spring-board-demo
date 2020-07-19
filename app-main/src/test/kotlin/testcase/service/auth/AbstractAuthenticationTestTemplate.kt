@@ -11,7 +11,7 @@ import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.AuthenticationServiceMixin
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.annotation.CallSuper
 import com.github.fj.lib.util.getRandomAlphaNumericString
 import com.nhaarman.mockitokotlin2.any
@@ -47,7 +47,7 @@ abstract class AbstractAuthenticationTestTemplate : AuthenticationServiceMixin {
     }
 
     protected fun setupDefaultTokenGenerationStrategy(
-        clientInfo: ClientRequestInfo,
+        clientInfo: ClientAuthInfo,
         authentication: Authentication,
         timestamp: LocalDateTime
     ) {

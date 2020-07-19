@@ -11,7 +11,7 @@ import com.github.fj.board.exception.client.auth.LoginNotAllowedException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignInService
 import com.github.fj.board.vo.auth.AuthenticationResult
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import io.seruco.encoding.base62.Base62
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -32,7 +32,7 @@ internal class SignInServiceImpl(
     @Transactional
     override fun signIn(
         req: AuthenticationRequest,
-        clientInfo: ClientRequestInfo,
+        clientInfo: ClientAuthInfo,
         timestamp: LocalDateTime
     ): AuthenticationResult {
         val auth = authRepo.findByLoginName(req.loginName) ?: run {

@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.appconfig
 
-import com.github.fj.board.appconfig.controllerParam.ClientRequestInfoResolver
+import com.github.fj.board.appconfig.controllerParam.ClientAuthInfoResolver
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -16,6 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class ControllerParamsConfig : WebMvcConfigurer {
     override fun addArgumentResolvers(argResolvers: MutableList<HandlerMethodArgumentResolver>) {
-        argResolvers.add(ClientRequestInfoResolver())
+        argResolvers.add(ClientAuthInfoResolver())
     }
 }

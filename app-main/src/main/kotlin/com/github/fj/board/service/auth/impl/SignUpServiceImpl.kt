@@ -12,7 +12,7 @@ import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.SignUpService
 import com.github.fj.board.vo.auth.AuthenticationResult
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow
 import io.seruco.encoding.base62.Base62
 import org.slf4j.LoggerFactory
@@ -29,7 +29,7 @@ internal class SignUpServiceImpl(
     override val authProps: AppAuthProperties,
     private val authRepo: AuthenticationRepository
 ) : SignUpService {
-    override fun signUp(req: AuthenticationRequest, clientInfo: ClientRequestInfo): AuthenticationResult {
+    override fun signUp(req: AuthenticationRequest, clientInfo: ClientAuthInfo): AuthenticationResult {
         if (authRepo.findByLoginName(req.loginName) != null) {
             LOG.info("Duplicated login name: {}", req.loginName)
             throw LoginNotAllowedException()

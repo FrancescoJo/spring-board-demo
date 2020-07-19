@@ -9,7 +9,7 @@ import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.FreshHttpAuthorizationToken
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.vo.auth.AuthenticationResult
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow
 import com.github.fj.lib.util.getSecureRandomBytes
 import io.seruco.encoding.base62.Base62
@@ -28,7 +28,7 @@ interface AuthenticationServiceMixin {
 
     fun Authentication.updateTokens(
         timestamp: LocalDateTime,
-        clientInfo: ClientRequestInfo
+        clientInfo: ClientAuthInfo
     ): FreshHttpAuthorizationToken {
         val token = authTokenMgr.create(loginName, "", timestamp)
 

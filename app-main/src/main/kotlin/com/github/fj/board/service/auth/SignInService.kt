@@ -6,7 +6,7 @@ package com.github.fj.board.service.auth
 
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
 import com.github.fj.board.vo.auth.AuthenticationResult
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow
 import java.time.LocalDateTime
 
@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 interface SignInService : AuthenticationServiceMixin, PasswordServiceMixin {
     fun signIn(
         req: AuthenticationRequest,
-        clientInfo: ClientRequestInfo,
+        clientInfo: ClientAuthInfo,
         timestamp: LocalDateTime = utcNow()
     ): AuthenticationResult
 }

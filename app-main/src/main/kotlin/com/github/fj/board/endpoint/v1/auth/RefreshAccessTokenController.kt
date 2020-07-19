@@ -8,7 +8,7 @@ import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
 import com.github.fj.board.service.auth.RefreshAccessTokenService
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 /**
@@ -32,7 +31,7 @@ interface RefreshAccessTokenController {
         path = [ApiPaths.TOKEN],
         method = [RequestMethod.PATCH]
     )
-    fun refresh(@Valid @RequestBody req: RefreshTokenRequest, clientInfo: ClientRequestInfo): AuthenticationResponse
+    fun refresh(@Valid @RequestBody req: RefreshTokenRequest, clientInfo: ClientAuthInfo): AuthenticationResponse
 }
 
 /**
@@ -43,7 +42,7 @@ interface RefreshAccessTokenController {
 internal class RefreshAccessTokenControllerImpl(
     private val svc: RefreshAccessTokenService
 ) : RefreshAccessTokenController {
-    override fun refresh(req: RefreshTokenRequest, clientInfo: ClientRequestInfo): AuthenticationResponse {
+    override fun refresh(req: RefreshTokenRequest, clientInfo: ClientAuthInfo): AuthenticationResponse {
         LOG.debug("{}: {}", clientInfo.requestUri, req)
 
         val result = svc.refreshAuthToken(req, clientInfo, utcNow())

@@ -13,7 +13,7 @@ import com.github.fj.board.exception.client.auth.WrongPasswordException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.service.auth.ChangePasswordService
 import com.github.fj.board.vo.auth.AuthenticationResult
-import com.github.fj.board.vo.auth.ClientRequestInfo
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import io.seruco.encoding.base62.Base62
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -33,7 +33,7 @@ internal class ChangePasswordServiceImpl(
     @Transactional
     override fun changePassword(
         req: ChangePasswordRequest,
-        clientInfo: ClientRequestInfo,
+        clientInfo: ClientAuthInfo,
         timestamp: LocalDateTime
     ): AuthenticationResult {
         val auth = authRepo.findByLoginName(clientInfo.loginName) ?: run {

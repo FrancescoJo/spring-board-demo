@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.`when`
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
-import test.com.github.fj.board.vo.auth.ClientRequestInfoBuilder
+import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
 import test.endpoint.v1.auth.dto.RefreshTokenRequestBuilder
 
 /**
@@ -37,7 +37,7 @@ class RefreshAccessTokenServiceTest : AbstractAuthenticationTestTemplate() {
     @Test
     fun `fail if there is no auth found for loginName`() {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = RefreshTokenRequestBuilder.createRandom()
         val now = utcNow()
 
@@ -50,7 +50,7 @@ class RefreshAccessTokenServiceTest : AbstractAuthenticationTestTemplate() {
     @Test
     fun `fail if refreshToken mismatches`() {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = RefreshTokenRequestBuilder.createRandom()
         val mockAuth = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .loginName(clientInfo.loginName)
@@ -69,7 +69,7 @@ class RefreshAccessTokenServiceTest : AbstractAuthenticationTestTemplate() {
     @Test
     fun `fail if given refreshToken is too old`() {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = RefreshTokenRequestBuilder.createRandom()
         val mockAuth = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .loginName(clientInfo.loginName)
@@ -91,7 +91,7 @@ class RefreshAccessTokenServiceTest : AbstractAuthenticationTestTemplate() {
     @Test
     fun `success if refreshToken is matched`() {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = RefreshTokenRequestBuilder.createRandom()
         val mockAuth = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .loginName(clientInfo.loginName)

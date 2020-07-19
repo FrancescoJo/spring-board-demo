@@ -29,7 +29,7 @@ import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
 import test.com.github.fj.board.persistence.entity.user.UserBuilder
-import test.com.github.fj.board.vo.auth.ClientRequestInfoBuilder
+import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
 import test.endpoint.v1.user.dto.CreateUserRequestBuilder
 
 /**
@@ -55,7 +55,7 @@ class CreateUserServiceTest {
     @Test
     fun `fail if there is no auth found for loginName`() {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = CreateUserRequestBuilder.createRandom()
 
         // expect:
@@ -67,7 +67,7 @@ class CreateUserServiceTest {
     @Test
     fun `fail if requested nickname is already in use`() {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = CreateUserRequestBuilder.createRandom()
         val mockAuth = AuthenticationBuilder.createRandom()
         val mockUser = UserBuilder(UserBuilder.createRandom())
@@ -89,7 +89,7 @@ class CreateUserServiceTest {
     @ValueSource(strings = ["", "someLoginName"])
     fun `user is created if request is valid`(invitedBy: String?) {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = CreateUserRequestBuilder(CreateUserRequestBuilder.createRandom())
             .invitedBy(invitedBy)
             .build()

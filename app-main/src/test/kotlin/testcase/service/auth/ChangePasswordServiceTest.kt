@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.*
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
-import test.com.github.fj.board.vo.auth.ClientRequestInfoBuilder
+import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
 import test.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
 
 /**
@@ -40,7 +40,7 @@ class ChangePasswordServiceTest : AbstractAuthenticationTestTemplate() {
     @Test
     fun `fail if there is no auth found for loginName`() {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = ChangePasswordRequestBuilder.createRandom()
 
         // expect:
@@ -52,7 +52,7 @@ class ChangePasswordServiceTest : AbstractAuthenticationTestTemplate() {
     @Test
     fun `fail if old password mismatches`() {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = ChangePasswordRequestBuilder.createRandom()
 
         // when:
@@ -68,7 +68,7 @@ class ChangePasswordServiceTest : AbstractAuthenticationTestTemplate() {
     fun `fail if new password is same to old one`() {
         // given:
         val defaultPassword = "__DEFAULT_PW__"
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = ChangePasswordRequestBuilder()
             .oldPassword(defaultPassword)
             .newPassword(defaultPassword)
@@ -91,7 +91,7 @@ class ChangePasswordServiceTest : AbstractAuthenticationTestTemplate() {
     @Test
     fun `success if new password is good`() {
         // given:
-        val clientInfo = ClientRequestInfoBuilder.createRandom()
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
         val req = ChangePasswordRequestBuilder.createRandom()
         val mockAuth = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .password(req.oldPassword.value)

@@ -58,7 +58,7 @@ class SignInServiceTest {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
         val httpReq = mockLocalhostServletRequest()
-        val clientInfo = request.createClientRequestInfoBy(httpReq)
+        val clientInfo = request.createClientAuthInfoBy(httpReq)
 
         // when:
         `when`(authRepo.findByLoginName(anyString())).thenReturn(null)
@@ -74,7 +74,7 @@ class SignInServiceTest {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
         val httpReq = mockLocalhostServletRequest()
-        val clientInfo = request.createClientRequestInfoBy(httpReq)
+        val clientInfo = request.createClientAuthInfoBy(httpReq)
         val mockAuthentication = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .password("")
             .build()
@@ -93,7 +93,7 @@ class SignInServiceTest {
         // given:
         val request = AuthenticationRequestBuilder.createRandom()
         val httpReq = mockLocalhostServletRequest()
-        val clientInfo = request.createClientRequestInfoBy(httpReq)
+        val clientInfo = request.createClientAuthInfoBy(httpReq)
         val mockAuthentication = AuthenticationBuilder(AuthenticationBuilder.createRandom())
             .password(request.password.value)
             .build()
