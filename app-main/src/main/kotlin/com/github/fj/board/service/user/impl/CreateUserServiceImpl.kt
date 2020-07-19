@@ -13,6 +13,7 @@ import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.user.CreateUserService
 import com.github.fj.board.vo.auth.ClientAuthInfo
+import com.github.fj.board.vo.user.UserInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -27,7 +28,7 @@ class CreateUserServiceImpl(
     private val userRepo: UserRepository
 ) : CreateUserService {
     @Transactional
-    override fun create(req: CreateUserRequest, clientInfo: ClientAuthInfo) {
+    override fun create(req: CreateUserRequest, clientInfo: ClientAuthInfo): UserInfo {
         val auth = authRepo.findByLoginName(clientInfo.loginName) ?: run {
             throw LoginNameNotFoundException()
         }
@@ -38,7 +39,7 @@ class CreateUserServiceImpl(
 
         val now = utcNow()
 
-        userRepo.save(User().apply {
+        val createdUser = User().apply {
             this.authentication = auth
             this.nickname = req.nickname
             this.status = Status.UNVERIFIED
@@ -53,6 +54,10 @@ class CreateUserServiceImpl(
             this.invitedBy = req.invitedBy.takeIf { !it.isNullOrEmpty() }?.let {
                 return@let userRepo.findByNickname(it)
             }
-        })
+        }
+
+        return UserInfo.from(createdUser).also {
+            userRepo.save(createdUser)
+        }
     }
 }

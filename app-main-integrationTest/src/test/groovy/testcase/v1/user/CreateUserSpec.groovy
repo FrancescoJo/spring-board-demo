@@ -6,12 +6,11 @@ package testcase.v1.user
 
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.user.dto.CreateUserRequest
-import com.github.fj.board.endpoint.v1.user.dto.CreateUserResponse
+import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.user.NicknameAlreadyExistException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import io.restassured.response.Response
-import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
@@ -21,7 +20,8 @@ import testcase.UserTestBase
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString
 import static org.hamcrest.CoreMatchers.is
-import static org.springframework.restdocs.payload.PayloadDocumentation.*
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -116,15 +116,15 @@ class CreateUserSpec extends UserTestBase {
                 "createUser-#$docId",
                 createdAuth.accessToken.value,
                 request,
-                responseFieldsDoc()
+                userInfoResponseFieldsDoc()
         )
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), CreateUserResponse.class)
+        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), UserInfoResponse.class)
 
         expect:
         response.nickname == request.nickname
-        response.email == request.email
+        response.email == (request.email ?: "")
 
         where:
         nickname               | docId
@@ -138,11 +138,17 @@ class CreateUserSpec extends UserTestBase {
     def "fail if nickname is duplicated"() {
         given:
         final createdUser = createRandomUser()
+        final String email
+        if (createdUser.email.isEmpty()) {
+            email = null
+        } else {
+            email = createdUser.email
+        }
 
         and:
         final request = new CreateUserRequestBuilder()
                 .nickname(createdUser.nickname)
-                .email(createdUser.email)
+                .email(email)
                 .build()
 
         when:
@@ -185,19 +191,5 @@ class CreateUserSpec extends UserTestBase {
                         .type(JsonFieldType.STRING)
                         .description(CreateUserRequest.DESC_INVITED_BY)
         )
-    }
-
-    private static ResponseFieldsSnippet responseFieldsDoc() {
-        final List<FieldDescriptor> fields = [
-                fieldWithPath("body.nickname")
-                        .type(JsonFieldType.STRING)
-                        .description(CreateUserResponse.DESC_NICKNAME),
-                fieldWithPath("body.email")
-                        .optional()
-                        .type(JsonFieldType.STRING)
-                        .description(CreateUserResponse.DESC_EMAIL)
-        ]
-
-        return responseFields(basicFieldsDoc() + fields)
     }
 }

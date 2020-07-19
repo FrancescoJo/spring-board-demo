@@ -25,6 +25,9 @@ open class GeneralHttpException protected constructor(
     override val cause: Throwable? = null
 ) : RuntimeException(message, cause) {
     companion object {
+        fun createPlain(httpStatus: HttpStatus, message: String, cause: Throwable? = null) =
+            GeneralHttpException(httpStatus, message, cause)
+
         fun create(httpStatus: HttpStatus, resourceName: String = "", cause: Throwable? = null) = when (httpStatus) {
             HttpStatus.NOT_FOUND    -> ResourceNotFoundException(resourceName, cause)
             HttpStatus.UNAUTHORIZED -> UnauthorisedException(cause = cause)
@@ -34,6 +37,5 @@ open class GeneralHttpException protected constructor(
                 GeneralHttpException(httpStatus, httpStatus.reasonPhrase + ": $resourceName", cause)
             }
         }
-
     }
 }

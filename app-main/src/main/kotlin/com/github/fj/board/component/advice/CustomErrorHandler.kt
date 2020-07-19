@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.stereotype.Controller
 import org.springframework.web.HttpMediaTypeNotSupportedException
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RequestMapping
@@ -44,6 +45,17 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 @RestControllerAdvice
 class CustomErrorHandler : ErrorController {
+    @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+    fun handleNoController(req: HttpServletRequest, ex: Exception): ResponseEntity<ErrorResponseDto> {
+        return handleError(
+            req, GeneralHttpException.createPlain(
+                HttpStatus.NOT_FOUND,
+                "${req.method} ${req.requestURI} is unsupported or not found on server.",
+                ex
+            )
+        )
+    }
+
     @ExceptionHandler(NoHandlerFoundException::class)
     fun handleSpring404(req: HttpServletRequest): ResponseEntity<ErrorResponseDto> {
         return handleError(

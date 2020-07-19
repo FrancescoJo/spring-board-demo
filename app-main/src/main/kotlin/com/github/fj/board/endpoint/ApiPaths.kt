@@ -23,6 +23,7 @@ object ApiPaths {
     const val PASSWORD = "$LATEST_VERSION/password"
 
     const val USER = "$LATEST_VERSION/user"
+    const val USER_NICKNAME = "$USER/{nickname}"
 
     const val BOARDS = "$LATEST_VERSION/boards"
 }

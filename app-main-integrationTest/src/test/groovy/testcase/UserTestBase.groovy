@@ -5,12 +5,18 @@
 package testcase
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.user.dto.CreateUserResponse
+import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
+import com.github.fj.board.persistence.model.user.Status
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.JsonFieldType
+import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.v1.user.dto.CreateUserRequestBuilder
 
 import java.time.LocalDateTime
 
 import static org.hamcrest.CoreMatchers.is
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -25,7 +31,7 @@ class UserTestBase extends AuthTestBase {
                 .body(request)
                 .post(ApiPaths.USER)
 
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), CreateUserResponse.class)
+        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), UserInfoResponse.class)
 
         return new CreatedUser(
                 /*loginName */                 createdAuth.loginName,
@@ -34,8 +40,33 @@ class UserTestBase extends AuthTestBase {
                 /* refreshToken */             createdAuth.refreshToken.value,
                 /* refreshTokenExpiresAfter */ createdAuth.refreshTokenExpiresAfter,
                 /* nickname */                 response.nickname,
-                /* email */                    response.email
+                /* status */                   response.status,
+                /* email */                    response.email,
+                /* createdDate */              response.createdDate,
+                /* lastActiveDate */           response.lastActiveDate
         )
+    }
+
+    protected static ResponseFieldsSnippet userInfoResponseFieldsDoc() {
+        final List<FieldDescriptor> fields = [
+                fieldWithPath("body.nickname")
+                        .type(JsonFieldType.STRING)
+                        .description(UserInfoResponse.DESC_NICKNAME),
+                fieldWithPath("body.status")
+                        .type(JsonFieldType.STRING)
+                        .description(UserInfoResponse.DESC_STATUS),
+                fieldWithPath("body.email")
+                        .type(JsonFieldType.STRING)
+                        .description(UserInfoResponse.DESC_EMAIL),
+                fieldWithPath("body.createdDate")
+                        .type(JsonFieldType.STRING)
+                        .description(UserInfoResponse.DESC_CREATED_DATE),
+                fieldWithPath("body.lastActiveDate")
+                        .type(JsonFieldType.STRING)
+                        .description(UserInfoResponse.DESC_LAST_ACTIVE_DATE)
+        ]
+
+        return responseFields(basicFieldsDoc() + fields)
     }
 
     static class CreatedUser {
@@ -45,7 +76,10 @@ class UserTestBase extends AuthTestBase {
         final String refreshToken
         final LocalDateTime refreshTokenExpiresAfter
         final String nickname
+        final Status status
         final String email
+        final LocalDateTime createdDate
+        final LocalDateTime lastActiveDate
 
         CreatedUser(
                 final String loginName,
@@ -54,7 +88,10 @@ class UserTestBase extends AuthTestBase {
                 final String refreshToken,
                 final LocalDateTime refreshTokenExpiresAfter,
                 final String nickname,
-                final String email
+                final Status status,
+                final String email,
+                final LocalDateTime createdDate,
+                final LocalDateTime lastActiveDate
         ) {
             this.loginName = loginName
             this.accessToken = accessToken
@@ -62,7 +99,10 @@ class UserTestBase extends AuthTestBase {
             this.refreshToken = refreshToken
             this.refreshTokenExpiresAfter = refreshTokenExpiresAfter
             this.nickname = nickname
+            this.status = status
             this.email = email
+            this.createdDate = createdDate
+            this.lastActiveDate = lastActiveDate
         }
 
         @Override
@@ -74,7 +114,10 @@ class UserTestBase extends AuthTestBase {
                     ", refreshToken='$refreshToken" +
                     ", refreshTokenExpiresAfter=$refreshTokenExpiresAfter" +
                     ", nickname='$nickname'" +
+                    ", status='$status'" +
                     ", email='$email'" +
+                    ", createdDate='$createdDate'" +
+                    ", lastActiveDate='$lastActiveDate'" +
                     '}'
         }
     }
