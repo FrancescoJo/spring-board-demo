@@ -105,14 +105,8 @@ class SignUpServiceTest {
 
         assertThat(result.loginName, `is`(request.loginName))
         assertThat(result.accessToken, `is`(mockAccessToken))
-        assertThat(
-            result.accessTokenExpiresAfter.truncatedTo(ChronoUnit.SECONDS),
-            lessThanOrEqualTo(utcNow().plusSeconds(tokenLifespanSecs).truncatedTo(ChronoUnit.SECONDS))
-        )
+        assertThat(result.accessTokenExpiresAfter, lessThanOrEqualTo(utcNow().plusSeconds(tokenLifespanSecs)))
         assertTrue(result.refreshToken.isNotEmpty())
-        assertThat(
-            result.refreshTokenExpiresAfter.truncatedTo(ChronoUnit.SECONDS),
-            lessThanOrEqualTo(utcNow().plusDays(refreshTokenLifespanDays).truncatedTo(ChronoUnit.SECONDS))
-        )
+        assertThat(result.refreshTokenExpiresAfter, lessThanOrEqualTo(utcNow().plusDays(refreshTokenLifespanDays)))
     }
 }

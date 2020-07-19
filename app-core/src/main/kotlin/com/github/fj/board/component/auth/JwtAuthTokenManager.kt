@@ -19,17 +19,11 @@ import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.time.utcEpochSecond
 import com.github.fj.lib.time.utcLocalDateTimeOf
 import com.github.fj.lib.time.utcNow
-import com.nimbusds.jose.JOSEException
-import com.nimbusds.jose.JOSEObjectType
-import com.nimbusds.jose.JWSAlgorithm
-import com.nimbusds.jose.JWSHeader
-import com.nimbusds.jose.JWSObject
-import com.nimbusds.jose.Payload
+import com.nimbusds.jose.*
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.text.ParseException
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.inject.Inject
 
@@ -45,7 +39,6 @@ internal class JwtAuthTokenManager @Inject constructor(
 ) : AuthTokenManager {
     override fun create(audience: String, subject: String, timestamp: LocalDateTime): FreshHttpAuthorizationToken {
         val keyPair = rsaKeyPairManager.getLatest()
-        val normalisedTimestamp = timestamp.truncatedTo(ChronoUnit.SECONDS)
 
         val jwtObject = with(authProperties) {
             JwtObject(
@@ -53,9 +46,9 @@ internal class JwtAuthTokenManager @Inject constructor(
                 issuer = tokenIssuer,
                 subject = subject,
                 audience = audience,
-                expiration = normalisedTimestamp.plusSeconds(authTokenAliveSecs),
+                expiration = timestamp.plusSeconds(authTokenAliveSecs),
                 notBefore = NOT_BEFORE_THAN,
-                issuedAt = normalisedTimestamp
+                issuedAt = timestamp
             )
         }
         val jwsHeader = JWSHeader.Builder(JWSAlgorithm.RS256).type(JOSEObjectType.JWT)

@@ -15,13 +15,13 @@ import com.github.fj.lib.util.getRandomAlphaNumericString
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.lessThanOrEqualTo
 import org.junit.jupiter.api.*
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.appconfig.security.MockRsaKeyPairManager
 import java.security.Security
-import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 
 /**
@@ -55,7 +55,7 @@ class JwtAuthTokenManagerTest {
         // given:
         val audience = getRandomAlphaNumericString(8)
         val subject = getRandomAlphaNumericString(8)
-        val timestamp = utcNow().truncatedTo(ChronoUnit.SECONDS)
+        val timestamp = utcNow()
 
         // when:
         val authToken = sut.create(audience, subject, timestamp)
@@ -68,9 +68,9 @@ class JwtAuthTokenManagerTest {
             assertThat(this.issuer, `is`(tokenIssuer))
             assertThat(this.subject, `is`(subject))
             assertThat(this.audience, `is`(audience))
-            assertThat(this.expiration, `is`(timestamp.plusSeconds(tokenAliveSecs)))
-            assertThat(this.issuedAt, `is`(timestamp))
-            assertThat(this.notBefore, `is`(JwtAuthTokenManager.NOT_BEFORE_THAN))
+            assertThat(this.expiration, lessThanOrEqualTo(timestamp.plusSeconds(tokenAliveSecs)))
+            assertThat(this.issuedAt, lessThanOrEqualTo(timestamp))
+            assertThat(this.notBefore, lessThanOrEqualTo(JwtAuthTokenManager.NOT_BEFORE_THAN))
         }
     }
 

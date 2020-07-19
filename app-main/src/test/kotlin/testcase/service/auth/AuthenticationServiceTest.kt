@@ -42,7 +42,7 @@ class AuthenticationServiceTest : AbstractAuthenticationTestTemplate() {
     @Test
     fun `relative fields are filled after successful refreshToken creation`() = with(sut) {
         // given:
-        val now = utcNow().truncatedTo(ChronoUnit.SECONDS)
+        val now = utcNow()
         val lifespan = getRandomPositiveLong(1L, AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS)
         this.loginName = getRandomAlphaNumericString(8)
 
@@ -90,7 +90,7 @@ class AuthenticationServiceTest : AbstractAuthenticationTestTemplate() {
     @Test
     fun `refreshToken validation would success if #old matches saved one`() = with(sut) {
         // given:
-        val now = utcNow().truncatedTo(ChronoUnit.SECONDS)
+        val now = utcNow()
         val lifespan = getRandomPositiveLong(1L, AppAuthProperties.DEFAULT_REFRESH_TOKEN_ALIVE_DAYS)
         this.loginName = getRandomAlphaNumericString(8)
 

@@ -16,6 +16,7 @@ internal class JacksonMsgConverterModule : SimpleModule(JacksonMsgConverterModul
     init {
         addSerializer(ProtectedPropertyJacksonSerialiser())
         addSerializer(SemanticVersionJacksonSerialiser())
+        addSerializer(LocalDateTimeJacksonSerialiser())
 
         addDeserializer(ProtectedProperty::class.java, ProtectedPropertyJacksonDeserialiser())
         addDeserializer(Version::class.java, SemanticVersionJacksonDeserialiser())
