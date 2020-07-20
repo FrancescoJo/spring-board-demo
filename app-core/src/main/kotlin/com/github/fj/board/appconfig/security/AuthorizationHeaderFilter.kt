@@ -64,13 +64,13 @@ internal class AuthorizationHeaderFilter(
             req.getHeader(HEADER).let { h ->
                 when {
                     h.isNullOrEmpty()                 ->
-                        LOG.trace("{}: No {} header in the request.", req.requestURI, HEADER)
+                        LOG.trace("{} {}: No '{}' header in the request.", req.method, req.requestURI, HEADER)
                     h.matchesIn(AUTHORIZATION_SYNTAX) -> return h.split(" ").let {
                         MaybeHttpAuthorizationToken(HttpAuthScheme.byTypeValue(it[0]), it[1])
                     }
                     else                              ->
                         LOG.trace(
-                            "{}: {} header does not match the syntax: '{}'", req.requestURI, HEADER, h
+                            "{} {}: {} header does not match the syntax: '{}'", req.method, req.requestURI, HEADER, h
                         )
                 }
                 return null

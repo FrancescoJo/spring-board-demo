@@ -24,8 +24,8 @@ import javax.transaction.Transactional
  */
 @Service
 class CreateUserServiceImpl(
-    private val authRepo: AuthenticationRepository,
-    private val userRepo: UserRepository
+    override val userRepo: UserRepository,
+    private val authRepo: AuthenticationRepository
 ) : CreateUserService {
     @Transactional
     override fun create(req: CreateUserRequest, clientInfo: ClientAuthInfo): UserInfo {
@@ -46,11 +46,9 @@ class CreateUserServiceImpl(
             this.email = req.email ?: ""
             this.createdDate = now
             this.createdIp = clientInfo.remoteAddr
-            this.lastActiveDate = now
-            this.lastActiveIp = clientInfo.remoteAddr
-            this.lastActivePlatformType = clientInfo.platformType
-            this.lastActivePlatformVersion = clientInfo.platformVer
-            this.lastActiveAppVersion = clientInfo.appVer
+
+            applyLastActivityWith(clientInfo, now)
+
             this.invitedBy = req.invitedBy.takeIf { !it.isNullOrEmpty() }?.let {
                 return@let userRepo.findByNickname(it)
             }

@@ -4,7 +4,7 @@
  */
 package test.endpoint.v1.user.dto;
 
-import com.github.fj.board.endpoint.v1.user.dto.CreateUserRequest;
+import com.github.fj.board.endpoint.v1.user.dto.UpdateUserRequest;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,46 +15,38 @@ import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEmail;
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
- * @since 18 - Jul - 2020
+ * @since 20 - Jul - 2020
  */
-public final class CreateUserRequestBuilder {
+public class UpdateUserRequestBuilder {
     private String nickname = "";
     private String email = null;
-    private String invitedBy = null;
 
-    public CreateUserRequestBuilder() {
+    public UpdateUserRequestBuilder() {
     }
 
-    public CreateUserRequestBuilder(final CreateUserRequest src) {
+    public UpdateUserRequestBuilder(final UpdateUserRequest src) {
         this.nickname = src.getNickname();
         this.email = src.getEmail();
-        this.invitedBy = src.getInvitedBy();
     }
 
-    public CreateUserRequestBuilder nickname(final @Nonnull String value) {
+    public UpdateUserRequestBuilder nickname(final @Nonnull String value) {
         this.nickname = value;
         return this;
     }
 
-    public CreateUserRequestBuilder email(final @Nullable String value) {
+    public UpdateUserRequestBuilder email(final @Nullable String value) {
         this.email = value;
         return this;
     }
 
-    public CreateUserRequestBuilder invitedBy(final @Nullable String value) {
-        this.invitedBy = value;
-        return this;
-    }
-
-    public CreateUserRequest build() {
-        return new CreateUserRequest(
+    public UpdateUserRequest build() {
+        return new UpdateUserRequest(
                 /* nickname */  nickname,
-                /* email */     email,
-                /* invitedBy */ invitedBy
+                /* email */     email
         );
     }
 
-    public static CreateUserRequest createRandom() {
+    public static UpdateUserRequest createRandom() {
         final String randomEmail;
         if (randomBoolean()) {
             randomEmail = randomEmail();
@@ -62,10 +54,9 @@ public final class CreateUserRequestBuilder {
             randomEmail = null;
         }
 
-        return new CreateUserRequestBuilder()
+        return new UpdateUserRequestBuilder()
                 .nickname(getRandomAlphaNumericString(8))
                 .email(randomEmail)
-                .invitedBy(null)
                 .build();
     }
 }

@@ -111,7 +111,7 @@ class CustomErrorHandler : ErrorController {
                 )
             }
             is MethodArgumentNotValidException -> {
-                LOG.error("{}: Illegal request from client. Constraint violations are:", req.requestURI)
+                LOG.error("{} {}: Illegal request from client. Constraint violations are:", req.method, req.requestURI)
                 val msgs = ex.bindingResult.allErrors.map {
                     LOG.error("  {}", it.defaultMessage)
                     return@map it.defaultMessage
@@ -170,10 +170,10 @@ class CustomErrorHandler : ErrorController {
     private fun logError(req: HttpServletRequest, message: String, ex: Exception) {
         if (Application.profile == AppProfile.RELEASE) {
             // Minimise log outputs in RELEASE binary
-            LOG.error("{}: {}", req.requestURI, message)
+            LOG.error("{} {}: {}", req.method, req.requestURI, message)
             logCauses(req, ex)
         } else {
-            LOG.error("{}: {}", req.requestURI, message, ex)
+            LOG.error("{} {}: {}", req.method, req.requestURI, message, ex)
         }
     }
 
@@ -183,7 +183,7 @@ class CustomErrorHandler : ErrorController {
         } else {
             val superCause = cause.cause
             if (superCause == null) {
-                LOG.error("""{}: {} ("{}")""", req.requestURI, cause::class, cause.message)
+                LOG.error("""{} {}: {} ("{}")""", req.method, req.requestURI, cause::class, cause.message)
             } else {
                 LOG.error("by {}", cause::class)
                 logCauses(req, superCause)

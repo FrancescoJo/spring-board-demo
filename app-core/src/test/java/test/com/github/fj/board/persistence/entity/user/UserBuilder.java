@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomPositiveLong;
+import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEmail;
 import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
 
 /**
@@ -163,7 +164,7 @@ public class UserBuilder {
                 .authentication(AuthenticationBuilder.createRandom())
                 .nickname(getRandomAlphaNumericString(8))
                 .status(randomEnumConst(Status.class))
-                .email(getRandomAlphaNumericString(8) + "@company.com")
+                .email(randomEmail())
                 .createdDate(now)
                 .createdIp(localhost)
                 .lastActiveDate(now)

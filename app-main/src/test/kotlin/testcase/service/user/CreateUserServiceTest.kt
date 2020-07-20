@@ -49,7 +49,7 @@ class CreateUserServiceTest {
     fun setup() {
         MockitoAnnotations.initMocks(this)
 
-        this.sut = CreateUserServiceImpl(authRepo, userRepo)
+        this.sut = CreateUserServiceImpl(userRepo, authRepo)
     }
 
     @Test

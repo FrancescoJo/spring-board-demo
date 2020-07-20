@@ -23,4 +23,21 @@ interface UserRepository : JpaRepository<User, Long> {
     """
     )
     fun findByNickname(nickname: String): User?
+
+    /**
+     * @hide Don't use this method directly. This method is unintentionally exposed as public since Kotlin mixin
+     * cannot hold state since it's actually an interface.
+     */
+    @Query(
+        """
+        SELECT u
+        FROM User u
+        WHERE u.authentication = (
+            SELECT a
+            FROM Authentication a
+            WHERE a.loginName = ?1
+        )
+    """
+    )
+    fun findByLoginName(loginName: String): User?
 }

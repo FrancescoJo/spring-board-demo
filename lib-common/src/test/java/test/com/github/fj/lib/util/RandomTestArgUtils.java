@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.function.Function;
 
+import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomPositiveInt;
 
 /**
@@ -55,5 +56,15 @@ public class RandomTestArgUtils {
         }
 
         return l;
+    }
+
+    public static String randomEmail() {
+        final String[] domains = new String[]{
+                "company.com", "organisation.org", "institute.edu", "government.gov", "network.net"
+        };
+        final int nameLength = getRandomPositiveInt(1, 16);
+        final int domainIdx = getRandomPositiveInt(0, domains.length);
+
+        return getRandomAlphaNumericString(nameLength) + "@" + domains[domainIdx];
     }
 }

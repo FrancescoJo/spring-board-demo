@@ -45,7 +45,7 @@ class GetUserServiceTest {
         val targetNickname = getRandomAlphaNumericString(8)
 
         // when:
-        `when`(userRepo.findByNickname(targetNickname)).thenThrow(UserNotFoundException())
+        `when`(userRepo.findByNickname(targetNickname)).thenReturn(null)
 
         // then:
         assertThrows<UserNotFoundException> {
