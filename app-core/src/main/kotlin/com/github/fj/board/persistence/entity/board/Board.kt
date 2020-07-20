@@ -22,13 +22,25 @@ import javax.persistence.*
 @Entity
 @Table(name = "boards")
 class Board : AbstractIncrementalLockableEntity() {
+    /**
+     * Internal id, must not be exposed
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0L
 
+    /**
+     * External id, could be exposed
+     */
     @Convert(converter = ByteArrayUuidConverter::class)
     @Column(name = "access_id", nullable = false, columnDefinition = "VARBINARY(16)")
     var accessId: UUID = UuidExtensions.EMPTY_UUID
+
+    /**
+     * Alphanumeric, can be empty, human friendly name to specify a board
+     */
+    @Column(length = 16, nullable = false, columnDefinition = "VARCHAR(16)")
+    var key: String = ""
 
     @Column(length = 128, nullable = false, columnDefinition = "VARCHAR(128)")
     var name: String = ""
@@ -58,6 +70,7 @@ class Board : AbstractIncrementalLockableEntity() {
 
     override fun toString() = "Board(id=$id, " +
             "accessId=$accessId, " +
+            "key='$key', " +
             "name='$name', " +
             "description='$description', " +
             "postsCount=$postsCount, " +

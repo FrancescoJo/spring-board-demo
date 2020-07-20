@@ -25,5 +25,7 @@ object ApiPaths {
     const val USER = "$LATEST_VERSION/user"
     const val USER_NICKNAME = "$USER/{nickname}"
 
+    const val BOARD = "$LATEST_VERSION/board"
+
     const val BOARDS = "$LATEST_VERSION/boards"
 }
