@@ -6,6 +6,7 @@ package com.github.fj.board.vo.user
 
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.user.Status
+import com.github.fj.board.vo.auth.AuthenticationResult
 import java.time.LocalDateTime
 
 /**
@@ -13,6 +14,7 @@ import java.time.LocalDateTime
  * @since 19 - Jul - 2020
  */
 data class UserInfo(
+    val loginName: String,
     val nickname: String,
     val status: Status,
     val email: String,
@@ -20,14 +22,13 @@ data class UserInfo(
     val lastActiveDate: LocalDateTime
 ) {
     companion object {
-        fun from(src: User) = with(src) {
-            UserInfo(
-                nickname = nickname,
-                status = status,
-                email = email,
-                createdDate = createdDate,
-                lastActiveDate = lastActiveDate
-            )
-        }
+        fun from(src: User) = UserInfo(
+            loginName = src.authentication.loginName,
+            nickname = src.nickname,
+            status = src.status,
+            email = src.email,
+            createdDate = src.createdDate,
+            lastActiveDate = src.lastActiveDate
+        )
     }
 }
