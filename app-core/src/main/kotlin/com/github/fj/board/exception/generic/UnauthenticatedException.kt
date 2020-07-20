@@ -9,9 +9,10 @@ import org.springframework.http.HttpStatus
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
- * @since 20 - Jul - 2020
+ * @since 16 - Jul - 2020
+ * @see <a href="https://stackoverflow.com/questions/3297048/403-forbidden-vs-401-unauthorized-http-responses">403 vs 401</a>
  */
-class UnauthorisedException(
-    override val message: String = "You are not authorised.",
+class UnauthenticatedException(
+    override val message: String = "You are not authenticated.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.FORBIDDEN, message, cause)
+) : GeneralHttpException(HttpStatus.UNAUTHORIZED, message, cause)

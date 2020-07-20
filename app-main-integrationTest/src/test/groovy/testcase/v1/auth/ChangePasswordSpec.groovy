@@ -9,7 +9,7 @@ import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequest
 import com.github.fj.board.exception.client.auth.DuplicatedPasswordException
 import com.github.fj.board.exception.client.auth.WrongPasswordException
-import com.github.fj.board.exception.generic.UnauthorisedException
+import com.github.fj.board.exception.generic.UnauthenticatedException
 import io.restassured.response.Response
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
@@ -41,7 +41,7 @@ class ChangePasswordSpec extends AuthTestBase {
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
 
         expect:
-        errorBody.cause == UnauthorisedException.class.simpleName
+        errorBody.cause == UnauthenticatedException.class.simpleName
     }
 
     def "fail if old password mismatches saved one"() {

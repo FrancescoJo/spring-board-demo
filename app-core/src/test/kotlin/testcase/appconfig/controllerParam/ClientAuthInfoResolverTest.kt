@@ -6,7 +6,7 @@ package testcase.appconfig.controllerParam
 
 import com.github.fj.board.appconfig.controllerParam.ClientAuthInfoResolver
 import com.github.fj.board.component.auth.AuthenticationObjectImpl
-import com.github.fj.board.exception.generic.UnauthorisedException
+import com.github.fj.board.exception.generic.UnauthenticatedException
 import com.github.fj.board.exception.server.NotImplementedException
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.vo.auth.ClientAuthInfo
@@ -48,7 +48,7 @@ class ClientAuthInfoResolverTest {
         val webReq = mock(NativeWebRequest::class.java)
 
         // expect:
-        assertThrows<UnauthorisedException> {
+        assertThrows<UnauthenticatedException> {
             testResolveArgument(webReq)
         }
     }

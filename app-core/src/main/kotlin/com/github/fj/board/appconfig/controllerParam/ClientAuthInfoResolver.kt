@@ -5,7 +5,7 @@
 package com.github.fj.board.appconfig.controllerParam
 
 import com.github.fj.board.component.auth.AuthenticationObjectImpl
-import com.github.fj.board.exception.generic.UnauthorisedException
+import com.github.fj.board.exception.generic.UnauthenticatedException
 import com.github.fj.board.exception.server.NotImplementedException
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import org.springframework.core.MethodParameter
@@ -28,7 +28,7 @@ class ClientAuthInfoResolver : HandlerMethodArgumentResolver {
         binderFactory: WebDataBinderFactory?
     ): Any? {
         val currentAuthentication =
-            SecurityContextHolder.getContext()?.authentication ?: throw UnauthorisedException()
+            SecurityContextHolder.getContext()?.authentication ?: throw UnauthenticatedException()
 
         val authObject = currentAuthentication as? AuthenticationObjectImpl
             ?: throw NotImplementedException("Authentication kind is not supported for user " +

@@ -9,7 +9,7 @@ import com.github.fj.board.endpoint.v1.user.dto.CreateUserRequest
 import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.user.NicknameAlreadyExistException
-import com.github.fj.board.exception.generic.UnauthorisedException
+import com.github.fj.board.exception.generic.UnauthenticatedException
 import io.restassured.response.Response
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
@@ -42,7 +42,7 @@ class CreateUserSpec extends UserTestBase {
         final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
 
         expect:
-        errorBody.cause == UnauthorisedException.class.simpleName
+        errorBody.cause == UnauthenticatedException.class.simpleName
     }
 
     @Unroll
