@@ -5,12 +5,17 @@
 package com.github.fj.board.service.board.impl
 
 import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
+import com.github.fj.board.exception.client.board.DuplicatedBoardKeyException
+import com.github.fj.board.exception.client.user.UserNotFoundException
+import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.board.CreateBoardService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.board.BoardInfo
+import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.transaction.Transactional
 
 /**
@@ -24,6 +29,28 @@ class CreateBoardServiceImpl(
 ) : CreateBoardService {
     @Transactional
     override fun create(req: CreateBoardRequest, clientInfo: ClientAuthInfo): BoardInfo {
-        TODO("Not yet implemented")
+        val self = clientInfo.getCurrentUser() ?: run {
+            throw UserNotFoundException()
+        }
+
+        boardRepo.findByKey(req.key)?.let {
+            throw DuplicatedBoardKeyException()
+        }
+
+        val now = utcNow()
+
+        val createdBoard = Board().apply {
+            accessId = UUID.randomUUID()
+            key = req.key
+            name = req.name
+            description = req.description
+            createdDate = now
+            modifiedDate = now
+            creator = self
+        }
+
+        return BoardInfo.from(createdBoard).also {
+            boardRepo.save(createdBoard)
+        }
     }
 }

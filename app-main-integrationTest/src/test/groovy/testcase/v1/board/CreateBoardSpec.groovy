@@ -4,11 +4,21 @@
  */
 package testcase.v1.board
 
+import com.github.fj.board.endpoint.ApiPaths
+import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
 import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
+import com.github.fj.board.exception.client.IllegalRequestException
+import com.github.fj.board.exception.client.user.UserNotFoundException
+import com.github.fj.board.exception.generic.UnauthenticatedException
+import io.restassured.response.Response
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
+import org.springframework.restdocs.payload.ResponseFieldsSnippet
+import spock.lang.Unroll
+import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
 import testcase.BoardTestBase
 
+import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 
@@ -18,27 +28,136 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
  */
 class CreateBoardSpec extends BoardTestBase {
     def "fail if not authenticated"() {
+        given:
+        final request = CreateBoardRequestBuilder.createRandom()
 
+        when:
+        final reqSpec = jsonRequestSpec("createBoard-error-unauthorised", requestFieldsDoc(), errorResponseFieldsDoc())
+                .when()
+                .body(request)
+                .post(ApiPaths.BOARD)
+
+        then:
+        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+
+        expect:
+        errorBody.cause == UnauthenticatedException.class.simpleName
     }
 
     def "fail if no user is created for authentication"() {
+        given:
+        final createdAuth = createRandomAuth()
+        final request = CreateBoardRequestBuilder.createRandom()
 
+        when:
+        final reqSpec = sendRequest(
+                "createBoard-error-noUserCreated",
+                createdAuth.accessToken.value,
+                request,
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+
+        expect:
+        errorBody.cause == UserNotFoundException.class.simpleName
     }
 
+    @Unroll
     def "fail if board key('#key') is out of pattern"() {
+        given:
+        final self = createRandomUser()
+        final request = new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
+                .key(key)
+                .build()
 
+        when:
+        final reqSpec = sendRequest(
+                "createBoard-error-illegalKeyFormat-#$docId",
+                self.accessToken,
+                request,
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+
+        expect:
+        errorBody.cause == IllegalRequestException.class.simpleName
+
+        where:
+        key                 | docId
+        ""                  | 1
+        "123"               | 2
+        "12345678901234567" | 3
+        "name and space"    | 4
+        "Русский"           | 5
     }
 
+    @Unroll
     def "fail if board name('#name') is too short or too long"() {
+        given:
+        final self = createRandomUser()
+        final request = new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
+                .name(name)
+                .build()
 
+        when:
+        final reqSpec = sendRequest(
+                "createBoard-error-illegalNameFormat-#$docId",
+                self.accessToken,
+                request,
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+
+        expect:
+        errorBody.cause == IllegalRequestException.class.simpleName
+
+        where:
+        name                  | docId
+        ""                    | 1
+        "1"                   | 2
+        "1234567890123456789" | 3
     }
 
     def "board is created if request is valid"() {
+        given:
+        final self = createRandomUser()
+        final request = CreateBoardRequestBuilder.createRandom()
 
+        when:
+        final reqSpec = sendRequest(
+                "createBoard",
+                self.accessToken,
+                request,
+                boardInfoResponseFieldsDoc()
+        )
+
+        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+
+        then:
+        !response.accessId.isEmpty()
+        response.key == request.key
+        response.name == request.name
+        response.description == request.description
+        response.postsCount == 0
+        response.createdDate == response.modifiedDate
+        response.creatorLoginName == self.loginName
     }
 
-    def "warning if duplicated board name is given"() {
-
+    private Response sendRequest(
+            final String documentId,
+            final String accessToken,
+            final CreateBoardRequest req,
+            final ResponseFieldsSnippet respDoc
+    ) {
+        return authenticatedRequest(documentId, accessToken, requestFieldsDoc(), respDoc)
+                .body(req)
+                .post(ApiPaths.BOARD)
     }
 
     private static RequestFieldsSnippet requestFieldsDoc() {
