@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.NoHandlerFoundException
 import javax.servlet.http.HttpServletRequest
+import javax.validation.ValidationException
 
 /**
  * This only works if following settings are applied:
@@ -53,6 +54,19 @@ class CustomErrorHandler : ErrorController {
                 "${req.method} ${req.requestURI} is unsupported or not found on server.",
                 ex
             )
+        )
+    }
+
+    @ExceptionHandler(ValidationException::class)
+    fun handleValidationFailure(req: HttpServletRequest, ex: ValidationException): ResponseEntity<ErrorResponseDto> {
+        val message = ex.message
+
+        return handleError(
+            req, if (message.isNullOrEmpty()) {
+                IllegalRequestException(cause = ex)
+            } else {
+                IllegalRequestException(message, ex)
+            }
         )
     }
 

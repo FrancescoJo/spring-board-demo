@@ -12,18 +12,10 @@ import javax.validation.constraints.Pattern
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
- * @since 20 - Jul - 2020
+ * @since 21 - Jul - 2020
  */
 @JsonDeserialize
-data class CreateBoardRequest(
-    @get:Pattern(
-        regexp = "^[A-Za-z0-9]{$KEY_SIZE_MIN,$KEY_SIZE_MAX}\$",
-        message = "`key` must between $KEY_SIZE_MIN to $KEY_SIZE_MAX alphanumeric characters."
-    )
-    @JsonProperty
-    @JsonPropertyDescription(DESC_KEY)
-    val key: String,
-
+data class UpdateBoardRequest(
     @get:UnicodeCharsLength(
         min = NAME_SIZE_MIN,
         max = NAME_SIZE_MAX,
@@ -38,14 +30,9 @@ data class CreateBoardRequest(
     val description: String
 ) {
     companion object {
-        const val KEY_SIZE_MIN = 4
-        const val KEY_SIZE_MAX = 16
         const val NAME_SIZE_MIN = 2
         const val NAME_SIZE_MAX = 18
 
-        const val DESC_KEY = "A distinct, human-friendly unique string to identify a board. " +
-                "Must between $KEY_SIZE_MIN to $KEY_SIZE_MAX alphanumeric characters. " +
-                "Once key is specified, it never could be changed."
         const val DESC_NAME = "A display name of this board. Should be concise and meaningful."
         const val DESC_DESCRIPTION = "Brief description of this board."
     }

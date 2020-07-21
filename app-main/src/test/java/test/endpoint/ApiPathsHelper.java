@@ -17,4 +17,11 @@ public class ApiPathsHelper {
     public static String USER_NICKNAME(final String nickname) {
         return ApiPaths.USER + "/" + nickname;
     }
+
+    /**
+     * {@link com.github.fj.board.endpoint.ApiPaths#BOARD_ACCESS_ID}
+     */
+    public static String BOARD_ACCESS_ID(final String accessId) {
+        return ApiPaths.BOARD + "/" + accessId;
+    }
 }

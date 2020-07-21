@@ -11,6 +11,12 @@ package com.github.fj.lib.util
 import java.nio.ByteBuffer
 import java.util.*
 
+const val REGEXP_UUID = "$REGEXP_HEXADECIMAL{8}-" +
+        "$REGEXP_HEXADECIMAL{4}-" +
+        "$REGEXP_HEXADECIMAL{4}-" +
+        "$REGEXP_HEXADECIMAL{4}-" +
+        "$REGEXP_HEXADECIMAL{12}"
+
 private val EMPTY_UUID = UUID(0, 0)
 
 fun UUID.toByteArray(): ByteArray {

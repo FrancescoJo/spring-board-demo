@@ -7,6 +7,7 @@ package com.github.fj.board.persistence.repository.board
 import com.github.fj.board.persistence.entity.board.Board
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import java.util.*
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -21,4 +22,13 @@ interface BoardRepository : JpaRepository<Board, Long> {
     """
     )
     fun findByKey(key: String): Board?
+
+    @Query(
+        """
+        SELECT b
+        FROM Board b
+        WHERE b.accessId = ?1
+    """
+    )
+    fun findByAccessId(accessId: UUID): Board?
 }
