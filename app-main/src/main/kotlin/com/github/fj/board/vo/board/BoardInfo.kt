@@ -5,6 +5,7 @@
 package com.github.fj.board.vo.board
 
 import com.github.fj.board.persistence.entity.board.Board
+import com.github.fj.board.persistence.model.board.Status
 import com.github.fj.board.vo.user.UserInfo
 import java.time.LocalDateTime
 import java.util.*
@@ -15,6 +16,7 @@ import java.util.*
  */
 interface BoardInfo {
     val accessId: UUID
+    val status: Status
     val key: String
     val name: String
     val description: String
@@ -26,6 +28,7 @@ interface BoardInfo {
     companion object {
         private data class Impl(
             override val accessId: UUID,
+            override val status: Status,
             override val key: String,
             override val name: String,
             override val description: String,
@@ -37,6 +40,7 @@ interface BoardInfo {
 
         fun from(src: Board): BoardInfo = Impl(
             accessId = src.accessId,
+            status = src.status,
             key = src.key,
             name = src.name,
             description = src.description,

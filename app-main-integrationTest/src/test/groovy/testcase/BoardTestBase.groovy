@@ -35,6 +35,9 @@ class BoardTestBase extends UserTestBase {
                 fieldWithPath("body.accessId")
                         .type(JsonFieldType.STRING)
                         .description(BoardInfoResponse.DESC_ACCESS_ID),
+                fieldWithPath("body.status")
+                        .type(JsonFieldType.STRING)
+                        .description(BoardInfoResponse.DESC_STATUS),
                 fieldWithPath("body.key")
                         .type(JsonFieldType.STRING)
                         .description(BoardInfoResponse.DESC_KEY),

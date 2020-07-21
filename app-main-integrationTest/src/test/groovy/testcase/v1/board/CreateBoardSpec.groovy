@@ -10,6 +10,7 @@ import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthenticatedException
+import com.github.fj.board.persistence.model.board.Status
 import io.restassured.response.Response
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
@@ -141,6 +142,7 @@ class CreateBoardSpec extends BoardTestBase {
 
         then:
         !response.accessId.isEmpty()
+        response.status == Status.NORMAL
         response.key == request.key
         response.name == request.name
         response.description == request.description

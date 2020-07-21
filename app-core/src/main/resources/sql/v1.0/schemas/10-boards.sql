@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS `boards`
 (
     `id`              BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `access_id`       VARBINARY(16) NOT NULL UNIQUE,
+    `status`          VARCHAR(4)    NOT NULL,
     `key`             VARCHAR(16)   NOT NULL,
     `name`            VARCHAR(128)  NOT NULL,
     `description`     TEXT          NOT NULL,

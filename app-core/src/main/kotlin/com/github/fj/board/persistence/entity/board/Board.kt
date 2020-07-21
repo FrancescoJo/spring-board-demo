@@ -5,12 +5,12 @@
 package com.github.fj.board.persistence.entity.board
 
 import com.github.fj.board.persistence.converter.ByteArrayUuidConverter
+import com.github.fj.board.persistence.converter.board.StatusConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
-import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.user.User
+import com.github.fj.board.persistence.model.board.Status
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.util.UuidExtensions
-import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
@@ -35,6 +35,9 @@ class Board : AbstractIncrementalLockableEntity() {
     @Convert(converter = ByteArrayUuidConverter::class)
     @Column(name = "access_id", nullable = false, columnDefinition = "VARBINARY(16)")
     var accessId: UUID = UuidExtensions.EMPTY_UUID
+
+    @Convert(converter = StatusConverter::class)
+    var status: Status = Status.NORMAL
 
     /**
      * Alphanumeric, can be empty, human friendly name to specify a board
@@ -70,6 +73,7 @@ class Board : AbstractIncrementalLockableEntity() {
 
     override fun toString() = "Board(id=$id, " +
             "accessId=$accessId, " +
+            "status=$status, " +
             "key='$key', " +
             "name='$name', " +
             "description='$description', " +
