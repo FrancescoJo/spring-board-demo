@@ -22,7 +22,7 @@ import static org.hamcrest.CoreMatchers.is
 class GetUserSpec extends UserTestBase {
     def "fail if not authenticated"() {
         when:
-        final reqSpec = jsonRequestSpec("getUser-error-unauthorised", errorResponseFieldsDoc())
+        final reqSpec = jsonRequestSpec("getUser-error-unauthenticated", errorResponseFieldsDoc())
                 .when()
                 .get(ApiPathsHelper.USER_NICKNAME(getRandomAlphaNumericString(8)))
 

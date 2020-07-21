@@ -6,7 +6,6 @@ package com.github.fj.board.service.board.impl
 
 import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
 import com.github.fj.board.exception.client.board.DuplicatedBoardKeyException
-import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
@@ -29,9 +28,7 @@ class CreateBoardServiceImpl(
 ) : CreateBoardService {
     @Transactional
     override fun create(req: CreateBoardRequest, clientInfo: ClientAuthInfo): BoardInfo {
-        val self = clientInfo.getCurrentUser() ?: run {
-            throw UserNotFoundException()
-        }
+        val self = clientInfo.getCurrentUser()
 
         boardRepo.findByKey(req.key)?.let {
             throw DuplicatedBoardKeyException()

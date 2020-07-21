@@ -33,7 +33,7 @@ class UpdateUserSpec extends UserTestBase {
         final request = UpdateUserRequestBuilder.createRandom()
 
         when:
-        final reqSpec = jsonRequestSpec("updateUser-error-unauthorised", requestFieldsDoc(), errorResponseFieldsDoc())
+        final reqSpec = jsonRequestSpec("updateUser-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .patch(ApiPathsHelper.USER_NICKNAME(getRandomAlphaNumericString(8)))

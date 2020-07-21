@@ -33,7 +33,7 @@ class CreateUserSpec extends UserTestBase {
         final request = CreateUserRequestBuilder.createRandom()
 
         when:
-        final reqSpec = jsonRequestSpec("createUser-error-unauthorised", requestFieldsDoc(), errorResponseFieldsDoc())
+        final reqSpec = jsonRequestSpec("createUser-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .post(ApiPaths.USER)

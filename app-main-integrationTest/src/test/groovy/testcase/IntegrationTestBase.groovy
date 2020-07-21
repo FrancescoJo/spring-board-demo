@@ -153,6 +153,16 @@ class IntegrationTestBase extends Specification {
         }
     }
 
+    final <T> T expectGenericResponse(
+            final @Nonnull ValidatableResponse respSpec,
+            final @Nonnull Class<T> klass
+    ) {
+        final responseDto = parseResponse(respSpec)
+        final body = responseDto.body
+
+        return klass.cast(body)
+    }
+
     final <T> T expectResponse(
             final @Nonnull ValidatableResponse respSpec,
             final @Nonnull Class<T> klass
@@ -223,5 +233,19 @@ class IntegrationTestBase extends Specification {
         ]
 
         return responseFields(basicFieldsDoc() + fields)
+    }
+
+    protected static ResponseFieldsSnippet genericBooleanResponseDoc() {
+        return responseFields(
+                fieldWithPath("type")
+                        .type(JsonFieldType.STRING)
+                        .description(AbstractResponseDto.DESC_TYPE),
+                fieldWithPath("timestamp")
+                        .type(JsonFieldType.NUMBER)
+                        .description(AbstractResponseDto.DESC_TIMESTAMP),
+                fieldWithPath("body")
+                        .type(JsonFieldType.BOOLEAN)
+                        .description(AbstractResponseDto.DESC_BODY)
+        )
     }
 }

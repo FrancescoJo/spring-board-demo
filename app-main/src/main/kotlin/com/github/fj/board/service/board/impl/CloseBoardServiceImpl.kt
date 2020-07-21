@@ -4,13 +4,12 @@
  */
 package com.github.fj.board.service.board.impl
 
-import com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequest
-import com.github.fj.board.exception.generic.UnauthorisedException
+import com.github.fj.board.exception.client.board.BoardNotFoundException
+import com.github.fj.board.persistence.model.board.Status
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
-import com.github.fj.board.service.board.UpdateBoardService
+import com.github.fj.board.service.board.CloseBoardService
 import com.github.fj.board.vo.auth.ClientAuthInfo
-import com.github.fj.board.vo.board.BoardInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
 import java.util.*
@@ -21,24 +20,24 @@ import javax.transaction.Transactional
  * @since 21 - Jul - 2020
  */
 @Service
-class UpdateBoardServiceImpl(
+internal class CloseBoardServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository
-) : UpdateBoardService {
+) : CloseBoardService {
     @Transactional
-    override fun update(accessId: UUID, req: UpdateBoardRequest, clientInfo: ClientAuthInfo): BoardInfo {
+    override fun close(accessId: UUID, clientInfo: ClientAuthInfo): Boolean {
         val self = clientInfo.getCurrentUser()
-        val board = accessId.getBoard()
+        val board = accessId.getBoard().takeIf {
+            it.status != Status.CLOSED
+        } ?: throw BoardNotFoundException()
+
         self.assertAuthorityOf(board)
 
-        val updatedBoard = board.apply {
-            this.name = req.name
-            this.description = req.description
+        boardRepo.save(board.apply {
+            this.status = Status.CLOSED
             this.modifiedDate = utcNow()
-        }
+        })
 
-        return BoardInfo.from(updatedBoard).also {
-            boardRepo.save(updatedBoard)
-        }
+        return true
     }
 }

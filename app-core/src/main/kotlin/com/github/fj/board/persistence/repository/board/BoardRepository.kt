@@ -19,6 +19,7 @@ interface BoardRepository : JpaRepository<Board, Long> {
         SELECT b
         FROM Board b
         WHERE b.key = ?1
+          AND b.status <> com.github.fj.board.persistence.model.board.Status.CLOSED
     """
     )
     fun findByKey(key: String): Board?
@@ -28,6 +29,7 @@ interface BoardRepository : JpaRepository<Board, Long> {
         SELECT b
         FROM Board b
         WHERE b.accessId = ?1
+          AND b.status <> com.github.fj.board.persistence.model.board.Status.CLOSED
     """
     )
     fun findByAccessId(accessId: UUID): Board?

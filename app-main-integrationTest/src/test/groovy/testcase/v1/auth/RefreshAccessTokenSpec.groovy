@@ -37,7 +37,7 @@ class RefreshAccessTokenSpec extends AuthTestBase {
         final request = new RefreshTokenRequest(createdAuth.refreshToken)
 
         when:
-        final reqSpec = jsonRequestSpec("refreshAccessToken-error-unauthorised", requestFieldsDoc(), errorResponseFieldsDoc())
+        final reqSpec = jsonRequestSpec("refreshAccessToken-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .patch(ApiPaths.TOKEN)

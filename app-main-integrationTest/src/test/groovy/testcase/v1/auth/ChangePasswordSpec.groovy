@@ -32,7 +32,7 @@ class ChangePasswordSpec extends AuthTestBase {
         final request = ChangePasswordRequestBuilder.createRandom()
 
         when:
-        final reqSpec = jsonRequestSpec("changePassword-error-unauthorised", requestFieldsDoc(), errorResponseFieldsDoc())
+        final reqSpec = jsonRequestSpec("changePassword-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .patch(ApiPaths.PASSWORD)

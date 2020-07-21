@@ -15,6 +15,7 @@ import java.util.*
  * @since 20 - Jul - 2020
  */
 interface BoardInfo {
+    val id: Long
     val accessId: UUID
     val status: Status
     val key: String
@@ -27,6 +28,7 @@ interface BoardInfo {
 
     companion object {
         private data class Impl(
+            override val id: Long,
             override val accessId: UUID,
             override val status: Status,
             override val key: String,
@@ -39,6 +41,7 @@ interface BoardInfo {
         ) : BoardInfo
 
         fun from(src: Board): BoardInfo = Impl(
+            id = src.id,
             accessId = src.accessId,
             status = src.status,
             key = src.key,

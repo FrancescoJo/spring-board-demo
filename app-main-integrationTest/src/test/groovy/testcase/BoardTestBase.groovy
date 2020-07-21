@@ -6,9 +6,13 @@ package testcase
 
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
+import com.github.fj.board.persistence.repository.board.BoardRepository
+import com.github.fj.board.vo.board.BoardInfo
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
+import org.springframework.transaction.support.TransactionTemplate
 import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
 
 import static org.hamcrest.CoreMatchers.is
@@ -20,14 +24,28 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
  * @since 20 - Jul - 2020
  */
 class BoardTestBase extends UserTestBase {
-    protected final BoardInfoResponse createRandomBoardBy(final CreatedUser owner) {
+    @Autowired
+    private BoardRepository boardRepo
+
+    @Autowired
+    private TransactionTemplate txTemplate
+
+    protected final BoardInfo createRandomBoardBy(final CreatedUser owner) {
         final request = CreateBoardRequestBuilder.createRandom()
 
         final reqSpec = authenticatedRequest(owner.accessToken)
                 .body(request)
                 .post(ApiPaths.BOARD)
 
-        return expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+
+        // Fixing groovyc error: reference problem in closures
+        final repository = boardRepo
+
+        return txTemplate.execute {
+            final board = repository.findByAccessId(UUID.fromString(response.accessId))
+            return new BoardInfo.Companion().from(board)
+        }
     }
 
     protected static ResponseFieldsSnippet boardInfoResponseFieldsDoc() {

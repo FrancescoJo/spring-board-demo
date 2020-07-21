@@ -7,46 +7,51 @@ package testcase.service.board
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthorisedException
-import com.github.fj.board.service.board.UpdateBoardService
-import com.github.fj.board.service.board.impl.UpdateBoardServiceImpl
-import com.github.fj.board.vo.user.UserInfo
+import com.github.fj.board.persistence.entity.board.Board
+import com.github.fj.board.persistence.model.board.Status
+import com.github.fj.board.service.board.CloseBoardService
+import com.github.fj.board.service.board.impl.CloseBoardServiceImpl
+import com.github.fj.lib.time.utcNow
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.greaterThanOrEqualTo
+import org.hamcrest.Matchers.lessThanOrEqualTo
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.`when`
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
-import test.endpoint.v1.board.dto.UpdateBoardRequestBuilder
 import java.util.*
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 21 - Jul - 2020
  */
-class UpdateBoardServiceTest : AbstractBoardServiceTestTemplate() {
-    private lateinit var sut: UpdateBoardService
+class CloseBoardServiceTest : AbstractBoardServiceTestTemplate() {
+    private lateinit var sut: CloseBoardService
 
     @BeforeEach
     override fun setup() {
         super.setup()
-        this.sut = UpdateBoardServiceImpl(userRepo, boardRepo)
+        this.sut = CloseBoardServiceImpl(userRepo, boardRepo)
     }
 
     @Test
     fun `fail if there is no User but only authentication`() {
         // given:
         val clientInfo = ClientAuthInfoBuilder.createRandom()
-        val req = UpdateBoardRequestBuilder.createRandom()
 
         // when:
         `when`(userRepo.findByLoginName(clientInfo.loginName)).thenReturn(null)
 
         // then:
         assertThrows<UserNotFoundException> {
-            sut.update(UUID.randomUUID(), req, clientInfo)
+            sut.close(UUID.randomUUID(), clientInfo)
         }
     }
 
@@ -55,23 +60,21 @@ class UpdateBoardServiceTest : AbstractBoardServiceTestTemplate() {
         // given:
         val (clientInfo, _) = prepareSelf()
         val targetBoard = UUID.randomUUID()
-        val req = UpdateBoardRequestBuilder.createRandom()
 
         // when:
         `when`(boardRepo.findByAccessId(targetBoard)).thenReturn(null)
 
         // then:
         assertThrows<BoardNotFoundException> {
-            sut.update(UUID.randomUUID(), req, clientInfo)
+            sut.close(UUID.randomUUID(), clientInfo)
         }
     }
 
     @Test
-    fun `only owner of board can update it`() {
+    fun `only owner of board can close it`() {
         // given:
         val (clientInfo, _) = prepareSelf()
         val targetBoard = UUID.randomUUID()
-        val req = UpdateBoardRequestBuilder.createRandom()
         val board = BoardBuilder.createRandom()
 
         // when:
@@ -79,36 +82,49 @@ class UpdateBoardServiceTest : AbstractBoardServiceTestTemplate() {
 
         // then:
         assertThrows<UnauthorisedException> {
-            sut.update(targetBoard, req, clientInfo)
+            sut.close(targetBoard, clientInfo)
         }
     }
 
     @Test
-    fun `board is updated if request is valid`() {
+    fun `cannot close if board is already closed`() {
+        // given:
+        val (clientInfo, _) = prepareSelf()
+        val targetBoard = UUID.randomUUID()
+        val board = BoardBuilder(BoardBuilder.createRandom())
+            .status(Status.CLOSED)
+            .build()
+
+        // when:
+        `when`(boardRepo.findByAccessId(targetBoard)).thenReturn(board)
+
+        // then:
+        assertThrows<BoardNotFoundException> {
+            sut.close(targetBoard, clientInfo)
+        }
+    }
+
+    @Test
+    fun `board is closed if request is valid`() {
         // given:
         val (clientInfo, self) = prepareSelf()
-        val targetBoardId = UUID.randomUUID()
-        val req = UpdateBoardRequestBuilder.createRandom()
         val board = BoardBuilder(BoardBuilder.createRandom())
-            .accessId(targetBoardId)
             .creator(self)
             .build()
 
         // when:
-        `when`(boardRepo.findByAccessId(targetBoardId)).thenReturn(board)
+        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
 
         // then:
-        val result = sut.update(targetBoardId, req, clientInfo)
+        assertTrue(sut.close(board.accessId, clientInfo))
+
+        // and:
+        val boardCaptor: KArgumentCaptor<Board> = argumentCaptor()
+        verify(boardRepo, times(1)).save(boardCaptor.capture())
+        val updatedBoard = boardCaptor.firstValue
 
         // expect:
-        assertThat(result.accessId, `is`(targetBoardId))
-        assertThat(result.accessId, `is`(board.accessId))
-        assertThat(result.key, `is`(board.key))
-        assertThat(result.name, `is`(req.name))
-        assertThat(result.description, `is`(req.description))
-        assertThat(result.postsCount, `is`(board.postsCount))
-        assertThat(result.createdDate, `is`(board.createdDate))
-        assertThat(result.modifiedDate, greaterThanOrEqualTo(board.modifiedDate))
-        assertThat(result.creator, `is`(UserInfo.from(board.creator)))
+        assertThat(updatedBoard.status, `is`(Status.CLOSED))
+        assertThat(updatedBoard.modifiedDate, lessThanOrEqualTo(utcNow()))
     }
 }

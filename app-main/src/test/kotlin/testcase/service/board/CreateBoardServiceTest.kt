@@ -30,19 +30,12 @@ import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 20 - Jul - 2020
  */
-class CreateBoardServiceTest {
-    @Mock
-    private lateinit var userRepo: UserRepository
-
-    @Mock
-    private lateinit var boardRepo: BoardRepository
-
+class CreateBoardServiceTest : AbstractBoardServiceTestTemplate() {
     private lateinit var sut: CreateBoardService
 
     @BeforeEach
-    fun setup() {
-        MockitoAnnotations.initMocks(this)
-
+    override fun setup() {
+        super.setup()
         this.sut = CreateBoardServiceImpl(userRepo, boardRepo)
     }
 
@@ -64,7 +57,7 @@ class CreateBoardServiceTest {
     @Test
     fun `fail if key is already exist`() {
         // given:
-        val (authInfo, _) = setupSelf()
+        val (authInfo, _) = prepareSelf()
         val req = CreateBoardRequestBuilder.createRandom()
         val board = BoardBuilder(BoardBuilder.createRandom())
             .key(req.key)
@@ -82,7 +75,7 @@ class CreateBoardServiceTest {
     @Test
     fun `board is created if request is valid`() {
         // given:
-        val (authInfo, user) = setupSelf()
+        val (authInfo, user) = prepareSelf()
         val req = CreateBoardRequestBuilder.createRandom()
 
         // then:
@@ -94,16 +87,5 @@ class CreateBoardServiceTest {
         assertThat(result.name, `is`(req.name))
         assertThat(result.description, `is`(req.description))
         assertThat(result.creator.loginName, `is`(user.authentication.loginName))
-    }
-
-    private fun setupSelf(): Pair<ClientAuthInfo, User> {
-        // given:
-        val clientInfo = ClientAuthInfoBuilder.createRandom()
-        val user = UserBuilder.createRandom()
-
-        // when:
-        `when`(userRepo.findByLoginName(clientInfo.loginName)).thenReturn(user)
-
-        return clientInfo to user
     }
 }

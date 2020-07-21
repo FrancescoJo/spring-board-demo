@@ -33,7 +33,7 @@ class CreateBoardSpec extends BoardTestBase {
         final request = CreateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = jsonRequestSpec("createBoard-error-unauthorised", requestFieldsDoc(), errorResponseFieldsDoc())
+        final reqSpec = jsonRequestSpec("createBoard-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .post(ApiPaths.BOARD)
