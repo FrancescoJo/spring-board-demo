@@ -42,7 +42,7 @@ class CreateBoardControllerImpl(
     private val src: CreateBoardService
 ) : CreateBoardController {
     override fun create(req: CreateBoardRequest, clientInfo: ClientAuthInfo): BoardInfoResponse {
-        LOG.debug("{}: {}", clientInfo.requestUri, req)
+        LOG.debug("{}: {}", clientInfo.requestLine, req)
 
         val result = src.create(req, clientInfo)
 

@@ -43,7 +43,7 @@ internal class ChangePasswordControllerImpl(
     private val svc: ChangePasswordService
 ) : ChangePasswordController {
     override fun refresh(req: ChangePasswordRequest, clientInfo: ClientAuthInfo): AuthenticationResponse {
-        LOG.debug("{}: {}", clientInfo.requestUri, req)
+        LOG.debug("{}: {}", clientInfo.requestLine, req)
 
         val result = svc.changePassword(req, clientInfo, utcNow())
 

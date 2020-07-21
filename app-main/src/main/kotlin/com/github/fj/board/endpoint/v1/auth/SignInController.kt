@@ -44,7 +44,7 @@ internal class SignInControllerImpl(
     private val svc: SignInService
 ) : SignInController {
     override fun signIn(req: AuthenticationRequest, httpReq: HttpServletRequest): AuthenticationResponse {
-        LOG.debug("{}: {}", httpReq.requestURI, req)
+        LOG.debug("{} {}: {}", httpReq.method, httpReq.requestURI, req)
 
         if (req.platformType == PlatformType.UNDEFINED) {
             throw IllegalRequestException("`platformType` is not specified.")

@@ -42,7 +42,7 @@ internal class CreateUserControllerImpl(
     private val svc: CreateUserService
 ) : CreateUserController {
     override fun create(req: CreateUserRequest, clientInfo: ClientAuthInfo): UserInfoResponse {
-        LOG.debug("{}: {}", clientInfo.requestUri, req)
+        LOG.debug("{}: {}", clientInfo.requestLine, req)
 
         val result = svc.create(req, clientInfo)
 

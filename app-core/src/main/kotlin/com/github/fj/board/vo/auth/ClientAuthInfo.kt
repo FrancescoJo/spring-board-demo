@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletRequest
 interface ClientAuthInfo : UserAgent {
     val loginName: String
     val remoteAddr: InetAddress
-    val requestUri: String
+    val requestLine: String
 
     companion object {
         private data class Dto(
             override val loginName: String,
             override val remoteAddr: InetAddress,
-            override val requestUri: String,
+            override val requestLine: String,
             override val platformType: PlatformType,
             override val platformVer: String,
             override val appVer: Version
@@ -36,7 +36,7 @@ interface ClientAuthInfo : UserAgent {
             Dto(
                 loginName = loginName,
                 remoteAddr = httpReq.extractInetAddress(),
-                requestUri = httpReq.requestURI,
+                requestLine = "${httpReq.method} ${httpReq.requestURI}",
                 platformType = platformType,
                 platformVer = platformVer,
                 appVer = appVer

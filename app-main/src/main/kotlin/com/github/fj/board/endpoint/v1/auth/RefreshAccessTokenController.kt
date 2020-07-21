@@ -43,7 +43,7 @@ internal class RefreshAccessTokenControllerImpl(
     private val svc: RefreshAccessTokenService
 ) : RefreshAccessTokenController {
     override fun refresh(req: RefreshTokenRequest, clientInfo: ClientAuthInfo): AuthenticationResponse {
-        LOG.debug("{}: {}", clientInfo.requestUri, req)
+        LOG.debug("{}: {}", clientInfo.requestLine, req)
 
         val result = svc.refreshAuthToken(req, clientInfo, utcNow())
 

@@ -47,7 +47,7 @@ internal class UpdateUserControllerImpl(
     private val svc: UpdateUserService
 ) : UpdateUserController {
     override fun get(nickname: String, req: UpdateUserRequest, clientInfo: ClientAuthInfo): UserInfoResponse {
-        LOG.debug("{}", clientInfo.requestUri)
+        LOG.debug("{}", clientInfo.requestLine)
 
         val result = svc.update(nickname, req, clientInfo)
 

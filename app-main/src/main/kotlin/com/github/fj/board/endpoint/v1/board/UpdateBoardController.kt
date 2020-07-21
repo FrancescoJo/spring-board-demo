@@ -57,7 +57,7 @@ class UpdateBoardControllerImpl(
     private val src: UpdateBoardService
 ) : UpdateBoardController {
     override fun update(accessId: String, req: UpdateBoardRequest, clientInfo: ClientAuthInfo): BoardInfoResponse {
-        LOG.debug("{}: {}", clientInfo.requestUri, req)
+        LOG.debug("{}: {}", clientInfo.requestLine, req)
 
         val result = src.update(UUID.fromString(accessId), req, clientInfo)
 

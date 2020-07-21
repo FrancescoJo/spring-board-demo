@@ -40,7 +40,7 @@ internal class GetUserControllerImpl(
     private val svc: GetUserService
 ) : GetUserController {
     override fun get(nickname: String, clientInfo: ClientAuthInfo): UserInfoResponse {
-        LOG.debug("{}", clientInfo.requestUri)
+        LOG.debug("{}", clientInfo.requestLine)
 
         val result = svc.get(nickname, clientInfo)
 
