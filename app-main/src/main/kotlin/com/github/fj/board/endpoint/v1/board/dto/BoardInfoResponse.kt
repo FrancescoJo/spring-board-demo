@@ -55,7 +55,8 @@ data class BoardInfoResponse(
 ) {
     companion object {
         const val DESC_ACCESS_ID = "An UUID of this board."
-        const val DESC_STATUS = "Status of this board. ['n': Normal, 'r': Read only, 'x': Archived, '-': Closed.]"
+        const val DESC_STATUS = "Status of this board. ['n': Normal, 'x': Archived]. Archived boards are invisible " +
+                "and inaccessible without authorisation by default."
         const val DESC_KEY = "A distinct, human-friendly unique string to identify a board."
         const val DESC_NAME = "A display name of this board."
         const val DESC_DESCRIPTION = "Brief description of this board."

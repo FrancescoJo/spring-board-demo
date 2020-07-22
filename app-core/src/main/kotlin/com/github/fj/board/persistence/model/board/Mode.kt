@@ -9,23 +9,14 @@ import com.fasterxml.jackson.annotation.JsonValue
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
- * @since 21 - Jul - 2020
+ * @since 22 - Jul - 2020
  */
-enum class Status(val key: String) {
-    /**
-     * Free to access
-     */
-    NORMAL("n"),
+enum class Mode(val key: String) {
+    FREE_STYLE("rw"),
 
-    /**
-     * Read only, invisible
-     */
-    ARCHIVED("x"),
+    READ_ONLY("ro"),
 
-    /**
-     * Inaccessible
-     */
-    CLOSED("-");
+    WRITE_ONCE("wo");
 
     @JsonValue
     @Suppress("unused") // Used by Jackson upon serialising @JsonSerialize annotated classes
@@ -36,6 +27,6 @@ enum class Status(val key: String) {
     companion object {
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         @JvmStatic
-        fun byKey(key: String?) = values().firstOrNull { it.key == key } ?: NORMAL
+        fun byKey(key: String?) = values().firstOrNull { it.key == key } ?: FREE_STYLE
     }
 }
