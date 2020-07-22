@@ -16,6 +16,7 @@ import de.skuzzle.semantic.Version
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -24,6 +25,7 @@ import org.mockito.Mockito.mock
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.context.request.NativeWebRequest
 import test.com.github.fj.board.component.auth.JwtObjectBuilder
 import test.com.github.fj.board.component.security.HttpAuthorizationTokenBuilder
@@ -39,15 +41,19 @@ class ClientAuthInfoResolverTest {
 
     @BeforeEach
     fun setup() {
-        this.sut = ClientAuthInfoResolver()
+        this.sut = ClientAuthInfoResolver(emptyList())
     }
 
     @Test
-    fun `fail if no authentication object is found in SecurityContext`() {
+    fun `fail if authentication is required but no authentication object is found in SecurityContext`() {
         // given:
         val webReq = mock(NativeWebRequest::class.java)
+        val mockHttpReq = mockLocalhostServletRequest()
 
-        // expect:
+        // when:
+        `when`(webReq.nativeRequest).thenReturn(mockHttpReq)
+
+        // then:
         assertThrows<UnauthenticatedException> {
             testResolveArgument(webReq)
         }
@@ -88,6 +94,41 @@ class ClientAuthInfoResolverTest {
     @Test
     fun `success if all conditions are good`() {
         // given:
+        val (webReq, authObject, userAgent) = setupSuccessArgs()
+
+        // and:
+        val result = testResolveArgument(webReq)!!
+
+        // expect:
+        assertThat(result.loginName, `is`(authObject.name))
+        assertThat(result.platformType, `is`(userAgent.platformType))
+        assertThat(result.platformVer, `is`(userAgent.platformVer))
+        assertThat(result.appVer, `is`(userAgent.appVer))
+    }
+
+    @Test
+    fun `no exceptions but returns null if request matches in authCheckBypassUris`() {
+        // given:
+        this.sut = ClientAuthInfoResolver(listOf(AntPathRequestMatcher("/**")))
+        val (webReq, _, _) = setupSuccessArgs()
+
+        // and:
+        SecurityContextHolder.getContext().authentication = null
+
+        // when:
+        val result = testResolveArgument(webReq)
+
+        // then:
+        assertNull(result)
+    }
+
+    @AfterEach
+    fun teardown() {
+        SecurityContextHolder.getContext().authentication = null
+    }
+
+    private fun setupSuccessArgs(): Triple<NativeWebRequest, Authentication, UserAgent> {
+        // given:
         val webReq = mock(NativeWebRequest::class.java)
         val authObject = AuthenticationObjectImpl(
             JwtObjectBuilder.createRandom(), HttpAuthorizationTokenBuilder.createRandom()
@@ -105,23 +146,12 @@ class ClientAuthInfoResolverTest {
         `when`(webReq.nativeRequest).thenReturn(mockHttpReq)
 
         // then:
-        val result = testResolveArgument(webReq)
-
-        // expect:
-        assertThat(result.loginName, `is`(authObject.name))
-        assertThat(result.platformType, `is`(mockUa.platformType))
-        assertThat(result.platformVer, `is`(mockUa.platformVer))
-        assertThat(result.appVer, `is`(mockUa.appVer))
+        return Triple(webReq, authObject, mockUa)
     }
 
-    @AfterEach
-    fun teardown() {
-        SecurityContextHolder.getContext().authentication = null
-    }
-
-    private fun testResolveArgument(webReq: NativeWebRequest): ClientAuthInfo {
+    private fun testResolveArgument(webReq: NativeWebRequest): ClientAuthInfo? {
         val param = mock(MethodParameter::class.java)
 
-        return sut.resolveArgument(param, null, webReq, null) as ClientAuthInfo
+        return sut.resolveArgument(param, null, webReq, null) as? ClientAuthInfo
     }
 }

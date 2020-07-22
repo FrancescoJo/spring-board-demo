@@ -12,6 +12,7 @@ import com.github.fj.board.appconfig.security.web.SavedRequestAwareAuthenticatio
 import com.github.fj.board.component.auth.AuthTokenManager
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -44,12 +45,14 @@ class SecurityConfig @Inject constructor(
     /**
      * A series of Pair of Ant pattern URL and HTTP method information, to bypass security configuration.
      */
-    @Autowired(required = false) private val checkBypassUris: List<Pair<String, HttpMethod?>>?
-) : WebSecurityConfigurerAdapter() {
+    @Autowired(required = false)
+    @Qualifier(BYPASS_AUTH_URI_LIST)
+    private val authCheckBypassUris: List<Pair<String, HttpMethod?>>?
+) : WebSecurityConfigurerAdapter(), SecurityConfigMixin {
     // This logic is called only once.
     @Suppress("SpreadOperator")
     override fun configure(http: HttpSecurity) {
-        val bypassUris = checkBypassUris.toRequestMatcher()
+        val bypassUris = authCheckBypassUris.toRequestMatcher()
 
         http.addFilterBefore(AuthorizationHeaderFilter(bypassUris), BasicAuthenticationFilter::class.java)
             .authenticationProvider(tokenAuthProvider())
@@ -93,21 +96,9 @@ class SecurityConfig @Inject constructor(
         return ProviderManager(listOf(tokenAuthProvider()))
     }
 
-    private fun List<Pair<String, HttpMethod?>>?.toRequestMatcher(): List<RequestMatcher> {
-        if (this == null) {
-            return emptyList()
-        }
-
-        return this.map { (antPath, httpMethod) ->
-            return@map if (httpMethod == null) {
-                AntPathRequestMatcher(antPath)
-            } else {
-                AntPathRequestMatcher(antPath, httpMethod.toString())
-            }
-        }
-    }
-
     companion object {
+        const val BYPASS_AUTH_URI_LIST = "SecurityConfig.authCheckBypassUris"
+
         private val LOG = LoggerFactory.getLogger(SecurityConfig::class.java)
     }
 }
