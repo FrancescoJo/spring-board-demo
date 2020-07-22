@@ -4,12 +4,17 @@
  */
 package testcase.v1.board
 
+import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.BoardNotFoundException
+import com.github.fj.board.persistence.model.board.Access
+import com.github.fj.board.vo.board.BoardInfo
 import io.restassured.response.Response
 import io.restassured.specification.RequestSpecification
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
+import spock.lang.Unroll
 import test.endpoint.ApiPathsHelper
+import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
 import testcase.BoardTestBase
 
 import static org.hamcrest.CoreMatchers.is
@@ -21,7 +26,7 @@ import static org.hamcrest.CoreMatchers.is
 class GetBoardSingleSpec extends BoardTestBase {
     def "fail if accessId is not a UUID format"() {
         when:
-        final reqSpec = sendRequest(
+        final reqSpec = unauthenticatedRequest(
                 "getBoardSingle-error-illegalAccessId",
                 "__not-a-uuid-format__",
                 errorResponseFieldsDoc()
@@ -36,7 +41,7 @@ class GetBoardSingleSpec extends BoardTestBase {
 
     def "fail if board is not found for given accessId"() {
         when:
-        final reqSpec = sendRequest(
+        final reqSpec = unauthenticatedRequest(
                 "getBoardSingle-error-notFound",
                 UUID.randomUUID().toString(),
                 errorResponseFieldsDoc()
@@ -52,11 +57,11 @@ class GetBoardSingleSpec extends BoardTestBase {
     def "fail if board is closed"() {
         given:
         final self = createRandomUser()
-        final boardInfo = super.createRandomBoardBy(self)
+        final boardInfo = super.createRandomBoardOf(self)
         closeBoard(self, boardInfo.accessId)
 
         when:
-        final reqSpec = sendRequest(
+        final reqSpec = unauthenticatedRequest(
                 "getBoardSingle-error-boardIsClosed",
                 boardInfo.accessId.toString(),
                 errorResponseFieldsDoc()
@@ -70,18 +75,78 @@ class GetBoardSingleSpec extends BoardTestBase {
     }
 
     def "not authenticated user can not access to members only board"() {
+        given:
+        final board = randomBoardWithAccess(Access.MEMBERS_ONLY)
 
+        when:
+        final reqSpec = unauthenticatedRequest(
+                "getBoardSingle-error-boardIsMembersOnly",
+                board.accessId.toString(),
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+
+        expect:
+        errorBody.cause == BoardNotFoundException.class.simpleName
     }
 
     def "not authenticated user can only access to public board"() {
+        given:
+        final board = randomBoardWithAccess(Access.PUBLIC)
 
+        when:
+        final reqSpec = unauthenticatedRequest(
+                "getBoardSingle-unauthenticated-publicOnly",
+                board.accessId.toString(),
+                boardInfoResponseFieldsDoc()
+        )
+
+        then:
+        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+
+        expect:
+        response.accessId == board.accessId.toString()
+        response.access == Access.PUBLIC
     }
 
-    def "authenticated user can access to public and members only board"() {
+    @Unroll
+    def "authenticated user can access to #access board"() {
+        given:
+        final self = createRandomUser()
+        final board = randomBoardWithAccess(access)
 
+        when:
+        final reqSpec = sendRequest(
+                "getBoardSingle-authenticated-$access",
+                self.accessToken,
+                board.accessId.toString(),
+                boardInfoResponseFieldsDoc()
+        )
+
+        then:
+        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+
+        expect:
+        response.accessId == board.accessId.toString()
+        response.access == access
+
+        where:
+        access              | _
+        Access.PUBLIC       | _
+        Access.MEMBERS_ONLY | _
     }
 
-    private Response sendRequest(
+    private BoardInfo randomBoardWithAccess(final Access access) {
+        final boardSpec = new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
+                .access(access)
+                .build()
+
+        return super.createBoardBy(boardSpec)
+    }
+
+    private Response unauthenticatedRequest(
             final String documentId,
             final String accessId,
             final ResponseFieldsSnippet respDoc

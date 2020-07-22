@@ -114,7 +114,7 @@ class UpdateBoardSpec extends BoardTestBase {
     def "fail if board name('#name') is too short or too long"() {
         given:
         final self = createRandomUser()
-        final board = createRandomBoardBy(self)
+        final board = createRandomBoardOf(self)
         final request = new UpdateBoardRequestBuilder(UpdateBoardRequestBuilder.createRandom())
                 .name(name)
                 .build()
@@ -144,7 +144,7 @@ class UpdateBoardSpec extends BoardTestBase {
     def "only owner of board can update it"() {
         given:
         final self = createRandomUser()
-        final notOwnedBoard = createRandomBoardBy(createRandomUser())
+        final notOwnedBoard = createRandomBoardOf(createRandomUser())
         final request = UpdateBoardRequestBuilder.createRandom()
 
         when:
@@ -166,7 +166,7 @@ class UpdateBoardSpec extends BoardTestBase {
     def "board is updated if request is valid"() {
         given:
         final self = createRandomUser()
-        final ownedBoard = createRandomBoardBy(self)
+        final ownedBoard = createRandomBoardOf(self)
         final request = UpdateBoardRequestBuilder.createRandom()
 
         when:

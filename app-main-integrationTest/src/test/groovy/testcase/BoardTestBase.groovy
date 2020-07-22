@@ -6,6 +6,7 @@ package testcase
 
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
+import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.vo.board.BoardInfo
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +16,8 @@ import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import org.springframework.transaction.support.TransactionTemplate
 import test.endpoint.ApiPathsHelper
 import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
+
+import javax.annotation.Nullable
 
 import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
@@ -31,10 +34,23 @@ class BoardTestBase extends UserTestBase {
     @Autowired
     private TransactionTemplate txTemplate
 
-    protected final BoardInfo createRandomBoardBy(final CreatedUser owner) {
-        final request = CreateBoardRequestBuilder.createRandom()
+    protected final BoardInfo createRandomBoardOf(final CreatedUser owner) {
+        return createBoardAs(CreateBoardRequestBuilder.createRandom(), owner)
+    }
 
-        final reqSpec = authenticatedRequest(owner.accessToken)
+    protected final BoardInfo createBoardBy(final CreateBoardRequest request) {
+        return createBoardAs(request, null)
+    }
+
+    protected final BoardInfo createBoardAs(final CreateBoardRequest request, final @Nullable CreatedUser owner) {
+        final String accessToken
+        if (owner == null) {
+            accessToken = createRandomUser().accessToken
+        } else {
+            accessToken = owner.accessToken
+        }
+
+        final reqSpec = authenticatedRequest(accessToken)
                 .body(request)
                 .post(ApiPaths.BOARD)
 

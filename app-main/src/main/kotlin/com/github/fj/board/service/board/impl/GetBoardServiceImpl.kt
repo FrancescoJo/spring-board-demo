@@ -15,6 +15,7 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.board.BoardInfo
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -24,12 +25,16 @@ import java.util.*
 internal class GetBoardServiceImpl(
     override val boardRepo: BoardRepository
 ) : GetBoardService {
+    @Transactional
     override fun getOne(accessId: UUID, clientInfo: ClientAuthInfo?): BoardInfo {
-        val board = boardRepo.findByAccessId(accessId) ?: run {
+        val board = accessId.getBoard()
+
+        if (clientInfo == null && board.access != Access.PUBLIC) {
+            // We want that such user cannot recognise whether it is even exist or not
             throw BoardNotFoundException()
         }
 
-        TODO("Not yet implemented")
+        return BoardInfo.from(board)
     }
 
     override fun getList(

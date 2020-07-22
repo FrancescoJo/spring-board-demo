@@ -71,13 +71,7 @@ internal class GetBoardControllerImpl(
     private val authDetector: ControllerClientAuthInfoDetector
 ) : GetBoardController {
     override fun getOne(accessId: String, httpReq: HttpServletRequest): BoardInfoResponse {
-        val clientInfo = authDetector.detectClientAuthInfo().also {
-            if (it == null) {
-                LOG.debug("{} {}", httpReq.method, httpReq.requestURI)
-            } else {
-                LOG.debug("{}", it.requestLine)
-            }
-        }
+        val clientInfo = from(httpReq)
 
         val result = svc.getOne(UUID.fromString(accessId), clientInfo)
 
@@ -89,17 +83,19 @@ internal class GetBoardControllerImpl(
         orderBy: BoardsSortOrderBy,
         httpReq: HttpServletRequest
     ): BoardInfoListResponse {
-        val clientInfo = authDetector.detectClientAuthInfo().also {
-            if (it == null) {
-                LOG.debug("{} {}", httpReq.method, httpReq.requestURI)
-            } else {
-                LOG.debug("{}", it.requestLine)
-            }
-        }
+        val clientInfo = from(httpReq)
 
         val result = svc.getList(sortBy, orderBy, clientInfo)
 
         return BoardInfoListResponse.from(result)
+    }
+
+    private fun from(httpReq: HttpServletRequest): ClientAuthInfo? = authDetector.detectClientAuthInfo().also {
+        if (it == null) {
+            LOG.debug("{} {}", httpReq.method, httpReq.requestURI)
+        } else {
+            LOG.debug("{}", it.requestLine)
+        }
     }
 
     companion object {

@@ -101,7 +101,7 @@ class CloseBoardSpec extends BoardTestBase {
     def "cannot close board which is already closed"() {
         given:
         final self = createRandomUser()
-        final board = createRandomBoardBy(self)
+        final board = createRandomBoardOf(self)
 
         and:
         final boardEntity = boardRepo.findByAccessId(board.accessId)
@@ -126,7 +126,7 @@ class CloseBoardSpec extends BoardTestBase {
     def "only owner of board can close it"() {
         given:
         final self = createRandomUser()
-        final notOwnedBoard = createRandomBoardBy(createRandomUser())
+        final notOwnedBoard = createRandomBoardOf(createRandomUser())
 
         when:
         final reqSpec = sendRequest(
@@ -146,7 +146,7 @@ class CloseBoardSpec extends BoardTestBase {
     def "board is closed if request is valid"() {
         given:
         final self = createRandomUser()
-        final ownedBoard = createRandomBoardBy(self)
+        final ownedBoard = createRandomBoardOf(self)
 
         when:
         final reqSpec = sendRequest(
