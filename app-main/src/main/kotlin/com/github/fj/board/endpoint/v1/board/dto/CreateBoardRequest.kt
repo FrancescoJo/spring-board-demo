@@ -7,6 +7,8 @@ package com.github.fj.board.endpoint.v1.board.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.github.fj.board.persistence.model.board.Access
+import com.github.fj.board.persistence.model.board.Mode
 import com.github.fj.board.validation.UnicodeCharsLength
 import javax.validation.constraints.Pattern
 
@@ -35,7 +37,15 @@ data class CreateBoardRequest(
 
     @JsonProperty
     @JsonPropertyDescription(DESC_DESCRIPTION)
-    val description: String
+    val description: String,
+
+    @JsonProperty
+    @JsonPropertyDescription(DESC_ACCESS)
+    val access: Access = Access.PUBLIC,
+
+    @JsonProperty
+    @JsonPropertyDescription(DESC_MODE)
+    val mode: Mode = Mode.FREE_STYLE
 ) {
     companion object {
         const val KEY_SIZE_MIN = 4
@@ -48,5 +58,7 @@ data class CreateBoardRequest(
                 "Once key is specified, it never could be changed."
         const val DESC_NAME = "A display name of this board. Should be concise and meaningful."
         const val DESC_DESCRIPTION = "Brief description of this board."
+        const val DESC_ACCESS = "Access rights of board. ['o': Public(default), 'p': Private/Members only]."
+        const val DESC_MODE = "Write mode of board. ['rw': Freestyle(default), 'ro': ReadOnly, 'rw': WriteOnce]."
     }
 }

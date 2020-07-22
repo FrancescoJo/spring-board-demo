@@ -5,6 +5,8 @@
 package com.github.fj.board.vo.board
 
 import com.github.fj.board.persistence.entity.board.Board
+import com.github.fj.board.persistence.model.board.Access
+import com.github.fj.board.persistence.model.board.Mode
 import com.github.fj.board.persistence.model.board.Status
 import com.github.fj.board.vo.user.UserInfo
 import java.time.LocalDateTime
@@ -18,6 +20,8 @@ interface BoardInfo {
     val id: Long
     val accessId: UUID
     val status: Status
+    val access: Access
+    val mode: Mode
     val key: String
     val name: String
     val description: String
@@ -31,6 +35,8 @@ interface BoardInfo {
             override val id: Long,
             override val accessId: UUID,
             override val status: Status,
+            override val access: Access,
+            override val mode: Mode,
             override val key: String,
             override val name: String,
             override val description: String,
@@ -44,6 +50,8 @@ interface BoardInfo {
             id = src.id,
             accessId = src.accessId,
             status = src.status,
+            access = src.access,
+            mode = src.mode,
             key = src.key,
             name = src.name,
             description = src.description,

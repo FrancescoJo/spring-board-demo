@@ -7,6 +7,7 @@ package com.github.fj.board.service.board.impl
 import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
 import com.github.fj.board.exception.client.board.DuplicatedBoardKeyException
 import com.github.fj.board.persistence.entity.board.Board
+import com.github.fj.board.persistence.model.board.Status
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.board.CreateBoardService
@@ -38,6 +39,9 @@ class CreateBoardServiceImpl(
 
         val createdBoard = Board().apply {
             accessId = UUID.randomUUID()
+            status = Status.NORMAL
+            access = req.access
+            mode = req.mode
             key = req.key
             name = req.name
             description = req.description

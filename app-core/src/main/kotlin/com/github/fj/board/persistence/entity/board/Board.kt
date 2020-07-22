@@ -93,6 +93,8 @@ class Board : AbstractIncrementalLockableEntity() {
     override fun toString() = "Board(id=$id, " +
             "accessId=$accessId, " +
             "status=$status, " +
+            "access=$access, " +
+            "mode=$mode, " +
             "key='$key', " +
             "name='$name', " +
             "description='$description', " +

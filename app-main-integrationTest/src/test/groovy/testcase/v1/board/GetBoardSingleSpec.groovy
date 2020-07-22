@@ -4,7 +4,6 @@
  */
 package testcase.v1.board
 
-
 import io.restassured.response.Response
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.ApiPathsHelper
@@ -27,7 +26,7 @@ class GetBoardSingleSpec extends BoardTestBase {
 
     }
 
-    def "fail if board is for members only and user is not authenticated"() {
+    def "fail if user is accessing members only board"() {
 
     }
 

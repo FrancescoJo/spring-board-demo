@@ -184,6 +184,8 @@ class UpdateBoardSpec extends BoardTestBase {
         expect:
         response.name == request.name
         response.description == request.description
+        response.access == request.access
+        response.mode == request.mode
     }
 
     private Response sendRequest(
@@ -205,7 +207,13 @@ class UpdateBoardSpec extends BoardTestBase {
                         .description(UpdateBoardRequest.DESC_NAME),
                 fieldWithPath("description")
                         .type(JsonFieldType.STRING)
-                        .description(UpdateBoardRequest.DESC_DESCRIPTION)
+                        .description(UpdateBoardRequest.DESC_DESCRIPTION),
+                fieldWithPath("access")
+                        .type(JsonFieldType.STRING)
+                        .description(UpdateBoardRequest.DESC_ACCESS),
+                fieldWithPath("mode")
+                        .type(JsonFieldType.STRING)
+                        .description(UpdateBoardRequest.DESC_MODE)
         )
     }
 }

@@ -143,6 +143,8 @@ class CreateBoardSpec extends BoardTestBase {
         then:
         !response.accessId.isEmpty()
         response.status == Status.NORMAL
+        response.access == request.access
+        response.mode == request.mode
         response.key == request.key
         response.name == request.name
         response.description == request.description
@@ -172,7 +174,13 @@ class CreateBoardSpec extends BoardTestBase {
                         .description(CreateBoardRequest.DESC_NAME),
                 fieldWithPath("description")
                         .type(JsonFieldType.STRING)
-                        .description(CreateBoardRequest.DESC_DESCRIPTION)
+                        .description(CreateBoardRequest.DESC_DESCRIPTION),
+                fieldWithPath("access")
+                        .type(JsonFieldType.STRING)
+                        .description(CreateBoardRequest.DESC_ACCESS),
+                fieldWithPath("mode")
+                        .type(JsonFieldType.STRING)
+                        .description(CreateBoardRequest.DESC_MODE)
         )
     }
 }

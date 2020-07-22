@@ -5,10 +5,13 @@
 package test.endpoint.v1.board.dto;
 
 import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest;
+import com.github.fj.board.persistence.model.board.Access;
+import com.github.fj.board.persistence.model.board.Mode;
 
 import javax.annotation.Nonnull;
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;
+import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -18,6 +21,8 @@ public class CreateBoardRequestBuilder {
     private String key = "";
     private String name = "";
     private String description = "";
+    private Access access = Access.PUBLIC;
+    private Mode mode = Mode.FREE_STYLE;
 
     public CreateBoardRequestBuilder() {
     }
@@ -32,7 +37,9 @@ public class CreateBoardRequestBuilder {
         return new CreateBoardRequest(
                 /* key */         key,
                 /* name */        name,
-                /* description */ description
+                /* description */ description,
+                /* access */      access,
+                /* mode */        mode
         );
     }
 
@@ -51,11 +58,23 @@ public class CreateBoardRequestBuilder {
         return this;
     }
 
+    public CreateBoardRequestBuilder access(final @Nonnull Access value) {
+        this.access = value;
+        return this;
+    }
+
+    public CreateBoardRequestBuilder mode(final @Nonnull Mode value) {
+        this.mode = value;
+        return this;
+    }
+
     public static CreateBoardRequest createRandom() {
         return new CreateBoardRequestBuilder()
                 .key(getRandomAlphaNumericString(8))
                 .name("name: " + getRandomAlphaNumericString(12))
                 .description("desc: " + getRandomAlphaNumericString(24))
+                .access(randomEnumConst(Access.class))
+                .mode(randomEnumConst(Mode.class))
                 .build();
     }
 }

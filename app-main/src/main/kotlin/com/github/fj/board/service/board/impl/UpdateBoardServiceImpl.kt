@@ -33,6 +33,8 @@ class UpdateBoardServiceImpl(
 
         val updatedBoard = board.apply {
             this.name = req.name
+            this.access = req.access
+            this.mode = req.mode
             this.description = req.description
             this.modifiedDate = utcNow()
         }
