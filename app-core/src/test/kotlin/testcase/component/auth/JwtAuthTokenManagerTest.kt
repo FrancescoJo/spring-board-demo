@@ -5,7 +5,7 @@
 package testcase.component.auth
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.fj.board.component.auth.JwtAuthTokenManager
+import com.github.fj.board.component.auth.impl.JwtAuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
 import com.github.fj.board.component.security.HttpAuthScheme
 import com.github.fj.board.component.security.MaybeHttpAuthorizationToken
@@ -47,7 +47,11 @@ class JwtAuthTokenManagerTest {
         `when`(authProperties.tokenIssuer).thenReturn(tokenIssuer)
         `when`(authProperties.authTokenAliveSecs).thenReturn(tokenAliveSecs)
 
-        this.sut = JwtAuthTokenManager(authProperties, rsaKeyPairManager, jsonMapper)
+        this.sut = JwtAuthTokenManager(
+            authProperties,
+            rsaKeyPairManager,
+            jsonMapper
+        )
     }
 
     @Test

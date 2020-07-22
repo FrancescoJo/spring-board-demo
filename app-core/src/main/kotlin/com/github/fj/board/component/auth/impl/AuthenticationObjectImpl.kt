@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.component.auth
+package com.github.fj.board.component.auth.impl
 
 import com.github.fj.board.component.security.HttpAuthScheme
 import com.github.fj.board.component.security.HttpAuthorizationToken
@@ -14,7 +14,7 @@ import java.util.*
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 03 - Nov - 2018
  */
-class AuthenticationObjectImpl(
+internal class AuthenticationObjectImpl(
     private val jwtObject: JwtObject,
     private val token: HttpAuthorizationToken
 ) : Authentication {

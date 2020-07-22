@@ -39,15 +39,15 @@ internal class AuthorizationHeaderFilter(
             return
         }
 
+        findAuthorizationHeader(req)?.let {
+            LOG.trace("HTTP Authorization header has been found with: ${it.principal} scheme")
+            SecurityContextHolder.getContext().authentication = it
+        }
+
         if (exclusions.any { it.matches(request) }) {
             LOG.trace("{}: This request does not seems requiring any authentication.", request.requestURI)
             chain.doFilter(req, resp)
             return
-        }
-
-        findAuthorizationHeader(req)?.let {
-            LOG.trace("HTTP Authorization header has been found with: ${it.principal} scheme")
-            SecurityContextHolder.getContext().authentication = it
         }
 
         chain.doFilter(req, resp)

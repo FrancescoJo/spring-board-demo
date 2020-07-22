@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.appconfig.controllerParam
 
-import com.github.fj.board.component.auth.AuthenticationObjectImpl
+import com.github.fj.board.component.auth.impl.AuthenticationObjectImpl
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import com.github.fj.board.exception.server.NotImplementedException
 import com.github.fj.board.vo.auth.ClientAuthInfo
@@ -41,7 +41,8 @@ internal class ClientAuthInfoResolver(
             }
         }
 
-        val authObject = currentAuthentication as? AuthenticationObjectImpl ?: run {
+        val authObject = currentAuthentication as? AuthenticationObjectImpl
+            ?: run {
             if (httpReq.isAuthRequired()) {
                 val errMsg = currentAuthentication?.let {
                     "Authentication kind is not supported for user '${it.name}'"

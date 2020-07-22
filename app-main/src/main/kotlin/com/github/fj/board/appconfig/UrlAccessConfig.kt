@@ -25,6 +25,11 @@ class UrlAccessConfig {
         // SignUp: SignUpController#signUp
         ApiPaths.ACCOUNT to HttpMethod.POST,
         // SignIn: SignUpController#signUp
-        ApiPaths.ACCOUNT to HttpMethod.PATCH
+        ApiPaths.ACCOUNT to HttpMethod.PATCH,
+
+        // Get Board: GetBoardController#getOne
+        "${ApiPaths.BOARD}/**" to HttpMethod.GET,
+        // Get Board: GetBoardController#getList
+        ApiPaths.BOARDS to HttpMethod.GET
     )
 }

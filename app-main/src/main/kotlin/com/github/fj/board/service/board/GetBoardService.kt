@@ -10,17 +10,18 @@ import com.github.fj.board.persistence.model.board.Access
 import com.github.fj.board.persistence.model.board.Status
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.board.BoardInfo
+import java.util.*
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 22 - Jul - 2020
  */
 interface GetBoardService : BoardAccessMixin {
-    fun getOne(accessId: String, clientInfo: ClientAuthInfo): BoardInfo
+    fun getOne(accessId: UUID, clientInfo: ClientAuthInfo?): BoardInfo
 
     fun getList(
         sortBy: BoardsSortBy,
         orderBy: BoardsSortOrderBy,
-        clientInfo: ClientAuthInfo
+        clientInfo: ClientAuthInfo?
     ): Map<Access, List<BoardInfo>>
 }

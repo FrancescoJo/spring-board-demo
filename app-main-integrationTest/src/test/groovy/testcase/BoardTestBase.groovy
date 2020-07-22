@@ -13,6 +13,7 @@ import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import org.springframework.transaction.support.TransactionTemplate
+import test.endpoint.ApiPathsHelper
 import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
 
 import static org.hamcrest.CoreMatchers.is
@@ -46,6 +47,15 @@ class BoardTestBase extends UserTestBase {
             final board = repository.findByAccessId(UUID.fromString(response.accessId))
             return new BoardInfo.Companion().from(board)
         }
+    }
+
+    protected final Boolean closeBoard(final CreatedUser owner, final UUID accessId) {
+        final reqSpec = authenticatedRequest(owner.accessToken)
+                .delete(ApiPathsHelper.BOARD_ACCESS_ID(accessId.toString()))
+
+        final okResult = expectGenericResponse(reqSpec.then().assertThat().statusCode(is(200)), Boolean.class)
+
+        return okResult
     }
 
     protected static ResponseFieldsSnippet boardInfoResponseFieldsDoc() {

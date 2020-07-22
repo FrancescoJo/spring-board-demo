@@ -4,20 +4,43 @@
  */
 package testcase.service.board
 
+import com.github.fj.board.exception.client.board.BoardNotFoundException
+import com.github.fj.board.service.board.GetBoardService
+import com.github.fj.board.service.board.impl.GetBoardServiceImpl
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito.`when`
+import java.util.*
+
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 22 - Jul - 2020
  */
-class GetBoardSingleServiceTest {
+class GetBoardSingleServiceTest : AbstractBoardServiceTestTemplate() {
+    private lateinit var sut: GetBoardService
+
+    @BeforeEach
+    override fun setup() {
+        super.setup()
+        this.sut = GetBoardServiceImpl(boardRepo)
+    }
+
+    @Test
     fun `fail if board is not found for given accessId`() {
+        // given:
+        val accessId = UUID.randomUUID()
 
+        // when:
+        `when`(boardRepo.findByAccessId(accessId)).thenReturn(null)
+
+        // then:
+        assertThrows<BoardNotFoundException> {
+            sut.getOne(accessId, null)
+        }
     }
 
-    fun `fail if board is not in normal state`() {
-
-    }
-
-    fun `fail if board is for members only and user is not authenticated`() {
+    fun `not authenticated user can not access to members only board`() {
 
     }
 

@@ -4,6 +4,7 @@
  */
 package com.github.fj.board.endpoint.v1.board
 
+import com.github.fj.board.component.auth.ControllerClientAuthInfoDetector
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
+import javax.servlet.http.HttpServletRequest
 import javax.validation.constraints.Pattern
 
 /**
@@ -43,7 +46,7 @@ interface GetBoardController {
         )
         @PathVariable
         accessId: String,
-        clientInfo: ClientAuthInfo
+        httpReq: HttpServletRequest
     ): BoardInfoResponse
 
     // Default: group sort by status
@@ -52,11 +55,9 @@ interface GetBoardController {
         method = [RequestMethod.GET]
     )
     fun getList(
-        @RequestParam(required = false)
-        sortBy: BoardsSortBy = BoardsSortBy.KEY,
-        @RequestParam(required = false)
-        orderBy: BoardsSortOrderBy = BoardsSortOrderBy.DESCENDING,
-        clientInfo: ClientAuthInfo
+        @RequestParam(required = false) sortBy: BoardsSortBy = BoardsSortBy.KEY,
+        @RequestParam(required = false) orderBy: BoardsSortOrderBy = BoardsSortOrderBy.DESCENDING,
+        httpReq: HttpServletRequest
     ): BoardInfoListResponse
 }
 
@@ -66,12 +67,19 @@ interface GetBoardController {
  */
 @RestController
 internal class GetBoardControllerImpl(
-    private val svc: GetBoardService
+    private val svc: GetBoardService,
+    private val authDetector: ControllerClientAuthInfoDetector
 ) : GetBoardController {
-    override fun getOne(accessId: String, clientInfo: ClientAuthInfo): BoardInfoResponse {
-        LOG.debug("{}: {}", clientInfo.requestLine)
+    override fun getOne(accessId: String, httpReq: HttpServletRequest): BoardInfoResponse {
+        val clientInfo = authDetector.detectClientAuthInfo().also {
+            if (it == null) {
+                LOG.debug("{} {}", httpReq.method, httpReq.requestURI)
+            } else {
+                LOG.debug("{}", it.requestLine)
+            }
+        }
 
-        val result = svc.getOne(accessId, clientInfo)
+        val result = svc.getOne(UUID.fromString(accessId), clientInfo)
 
         return BoardInfoResponse.from(result)
     }
@@ -79,9 +87,15 @@ internal class GetBoardControllerImpl(
     override fun getList(
         sortBy: BoardsSortBy,
         orderBy: BoardsSortOrderBy,
-        clientInfo: ClientAuthInfo
+        httpReq: HttpServletRequest
     ): BoardInfoListResponse {
-        LOG.debug("{}: {}", clientInfo.requestLine)
+        val clientInfo = authDetector.detectClientAuthInfo().also {
+            if (it == null) {
+                LOG.debug("{} {}", httpReq.method, httpReq.requestURI)
+            } else {
+                LOG.debug("{}", it.requestLine)
+            }
+        }
 
         val result = svc.getList(sortBy, orderBy, clientInfo)
 

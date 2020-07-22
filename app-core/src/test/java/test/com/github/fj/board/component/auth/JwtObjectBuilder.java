@@ -4,7 +4,7 @@
  */
 package test.com.github.fj.board.component.auth;
 
-import com.github.fj.board.component.auth.JwtObject;
+import com.github.fj.board.component.auth.impl.JwtObject;
 import com.github.fj.board.component.property.AppAuthProperties;
 import com.github.fj.lib.time.DateTimeUtilsKt;
 import com.github.fj.lib.util.UuidExtensions;

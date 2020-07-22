@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.component.auth
+package com.github.fj.board.component.auth.impl
 
 import java.time.LocalDateTime
 import java.util.*
@@ -15,7 +15,7 @@ import java.util.*
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 18 - Nov - 2018
  */
-data class JwtObject(
+internal data class JwtObject(
     /**
      * provides a unique identifier for the JWT. The identifier value MUST
      * be assigned in a manner that ensures that there is a negligible
