@@ -9,7 +9,8 @@ package testcase.time
 import com.github.fj.lib.time.utcEpochSecond
 import com.github.fj.lib.time.utcLocalDateTimeOf
 import com.github.fj.lib.time.utcNow
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.greaterThanOrEqualTo
 import org.junit.jupiter.api.Test
 
 /**
@@ -28,8 +29,8 @@ class DateTimeUtilsTest {
         val systemEpoch = System.currentTimeMillis()
 
         // then:
-        assertEquals(utcLocalDateTimeOf(longTimestamp).withNano(0), now)
-        assertEquals(utcLocalDateTimeOf(intTimestamp).withNano(0), now)
-        assertEquals(utcLocalDateTimeOf(systemEpoch).withNano(0), now)
+        assertThat(utcLocalDateTimeOf(longTimestamp), greaterThanOrEqualTo(now))
+        assertThat(utcLocalDateTimeOf(intTimestamp), greaterThanOrEqualTo(now))
+        assertThat(utcLocalDateTimeOf(systemEpoch), greaterThanOrEqualTo(now))
     }
 }

@@ -14,4 +14,8 @@ import org.springframework.http.HttpStatus
 class UserNotFoundException(
     override val message: String = "User not found.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.NOT_FOUND, message, cause)
+) : GeneralHttpException(STATUS, message, cause) {
+    companion object {
+        val STATUS = HttpStatus.NOT_FOUND
+    }
+}

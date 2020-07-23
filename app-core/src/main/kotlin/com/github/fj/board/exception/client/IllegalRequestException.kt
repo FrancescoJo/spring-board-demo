@@ -14,4 +14,8 @@ import org.springframework.http.HttpStatus
 class IllegalRequestException(
     override val message: String = "Illegal request from client.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.BAD_REQUEST, message, cause)
+) : GeneralHttpException(STATUS, message, cause) {
+    companion object {
+        val STATUS = HttpStatus.BAD_REQUEST
+    }
+}

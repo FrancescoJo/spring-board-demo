@@ -7,6 +7,7 @@ package testcase
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
 import com.github.fj.board.persistence.model.user.Status
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
@@ -14,7 +15,6 @@ import test.endpoint.v1.user.dto.CreateUserRequestBuilder
 
 import java.time.LocalDateTime
 
-import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 
@@ -26,12 +26,11 @@ class UserTestBase extends AuthTestBase {
     protected final CreatedUser createRandomUser() {
         final createdAuth = createRandomAuth()
         final request = CreateUserRequestBuilder.createRandom()
-
-        final reqSpec = authenticatedRequest(createdAuth.accessToken.value)
+        final rawResponse = authenticatedRequest(createdAuth.accessToken.value)
                 .body(request)
                 .post(ApiPaths.USER)
 
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), UserInfoResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, UserInfoResponse.class)
 
         return new CreatedUser(
                 /*loginName */                 createdAuth.loginName,

@@ -14,4 +14,8 @@ import org.springframework.http.HttpStatus
 class UnauthorisedException(
     override val message: String = "You are not authorised.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.FORBIDDEN, message, cause)
+) : GeneralHttpException(STATUS, message, cause) {
+    companion object {
+        val STATUS = HttpStatus.FORBIDDEN
+    }
+}

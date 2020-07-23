@@ -13,6 +13,7 @@ import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import io.restassured.response.Response
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
@@ -21,7 +22,6 @@ import test.endpoint.ApiPathsHelper
 import test.endpoint.v1.board.dto.UpdateBoardRequestBuilder
 import testcase.BoardTestBase
 
-import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 
@@ -35,13 +35,13 @@ class UpdateBoardSpec extends BoardTestBase {
         final request = UpdateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = jsonRequestSpec("updateBoard-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
+        final response = jsonRequestSpec("updateBoard-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .patch(ApiPaths.BOARD)
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+        final errorBody = expectError(response, UnauthenticatedException.STATUS)
 
         expect:
         errorBody.cause == UnauthenticatedException.class.simpleName
@@ -53,7 +53,7 @@ class UpdateBoardSpec extends BoardTestBase {
         final request = UpdateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "updateBoard-error-illegalAccessId",
                 createdAuth.accessToken.value,
                 "__not-a-uuid-format__",
@@ -62,7 +62,7 @@ class UpdateBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -74,7 +74,7 @@ class UpdateBoardSpec extends BoardTestBase {
         final request = UpdateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "updateBoard-error-noUserCreated",
                 createdAuth.accessToken.value,
                 UUID.randomUUID().toString(),
@@ -83,7 +83,7 @@ class UpdateBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, UserNotFoundException.STATUS)
 
         expect:
         errorBody.cause == UserNotFoundException.class.simpleName
@@ -95,7 +95,7 @@ class UpdateBoardSpec extends BoardTestBase {
         final request = UpdateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "updateBoard-error-noBoardFound",
                 self.accessToken,
                 UUID.randomUUID().toString(),
@@ -104,7 +104,7 @@ class UpdateBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, BoardNotFoundException.STATUS)
 
         expect:
         errorBody.cause == BoardNotFoundException.class.simpleName
@@ -120,7 +120,7 @@ class UpdateBoardSpec extends BoardTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "updateBoard-error-illegalNameFormat-#$docId",
                 self.accessToken,
                 board.accessId.toString(),
@@ -129,7 +129,7 @@ class UpdateBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -148,7 +148,7 @@ class UpdateBoardSpec extends BoardTestBase {
         final request = UpdateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "updateBoard-error-boardNotOwned",
                 self.accessToken,
                 notOwnedBoard.accessId.toString(),
@@ -157,7 +157,7 @@ class UpdateBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(403))).body
+        final errorBody = expectError(response, UnauthorisedException.STATUS)
 
         expect:
         errorBody.cause == UnauthorisedException.class.simpleName
@@ -170,7 +170,7 @@ class UpdateBoardSpec extends BoardTestBase {
         final request = UpdateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final rawResponse = sendRequest(
                 "updateBoard",
                 self.accessToken,
                 ownedBoard.accessId.toString(),
@@ -179,7 +179,7 @@ class UpdateBoardSpec extends BoardTestBase {
         )
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, BoardInfoResponse.class)
 
         expect:
         response.name == request.name

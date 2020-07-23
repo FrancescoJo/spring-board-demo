@@ -11,13 +11,13 @@ import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
 import io.restassured.http.Header
 import io.restassured.response.Response
 import io.restassured.specification.RequestSpecification
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 
-import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.*
 
 /**
@@ -32,12 +32,12 @@ class AuthTestBase extends IntegrationTestBase {
     }
 
     protected final AuthenticationResponse createAuthFor(final AuthenticationRequest request) {
-        final reqSpec = jsonRequestSpec()
+        final response = jsonRequestSpec()
                 .when()
                 .body(request)
                 .post(ApiPaths.ACCOUNT)
 
-        return expectResponse(reqSpec.then().assertThat().statusCode(is(200)), AuthenticationResponse.class)
+        return expectResponse(response, HttpStatus.OK, AuthenticationResponse.class)
     }
 
     protected final Response sendSignUpRequest(

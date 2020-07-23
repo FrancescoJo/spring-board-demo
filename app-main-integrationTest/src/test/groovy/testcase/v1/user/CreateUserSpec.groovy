@@ -11,6 +11,7 @@ import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.user.NicknameAlreadyExistException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import io.restassured.response.Response
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
@@ -19,7 +20,6 @@ import test.endpoint.v1.user.dto.CreateUserRequestBuilder
 import testcase.UserTestBase
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString
-import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 
@@ -33,13 +33,13 @@ class CreateUserSpec extends UserTestBase {
         final request = CreateUserRequestBuilder.createRandom()
 
         when:
-        final reqSpec = jsonRequestSpec("createUser-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
+        final response = jsonRequestSpec("createUser-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .post(ApiPaths.USER)
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+        final errorBody = expectError(response, UnauthenticatedException.STATUS)
 
         expect:
         errorBody.cause == UnauthenticatedException.class.simpleName
@@ -54,7 +54,7 @@ class CreateUserSpec extends UserTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "createUser-error-wrongNickname-#$docId",
                 createdAuth.accessToken.value,
                 request,
@@ -62,7 +62,7 @@ class CreateUserSpec extends UserTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -83,7 +83,7 @@ class CreateUserSpec extends UserTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "createUser-error-wrongEmail-#$docId",
                 createdAuth.accessToken.value,
                 request,
@@ -91,7 +91,7 @@ class CreateUserSpec extends UserTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -112,7 +112,7 @@ class CreateUserSpec extends UserTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final rawResponse = sendRequest(
                 "createUser-#$docId",
                 createdAuth.accessToken.value,
                 request,
@@ -120,7 +120,7 @@ class CreateUserSpec extends UserTestBase {
         )
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), UserInfoResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, UserInfoResponse.class)
 
         expect:
         response.nickname == request.nickname
@@ -152,7 +152,7 @@ class CreateUserSpec extends UserTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final rawResponse = sendRequest(
                 "createUser-error-duplicateNickname",
                 createdUser.accessToken,
                 request,
@@ -160,7 +160,7 @@ class CreateUserSpec extends UserTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(409))).body
+        final errorBody = expectError(rawResponse, NicknameAlreadyExistException.STATUS)
 
         expect:
         errorBody.cause == NicknameAlreadyExistException.class.simpleName

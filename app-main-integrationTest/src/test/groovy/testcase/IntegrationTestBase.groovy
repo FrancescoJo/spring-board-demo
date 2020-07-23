@@ -16,12 +16,14 @@ import io.restassured.builder.RequestSpecBuilder
 import io.restassured.config.ObjectMapperConfig
 import io.restassured.config.RestAssuredConfig
 import io.restassured.http.Header
+import io.restassured.response.Response
 import io.restassured.response.ValidatableResponse
 import io.restassured.specification.RequestSpecification
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.restdocs.JUnitRestDocumentation
 import org.springframework.restdocs.payload.FieldDescriptor
@@ -36,6 +38,7 @@ import javax.annotation.Nonnull
 import javax.annotation.Nullable
 
 import static io.restassured.RestAssured.given
+import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
@@ -154,31 +157,36 @@ class IntegrationTestBase extends Specification {
     }
 
     final <T> T expectGenericResponse(
-            final @Nonnull ValidatableResponse respSpec,
+            final @Nonnull Response response,
+            final @Nonnull HttpStatus status,
             final @Nonnull Class<T> klass
     ) {
-        final responseDto = parseResponse(respSpec)
+        final responseDto = parseResponse(response.then().assertThat().statusCode(is(status.value())))
         final body = responseDto.body
 
         return klass.cast(body)
     }
 
     final <T> T expectResponse(
-            final @Nonnull ValidatableResponse respSpec,
+            final @Nonnull Response response,
+            final @Nonnull HttpStatus status,
             final @Nonnull Class<T> klass
     ) {
-        final responseDto = parseResponse(respSpec)
+        final responseDto = parseResponse(response.then().assertThat().statusCode(is(status.value())))
         final body = responseDto.body
 
         return defaultObjMapper.convertValue(body, klass)
     }
 
-    final ErrorResponseDto expectError(final @Nonnull ValidatableResponse respSpec) {
-        final rawResponseDto = parseResponse(respSpec)
+    final ErrorResponseDto.Body expectError(
+            final @Nonnull Response response,
+            final @Nonnull HttpStatus status
+    ) {
+        final rawResponseDto = parseResponse(response.then().assertThat().statusCode(is(status.value())))
 
         return new ErrorResponseDto(
                 defaultObjMapper.convertValue(rawResponseDto.body, ErrorResponseDto.Body.class)
-        )
+        ).body
     }
 
     final ObjectMapper getJsonMapper() {

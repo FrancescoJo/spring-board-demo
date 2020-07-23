@@ -8,6 +8,7 @@ import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import io.restassured.response.Response
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.ApiPathsHelper
 import testcase.UserTestBase
@@ -22,12 +23,12 @@ import static org.hamcrest.CoreMatchers.is
 class GetUserSpec extends UserTestBase {
     def "fail if not authenticated"() {
         when:
-        final reqSpec = jsonRequestSpec("getUser-error-unauthenticated", errorResponseFieldsDoc())
+        final response = jsonRequestSpec("getUser-error-unauthenticated", errorResponseFieldsDoc())
                 .when()
                 .get(ApiPathsHelper.USER_NICKNAME(getRandomAlphaNumericString(8)))
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+        final errorBody = expectError(response, UnauthenticatedException.STATUS)
 
         expect:
         errorBody.cause == UnauthenticatedException.class.simpleName
@@ -38,7 +39,7 @@ class GetUserSpec extends UserTestBase {
         final createdAuth = createRandomAuth()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "getUser-error-nicknameNotFound",
                 createdAuth.accessToken.value,
                 getRandomAlphaNumericString(8),
@@ -46,7 +47,7 @@ class GetUserSpec extends UserTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, UserNotFoundException.STATUS)
 
         expect:
         errorBody.cause == UserNotFoundException.class.simpleName
@@ -58,7 +59,7 @@ class GetUserSpec extends UserTestBase {
         final createdUser = createRandomUser()
 
         when:
-        final reqSpec = sendRequest(
+        final rawResponse = sendRequest(
                 "getUser",
                 myAuth.accessToken.value,
                 createdUser.nickname,
@@ -66,7 +67,7 @@ class GetUserSpec extends UserTestBase {
         )
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), UserInfoResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, UserInfoResponse.class)
 
         expect:
         response.nickname == createdUser.nickname

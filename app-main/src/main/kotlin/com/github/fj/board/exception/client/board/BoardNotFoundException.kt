@@ -14,4 +14,8 @@ import org.springframework.http.HttpStatus
 class BoardNotFoundException(
     override val message: String = "Board is not found for given parameter.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.NOT_FOUND, message, cause)
+) : GeneralHttpException(STATUS, message, cause) {
+    companion object {
+        val STATUS = HttpStatus.NOT_FOUND
+    }
+}

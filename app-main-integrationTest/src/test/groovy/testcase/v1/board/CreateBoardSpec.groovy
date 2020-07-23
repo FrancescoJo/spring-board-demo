@@ -8,10 +8,12 @@ import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
 import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
 import com.github.fj.board.exception.client.IllegalRequestException
+import com.github.fj.board.exception.client.board.DuplicatedBoardKeyException
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import com.github.fj.board.persistence.model.board.Status
 import io.restassured.response.Response
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
@@ -19,7 +21,6 @@ import spock.lang.Unroll
 import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
 import testcase.BoardTestBase
 
-import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 
@@ -33,13 +34,13 @@ class CreateBoardSpec extends BoardTestBase {
         final request = CreateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = jsonRequestSpec("createBoard-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
+        final response = jsonRequestSpec("createBoard-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .post(ApiPaths.BOARD)
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+        final errorBody = expectError(response, UnauthenticatedException.STATUS)
 
         expect:
         errorBody.cause == UnauthenticatedException.class.simpleName
@@ -51,7 +52,7 @@ class CreateBoardSpec extends BoardTestBase {
         final request = CreateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "createBoard-error-noUserCreated",
                 createdAuth.accessToken.value,
                 request,
@@ -59,7 +60,7 @@ class CreateBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, UserNotFoundException.STATUS)
 
         expect:
         errorBody.cause == UserNotFoundException.class.simpleName
@@ -74,7 +75,7 @@ class CreateBoardSpec extends BoardTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "createBoard-error-illegalKeyFormat-#$docId",
                 self.accessToken,
                 request,
@@ -82,7 +83,7 @@ class CreateBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -96,6 +97,29 @@ class CreateBoardSpec extends BoardTestBase {
         "Русский"           | 5
     }
 
+    def "fail if board key is already exist"() {
+        given:
+        final createdBoard = createBoardBy(CreateBoardRequestBuilder.createRandom())
+        final self = createRandomUser()
+        final request = new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
+                .key(createdBoard.key)
+                .build()
+
+        when:
+        final response = sendRequest(
+                "createBoard-error-duplicatedKey",
+                self.accessToken,
+                request,
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(response, DuplicatedBoardKeyException.STATUS)
+
+        expect:
+        errorBody.cause == DuplicatedBoardKeyException.class.simpleName
+    }
+
     @Unroll
     def "fail if board name('#name') is too short or too long"() {
         given:
@@ -105,7 +129,7 @@ class CreateBoardSpec extends BoardTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "createBoard-error-illegalNameFormat-#$docId",
                 self.accessToken,
                 request,
@@ -113,7 +137,7 @@ class CreateBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -131,14 +155,14 @@ class CreateBoardSpec extends BoardTestBase {
         final request = CreateBoardRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final rawResponse = sendRequest(
                 "createBoard",
                 self.accessToken,
                 request,
                 boardInfoResponseFieldsDoc()
         )
 
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, BoardInfoResponse.class)
 
         then:
         !response.accessId.isEmpty()

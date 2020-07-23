@@ -14,12 +14,12 @@ import com.github.fj.lib.time.DateTimeUtilsKt
 import com.github.fj.lib.util.ProtectedProperty
 import io.restassured.response.Response
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import testcase.AuthTestBase
 
-import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 
@@ -37,13 +37,13 @@ class RefreshAccessTokenSpec extends AuthTestBase {
         final request = new RefreshTokenRequest(createdAuth.refreshToken)
 
         when:
-        final reqSpec = jsonRequestSpec("refreshAccessToken-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
+        final response = jsonRequestSpec("refreshAccessToken-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .patch(ApiPaths.TOKEN)
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+        final errorBody = expectError(response, UnauthenticatedException.STATUS)
 
         expect:
         errorBody.cause == UnauthenticatedException.class.simpleName
@@ -55,7 +55,7 @@ class RefreshAccessTokenSpec extends AuthTestBase {
         final request = new RefreshTokenRequest(new ProtectedProperty<>(""))
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "refreshAccessToken-error-refreshTokenMismatch",
                 createdAuth.accessToken.value,
                 request,
@@ -63,7 +63,7 @@ class RefreshAccessTokenSpec extends AuthTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(403))).body
+        final errorBody = expectError(response, RefreshTokenMismatchException.STATUS)
 
         expect:
         errorBody.cause == RefreshTokenMismatchException.class.simpleName
@@ -81,7 +81,7 @@ class RefreshAccessTokenSpec extends AuthTestBase {
         authRepo.save(savedAuthEntity)
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "refreshAccessToken-error-refreshTokenTooOld",
                 createdAuth.accessToken.value,
                 request,
@@ -89,7 +89,7 @@ class RefreshAccessTokenSpec extends AuthTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(403))).body
+        final errorBody = expectError(response, RefreshTokenMismatchException.STATUS)
 
         expect:
         errorBody.cause == RefreshTokenMismatchException.class.simpleName
@@ -101,7 +101,7 @@ class RefreshAccessTokenSpec extends AuthTestBase {
         final request = new RefreshTokenRequest(createdAuth.refreshToken)
 
         when:
-        final reqSpec = sendRequest(
+        final rawResponse = sendRequest(
                 "refreshAccessToken",
                 createdAuth.accessToken.value,
                 request,
@@ -109,7 +109,7 @@ class RefreshAccessTokenSpec extends AuthTestBase {
         )
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), AuthenticationResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, AuthenticationResponse.class)
 
         expect:
         response.loginName == createdAuth.loginName

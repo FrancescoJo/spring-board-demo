@@ -14,11 +14,10 @@ import com.github.fj.board.persistence.model.board.Status
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import io.restassured.response.Response
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.ApiPathsHelper
 import testcase.BoardTestBase
-
-import static org.hamcrest.CoreMatchers.is
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -30,12 +29,12 @@ class CloseBoardSpec extends BoardTestBase {
 
     def "fail if not authenticated"() {
         when:
-        final reqSpec = jsonRequestSpec("closeBoard-error-unauthenticated", errorResponseFieldsDoc())
+        final response = jsonRequestSpec("closeBoard-error-unauthenticated", errorResponseFieldsDoc())
                 .when()
                 .delete(ApiPaths.BOARD)
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+        final errorBody = expectError(response, UnauthenticatedException.STATUS)
 
         expect:
         errorBody.cause == UnauthenticatedException.class.simpleName
@@ -46,7 +45,7 @@ class CloseBoardSpec extends BoardTestBase {
         final createdAuth = createRandomAuth()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "closeBoard-error-illegalAccessId",
                 createdAuth.accessToken.value,
                 "__not-a-uuid-format__",
@@ -54,7 +53,7 @@ class CloseBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -65,7 +64,7 @@ class CloseBoardSpec extends BoardTestBase {
         final createdAuth = createRandomAuth()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "closeBoard-error-noUserCreated",
                 createdAuth.accessToken.value,
                 UUID.randomUUID().toString(),
@@ -73,7 +72,7 @@ class CloseBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, UserNotFoundException.STATUS)
 
         expect:
         errorBody.cause == UserNotFoundException.class.simpleName
@@ -84,7 +83,7 @@ class CloseBoardSpec extends BoardTestBase {
         final self = createRandomUser()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "closeBoard-error-noBoardFound",
                 self.accessToken,
                 UUID.randomUUID().toString(),
@@ -92,7 +91,7 @@ class CloseBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, BoardNotFoundException.STATUS)
 
         expect:
         errorBody.cause == BoardNotFoundException.class.simpleName
@@ -109,7 +108,7 @@ class CloseBoardSpec extends BoardTestBase {
         boardRepo.save(boardEntity)
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "closeBoard-error-cannotCloseAlreadyClosed",
                 self.accessToken,
                 board.accessId.toString(),
@@ -117,7 +116,7 @@ class CloseBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, BoardNotFoundException.STATUS)
 
         expect:
         errorBody.cause == BoardNotFoundException.class.simpleName
@@ -129,7 +128,7 @@ class CloseBoardSpec extends BoardTestBase {
         final notOwnedBoard = createRandomBoardOf(createRandomUser())
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "closeBoard-error-boardNotOwned",
                 self.accessToken,
                 notOwnedBoard.accessId.toString(),
@@ -137,7 +136,7 @@ class CloseBoardSpec extends BoardTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(403))).body
+        final errorBody = expectError(response, UnauthorisedException.STATUS)
 
         expect:
         errorBody.cause == UnauthorisedException.class.simpleName
@@ -149,7 +148,7 @@ class CloseBoardSpec extends BoardTestBase {
         final ownedBoard = createRandomBoardOf(self)
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "closeBoard",
                 self.accessToken,
                 ownedBoard.accessId.toString(),
@@ -157,7 +156,7 @@ class CloseBoardSpec extends BoardTestBase {
         )
 
         then:
-        final okResult = expectGenericResponse(reqSpec.then().assertThat().statusCode(is(200)), Boolean.class)
+        final okResult = expectGenericResponse(response, HttpStatus.OK, Boolean.class)
 
         expect: "Normal result: true"
         okResult

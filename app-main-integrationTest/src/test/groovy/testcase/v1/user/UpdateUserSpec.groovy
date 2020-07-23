@@ -10,6 +10,7 @@ import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import io.restassured.response.Response
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
@@ -19,7 +20,6 @@ import test.endpoint.v1.user.dto.UpdateUserRequestBuilder
 import testcase.UserTestBase
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString
-import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 
@@ -33,13 +33,13 @@ class UpdateUserSpec extends UserTestBase {
         final request = UpdateUserRequestBuilder.createRandom()
 
         when:
-        final reqSpec = jsonRequestSpec("updateUser-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
+        final response = jsonRequestSpec("updateUser-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .patch(ApiPathsHelper.USER_NICKNAME(getRandomAlphaNumericString(8)))
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+        final errorBody = expectError(response, UnauthenticatedException.STATUS)
 
         expect:
         errorBody.cause == UnauthenticatedException.class.simpleName
@@ -52,7 +52,7 @@ class UpdateUserSpec extends UserTestBase {
         final request = UpdateUserRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "updateUser-error-notTargetUser",
                 self.accessToken,
                 targetUser.nickname,
@@ -61,7 +61,7 @@ class UpdateUserSpec extends UserTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(403))).body
+        final errorBody = expectError(response, UnauthorisedException.STATUS)
 
         expect:
         errorBody.cause == UnauthorisedException.class.simpleName
@@ -76,7 +76,7 @@ class UpdateUserSpec extends UserTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "updateUser-error-wrongNickname-#$docId",
                 createdUser.accessToken,
                 createdUser.nickname,
@@ -85,7 +85,7 @@ class UpdateUserSpec extends UserTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -106,7 +106,7 @@ class UpdateUserSpec extends UserTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "updateUser-error-wrongEmail-#$docId",
                 self.accessToken,
                 self.nickname,
@@ -115,7 +115,7 @@ class UpdateUserSpec extends UserTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -133,7 +133,7 @@ class UpdateUserSpec extends UserTestBase {
         final request = UpdateUserRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final rawResponse = sendRequest(
                 "updateUser",
                 self.accessToken,
                 self.nickname,
@@ -142,7 +142,7 @@ class UpdateUserSpec extends UserTestBase {
         )
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), UserInfoResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, UserInfoResponse.class)
 
         expect:
         response.nickname == request.nickname

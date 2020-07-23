@@ -15,4 +15,8 @@ import org.springframework.http.HttpStatus
 class UnauthenticatedException(
     override val message: String = "You are not authenticated.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.UNAUTHORIZED, message, cause)
+) : GeneralHttpException(STATUS, message, cause) {
+    companion object {
+        val STATUS = HttpStatus.UNAUTHORIZED
+    }
+}

@@ -14,4 +14,8 @@ import org.springframework.http.HttpStatus
 class NicknameAlreadyExistException(
     override val message: String = "Nickname already exists.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.CONFLICT, message, cause)
+) : GeneralHttpException(STATUS, message, cause) {
+    companion object {
+        val STATUS = HttpStatus.CONFLICT
+    }
+}

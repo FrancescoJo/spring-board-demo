@@ -14,4 +14,8 @@ import org.springframework.http.HttpStatus
 class DuplicatedBoardKeyException(
     override val message: String = "Board key is already exist.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.CONFLICT, message, cause)
+) : GeneralHttpException(HttpStatus.CONFLICT, message, cause) {
+    companion object {
+        val STATUS = HttpStatus.CONFLICT
+    }
+}

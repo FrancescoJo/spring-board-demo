@@ -9,12 +9,11 @@ import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.auth.LoginNotAllowedException
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.lib.time.DateTimeUtilsKt
+import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import spock.lang.Unroll
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import testcase.AuthTestBase
-
-import static org.hamcrest.CoreMatchers.is
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -23,10 +22,10 @@ import static org.hamcrest.CoreMatchers.is
 class SignUpSpec extends AuthTestBase {
     def "empty request payload does nothing"() {
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-emptyRequest", errorResponseFieldsDoc())
+        final response = sendSignUpRequest("signUp-error-emptyRequest", errorResponseFieldsDoc())
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, HttpStatus.BAD_REQUEST)
 
         expect:
         errorBody.cause == HttpMessageNotReadableException.class.simpleName
@@ -40,10 +39,10 @@ class SignUpSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-wrongLoginName-#$docId", request, errorResponseFieldsDoc())
+        final response = sendSignUpRequest("signUp-error-wrongLoginName-#$docId", request, errorResponseFieldsDoc())
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -63,10 +62,10 @@ class SignUpSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-wrongPassword-#$docId", request, errorResponseFieldsDoc())
+        final response = sendSignUpRequest("signUp-error-wrongPassword-#$docId", request, errorResponseFieldsDoc())
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -84,10 +83,10 @@ class SignUpSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-unknownClientPlatform", request, errorResponseFieldsDoc())
+        final response = sendSignUpRequest("signUp-error-unknownClientPlatform", request, errorResponseFieldsDoc())
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -100,10 +99,10 @@ class SignUpSpec extends AuthTestBase {
                 .buildAsJsonBy(getJsonMapper())
 
         when:
-        final reqSpec = sendSignUpRequest("signUp-error-wrongClientAppVersion", request, errorResponseFieldsDoc())
+        final response = sendSignUpRequest("signUp-error-wrongClientAppVersion", request, errorResponseFieldsDoc())
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -115,10 +114,10 @@ class SignUpSpec extends AuthTestBase {
         createAuthFor(request)
 
         when:
-        final reqSpec = sendSignUpRequest("signup-error-duplicatedLoginName", request, errorResponseFieldsDoc())
+        final response = sendSignUpRequest("signup-error-duplicatedLoginName", request, errorResponseFieldsDoc())
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, LoginNotAllowedException.STATUS)
 
         expect:
         errorBody.cause == LoginNotAllowedException.class.simpleName
@@ -130,10 +129,10 @@ class SignUpSpec extends AuthTestBase {
         final request = AuthenticationRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendSignUpRequest("signUp", request, authResponseFieldsDoc())
+        final rawResponse = sendSignUpRequest("signUp", request, authResponseFieldsDoc())
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), AuthenticationResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, AuthenticationResponse.class)
 
         expect:
         response.loginName == request.loginName

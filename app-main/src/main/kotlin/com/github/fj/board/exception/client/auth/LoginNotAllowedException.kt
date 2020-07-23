@@ -20,4 +20,8 @@ import org.springframework.http.HttpStatus
 class LoginNotAllowedException(
     override val message: String = "Login is not allowed.",
     override val cause: Throwable? = null
-) : GeneralHttpException(HttpStatus.BAD_REQUEST, message, cause)
+) : GeneralHttpException(STATUS, message, cause) {
+    companion object {
+        val STATUS = HttpStatus.BAD_REQUEST
+    }
+}

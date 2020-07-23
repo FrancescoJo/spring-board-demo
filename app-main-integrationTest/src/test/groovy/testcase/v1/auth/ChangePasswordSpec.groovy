@@ -11,6 +11,7 @@ import com.github.fj.board.exception.client.auth.DuplicatedPasswordException
 import com.github.fj.board.exception.client.auth.WrongPasswordException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import io.restassured.response.Response
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
@@ -18,7 +19,6 @@ import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import test.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
 import testcase.AuthTestBase
 
-import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 
@@ -32,13 +32,13 @@ class ChangePasswordSpec extends AuthTestBase {
         final request = ChangePasswordRequestBuilder.createRandom()
 
         when:
-        final reqSpec = jsonRequestSpec("changePassword-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
+        final response = jsonRequestSpec("changePassword-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .patch(ApiPaths.PASSWORD)
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(401))).body
+        final errorBody = expectError(response, UnauthenticatedException.STATUS)
 
         expect:
         errorBody.cause == UnauthenticatedException.class.simpleName
@@ -48,15 +48,15 @@ class ChangePasswordSpec extends AuthTestBase {
         given:
         final oldPassword = "__PASSWORD__"
         final authReq = new AuthenticationRequestBuilder(AuthenticationRequestBuilder.createRandom())
-            .passwordHashed(oldPassword)
-            .build()
+                .passwordHashed(oldPassword)
+                .build()
         final createdAuth = createAuthFor(authReq)
 
         and:
         final request = ChangePasswordRequestBuilder.createRandom()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "changePassword-error-wrongPassword",
                 createdAuth.accessToken.value,
                 request,
@@ -64,7 +64,7 @@ class ChangePasswordSpec extends AuthTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, WrongPasswordException.STATUS)
 
         expect:
         errorBody.cause == WrongPasswordException.class.simpleName
@@ -85,7 +85,7 @@ class ChangePasswordSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final response = sendRequest(
                 "changePassword-error-duplicatedPassword",
                 createdAuth.accessToken.value,
                 request,
@@ -93,7 +93,7 @@ class ChangePasswordSpec extends AuthTestBase {
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, DuplicatedPasswordException.STATUS)
 
         expect:
         errorBody.cause == DuplicatedPasswordException.class.simpleName
@@ -113,7 +113,7 @@ class ChangePasswordSpec extends AuthTestBase {
                 .build()
 
         when:
-        final reqSpec = sendRequest(
+        final rawResponse = sendRequest(
                 "changePassword",
                 createdAuth.accessToken.value,
                 request,
@@ -121,7 +121,7 @@ class ChangePasswordSpec extends AuthTestBase {
         )
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), AuthenticationResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, AuthenticationResponse.class)
 
         expect:
         response.loginName == createdAuth.loginName

@@ -11,6 +11,7 @@ import com.github.fj.board.persistence.model.board.Access
 import com.github.fj.board.vo.board.BoardInfo
 import io.restassured.response.Response
 import io.restassured.specification.RequestSpecification
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
 import test.endpoint.ApiPathsHelper
@@ -26,14 +27,14 @@ import static org.hamcrest.CoreMatchers.is
 class GetBoardSingleSpec extends BoardTestBase {
     def "fail if accessId is not a UUID format"() {
         when:
-        final reqSpec = unauthenticatedRequest(
+        final response = unauthenticatedRequest(
                 "getBoardSingle-error-illegalAccessId",
                 "__not-a-uuid-format__",
                 errorResponseFieldsDoc()
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(400))).body
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
 
         expect:
         errorBody.cause == IllegalRequestException.class.simpleName
@@ -41,14 +42,14 @@ class GetBoardSingleSpec extends BoardTestBase {
 
     def "fail if board is not found for given accessId"() {
         when:
-        final reqSpec = unauthenticatedRequest(
+        final response = unauthenticatedRequest(
                 "getBoardSingle-error-notFound",
                 UUID.randomUUID().toString(),
                 errorResponseFieldsDoc()
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, BoardNotFoundException.STATUS)
 
         expect:
         errorBody.cause == BoardNotFoundException.class.simpleName
@@ -61,14 +62,14 @@ class GetBoardSingleSpec extends BoardTestBase {
         closeBoard(self, boardInfo.accessId)
 
         when:
-        final reqSpec = unauthenticatedRequest(
+        final response = unauthenticatedRequest(
                 "getBoardSingle-error-boardIsClosed",
                 boardInfo.accessId.toString(),
                 errorResponseFieldsDoc()
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, BoardNotFoundException.STATUS)
 
         expect:
         errorBody.cause == BoardNotFoundException.class.simpleName
@@ -79,14 +80,14 @@ class GetBoardSingleSpec extends BoardTestBase {
         final board = randomBoardWithAccess(Access.MEMBERS_ONLY)
 
         when:
-        final reqSpec = unauthenticatedRequest(
+        final response = unauthenticatedRequest(
                 "getBoardSingle-error-boardIsMembersOnly",
                 board.accessId.toString(),
                 errorResponseFieldsDoc()
         )
 
         then:
-        final errorBody = expectError(reqSpec.then().assertThat().statusCode(is(404))).body
+        final errorBody = expectError(response, BoardNotFoundException.STATUS)
 
         expect:
         errorBody.cause == BoardNotFoundException.class.simpleName
@@ -97,14 +98,14 @@ class GetBoardSingleSpec extends BoardTestBase {
         final board = randomBoardWithAccess(Access.PUBLIC)
 
         when:
-        final reqSpec = unauthenticatedRequest(
+        final rawResponse = unauthenticatedRequest(
                 "getBoardSingle-unauthenticated-publicOnly",
                 board.accessId.toString(),
                 boardInfoResponseFieldsDoc()
         )
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, BoardInfoResponse.class)
 
         expect:
         response.accessId == board.accessId.toString()
@@ -118,7 +119,7 @@ class GetBoardSingleSpec extends BoardTestBase {
         final board = randomBoardWithAccess(access)
 
         when:
-        final reqSpec = sendRequest(
+        final rawResponse = sendRequest(
                 "getBoardSingle-authenticated-$access",
                 self.accessToken,
                 board.accessId.toString(),
@@ -126,7 +127,7 @@ class GetBoardSingleSpec extends BoardTestBase {
         )
 
         then:
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+        final response = expectResponse(rawResponse, HttpStatus.OK, BoardInfoResponse.class)
 
         expect:
         response.accessId == board.accessId.toString()

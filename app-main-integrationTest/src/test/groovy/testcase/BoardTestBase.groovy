@@ -10,6 +10,7 @@ import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.vo.board.BoardInfo
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
@@ -19,7 +20,6 @@ import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
 
 import javax.annotation.Nullable
 
-import static org.hamcrest.CoreMatchers.is
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 
@@ -50,26 +50,26 @@ class BoardTestBase extends UserTestBase {
             accessToken = owner.accessToken
         }
 
-        final reqSpec = authenticatedRequest(accessToken)
+        final response = authenticatedRequest(accessToken)
                 .body(request)
                 .post(ApiPaths.BOARD)
 
-        final response = expectResponse(reqSpec.then().assertThat().statusCode(is(200)), BoardInfoResponse.class)
+        final boardInfoResponse = expectResponse(response, HttpStatus.OK, BoardInfoResponse.class)
 
         // Fixing groovyc error: reference problem in closures
         final repository = boardRepo
 
         return txTemplate.execute {
-            final board = repository.findByAccessId(UUID.fromString(response.accessId))
+            final board = repository.findByAccessId(UUID.fromString(boardInfoResponse.accessId))
             return new BoardInfo.Companion().from(board)
         }
     }
 
     protected final Boolean closeBoard(final CreatedUser owner, final UUID accessId) {
-        final reqSpec = authenticatedRequest(owner.accessToken)
+        final response = authenticatedRequest(owner.accessToken)
                 .delete(ApiPathsHelper.BOARD_ACCESS_ID(accessId.toString()))
 
-        final okResult = expectGenericResponse(reqSpec.then().assertThat().statusCode(is(200)), Boolean.class)
+        final okResult = expectGenericResponse(response, HttpStatus.OK, Boolean.class)
 
         return okResult
     }
