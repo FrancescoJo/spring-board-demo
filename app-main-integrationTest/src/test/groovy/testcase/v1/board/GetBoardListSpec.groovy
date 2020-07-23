@@ -5,8 +5,17 @@
 package testcase.v1.board
 
 import com.github.fj.board.endpoint.ApiPaths
+import com.github.fj.board.endpoint.v1.board.GetBoardController
+import com.github.fj.board.endpoint.v1.board.dto.BoardInfoListResponse
+import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
+import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
+import com.github.fj.board.persistence.model.board.Access
+import com.github.fj.board.vo.board.BoardInfo
+import com.github.fj.lib.collection.CollectionUtilsKt
 import io.restassured.response.Response
+import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
+import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
 import testcase.BoardTestBase
 
 /**
@@ -14,16 +23,121 @@ import testcase.BoardTestBase
  * @since 22 - Jul - 2020
  */
 class GetBoardListSpec extends BoardTestBase {
-    def "only boards in normal state are present in list"() {
+    def "not authenticated user can get list of public boards"() {
+        given:
+        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(Access.PUBLIC) }
+        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(Access.MEMBERS_ONLY) }
 
-    }
+        when:
+        final rawResponse = unauthenticatedRequest("getBoardList-noAuth-membersOnly", boardInfoListResponseFieldsDoc())
 
-    def "not authenticated user can only access to public boards"() {
+        then:
+        final response = expectResponse(rawResponse, HttpStatus.OK, BoardInfoListResponse.class)
 
+        expect:
+        response.boards.size() == 2
+        !response.boards.any { it.access != Access.PUBLIC }
     }
 
     def "authenticated user can access to all boards"() {
+        given:
+        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(Access.PUBLIC) }
+        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(Access.MEMBERS_ONLY) }
 
+        when:
+        final rawResponse = sendRequest(
+                "getBoardList-auth-allBoards",
+                createRandomUser().accessToken,
+                boardInfoListResponseFieldsDoc()
+        )
+
+        then:
+        final response = expectResponse(rawResponse, HttpStatus.OK, BoardInfoListResponse.class)
+
+        expect:
+        response.boards.size() == 4
+    }
+
+    def "only normal boards are present in list"() {
+        given:
+        final owner = createRandomUser()
+        final createdBoards = CollectionUtilsKt.iterationsOf(4) {
+            createBoardWithAccess(owner, Access.PUBLIC)
+        }
+
+        and:
+        2.times { i ->
+            closeBoard(owner, createdBoards[i].accessId)
+        }
+
+        when:
+        final rawResponse = sendRequest(
+                "getBoardList-onlyNormalBoardsAreShown",
+                owner.accessToken,
+                boardInfoListResponseFieldsDoc()
+        )
+
+        then:
+        final response = expectResponse(rawResponse, HttpStatus.OK, BoardInfoListResponse.class)
+
+        expect: "2 of 4 are closed so it will be hidden in the list"
+        response.boards.size() == 2
+    }
+
+    def "boards are sorted by given criteria"() {
+        given: "name, by descending"
+        final self = createRandomUser()
+        final board2 = createBoardBy(new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
+                .key("key2")
+                .build()
+        )
+        final board1 = createBoardBy(new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
+                .key("key1")
+                .build()
+        )
+
+        when: "sorted by key, ascending by default"
+        final rawResponse1 = jsonRequestSpec().get(ApiPaths.BOARDS)
+
+        then:
+        final response1 = expectResponse(rawResponse1, HttpStatus.OK, BoardInfoListResponse.class)
+
+        expect:
+        response1.boards[0].key == board1.key
+        response1.boards[1].key == board2.key
+
+        when: "sorted by key, descending"
+        final rawResponse2 = authenticatedRequest(
+                "getBoardList-sortedByCriteria",
+                self.accessToken,
+                boardInfoListResponseFieldsDoc()
+        ).get("${ApiPaths.BOARDS}?${GetBoardController.GET_LIST_PARAM_SORT_BY}=${BoardsSortBy.KEY.value}&" +
+                "${GetBoardController.GET_LIST_PARAM_ORDER_BY}=${BoardsSortOrderBy.DESCENDING.value}")
+
+        then:
+        final response2 = expectResponse(rawResponse2, HttpStatus.OK, BoardInfoListResponse.class)
+
+        expect:
+        response2.boards[0].key == board2.key
+        response2.boards[1].key == board1.key
+    }
+
+    private BoardInfo createBoardWithAccess(final Access access) {
+        return createBoardBy(new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
+                .access(access)
+                .build())
+    }
+
+    private BoardInfo createBoardWithAccess(final CreatedUser owner, final Access access) {
+        return createBoardOf(owner, new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
+                .access(access)
+                .build())
+    }
+
+    private Response unauthenticatedRequest(final String documentId, final ResponseFieldsSnippet respDoc) {
+        return jsonRequestSpec(documentId, respDoc)
+                .when()
+                .get(ApiPaths.BOARDS)
     }
 
     private Response sendRequest(

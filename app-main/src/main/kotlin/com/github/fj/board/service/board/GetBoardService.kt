@@ -6,8 +6,6 @@ package com.github.fj.board.service.board
 
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
-import com.github.fj.board.persistence.model.board.Access
-import com.github.fj.board.persistence.model.board.Status
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.board.BoardInfo
 import java.util.*
@@ -23,5 +21,5 @@ interface GetBoardService : BoardAccessMixin {
         sortBy: BoardsSortBy,
         orderBy: BoardsSortOrderBy,
         clientInfo: ClientAuthInfo?
-    ): Map<Access, List<BoardInfo>>
+    ): List<BoardInfo>
 }

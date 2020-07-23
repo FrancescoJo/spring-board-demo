@@ -16,6 +16,6 @@ enum class BoardsSortBy(private val value: String) {
     LAST_MODIFIED_DATE("md");
 
     companion object {
-        fun fromString(src: String?) = values().firstOrNull { it.value == src } ?: KEY
+        fun fromString(src: String?) = values().firstOrNull { it.value == src }
     }
 }

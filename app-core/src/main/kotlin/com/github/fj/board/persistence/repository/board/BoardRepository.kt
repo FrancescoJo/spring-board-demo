@@ -6,6 +6,7 @@ package com.github.fj.board.persistence.repository.board
 
 import com.github.fj.board.persistence.entity.board.Board
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
 import java.util.*
 
@@ -13,7 +14,7 @@ import java.util.*
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 20 - Jul - 2020
  */
-interface BoardRepository : JpaRepository<Board, Long> {
+interface BoardRepository : JpaRepository<Board, Long>, BoardRepositoryExtension, JpaSpecificationExecutor<Board> {
     @Query(
         """
         SELECT b

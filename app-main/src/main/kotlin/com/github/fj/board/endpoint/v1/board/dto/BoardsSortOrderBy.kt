@@ -13,6 +13,6 @@ enum class BoardsSortOrderBy(private val value: String) {
     ASCENDING("old");
 
     companion object {
-        fun fromString(src: String?) = values().firstOrNull { it.value == src } ?: DESCENDING
+        fun fromString(src: String?) = values().firstOrNull { it.value == src }
     }
 }

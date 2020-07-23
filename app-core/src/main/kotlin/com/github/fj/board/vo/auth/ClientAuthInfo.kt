@@ -36,7 +36,7 @@ interface ClientAuthInfo : UserAgent {
             Dto(
                 loginName = loginName,
                 remoteAddr = httpReq.extractInetAddress(),
-                requestLine = "${httpReq.method} ${httpReq.requestURI}",
+                requestLine = "${httpReq.method} ${httpReq.requestURI}${httpReq.queryString?.let { "?$it" }}",
                 platformType = platformType,
                 platformVer = platformVer,
                 appVer = appVer

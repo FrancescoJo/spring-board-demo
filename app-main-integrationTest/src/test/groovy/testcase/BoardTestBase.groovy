@@ -5,6 +5,7 @@
 package testcase
 
 import com.github.fj.board.endpoint.ApiPaths
+import com.github.fj.board.endpoint.v1.board.dto.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
 import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
 import com.github.fj.board.persistence.repository.board.BoardRepository
@@ -22,6 +23,7 @@ import javax.annotation.Nullable
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -39,14 +41,14 @@ class BoardTestBase extends UserTestBase {
     }
 
     protected final BoardInfo createRandomBoardOf(final CreatedUser owner) {
-        return createBoardAs(CreateBoardRequestBuilder.createRandom(), owner)
+        return createBoardOf(owner, CreateBoardRequestBuilder.createRandom())
     }
 
     protected final BoardInfo createBoardBy(final CreateBoardRequest request) {
-        return createBoardAs(request, null)
+        return createBoardOf(null, request)
     }
 
-    protected final BoardInfo createBoardAs(final CreateBoardRequest request, final @Nullable CreatedUser owner) {
+    protected final BoardInfo createBoardOf(final @Nullable CreatedUser owner, final CreateBoardRequest request) {
         final String accessToken
         if (owner == null) {
             accessToken = createRandomUser().accessToken
@@ -76,6 +78,16 @@ class BoardTestBase extends UserTestBase {
         final okResult = expectGenericResponse(response, HttpStatus.OK, Boolean.class)
 
         return okResult
+    }
+
+    protected static ResponseFieldsSnippet boardInfoListResponseFieldsDoc() {
+        final List<FieldDescriptor> fields = [
+                subsectionWithPath("body.boards[]")
+                        .type(JsonFieldType.ARRAY)
+                        .description(BoardInfoListResponse.DESC_BOARDS)
+        ]
+
+        return responseFields(basicFieldsDoc() + fields)
     }
 
     protected static ResponseFieldsSnippet boardInfoResponseFieldsDoc() {

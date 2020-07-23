@@ -17,23 +17,14 @@ import com.github.fj.board.vo.board.BoardInfo
 @JsonSerialize
 data class BoardInfoListResponse(
     @JsonProperty
-    @JsonPropertyDescription(DESC_PUBLIC)
-    val public: List<BoardInfoResponse>,
-
-    @JsonProperty
-    @JsonPropertyDescription(DESC_MEMBERS_ONLY)
-    val membersOnly: List<BoardInfoResponse>
+    @JsonPropertyDescription(DESC_BOARDS)
+    val boards: List<BoardInfoResponse>
 ) {
     companion object {
-        const val DESC_PUBLIC = "List of 'public' boards."
-        const val DESC_MEMBERS_ONLY = "List of 'private' boards. Member access only."
+        const val DESC_BOARDS = "List of available boards. Contains multiple `BoardInfoResponse`."
 
-        fun from(src: Map<Access, List<BoardInfo>>) = BoardInfoListResponse(
-            public = src.listOf(Access.PUBLIC),
-            membersOnly = src.listOf(Access.MEMBERS_ONLY)
+        fun from(src: List<BoardInfo>) = BoardInfoListResponse(
+            boards = src.map { BoardInfoResponse.from(it) }
         )
-
-        private fun Map<Access, List<BoardInfo>>.listOf(access: Access): List<BoardInfoResponse> =
-            get(access)?.map { BoardInfoResponse.from(it) } ?: emptyList()
     }
 }

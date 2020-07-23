@@ -18,8 +18,6 @@ import test.endpoint.ApiPathsHelper
 import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
 import testcase.BoardTestBase
 
-import static org.hamcrest.CoreMatchers.is
-
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 22 - Jul - 2020
