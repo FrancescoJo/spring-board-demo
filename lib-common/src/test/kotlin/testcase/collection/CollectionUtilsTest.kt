@@ -7,6 +7,7 @@
 package testcase.collection
 
 import com.github.fj.lib.collection.findInsertPosition
+import com.github.fj.lib.collection.iterationsOf
 import com.github.fj.lib.collection.resize
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -35,5 +36,12 @@ class CollectionUtilsTest {
         assertEquals(1, withPosition(2))
         assertEquals(4, withPosition(5))
         assertEquals(7, withPosition(10))
+    }
+
+    @Test
+    fun `Int#iterations test`() {
+        val strings = 3.iterationsOf { "a" }
+
+        assertEquals(strings, listOf("a", "a", "a"))
     }
 }

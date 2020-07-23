@@ -56,7 +56,7 @@ fun <T> List<T>.resize(desiredSize: Int, filler: ((Int) -> T)? = null): List<T> 
 @Suppress("LoopWithTooManyJumpStatements")
 fun <T : Comparable<T>> List<T>.findInsertPosition(input: T): Int {
     var low = 0
-    var hi  = this.size
+    var hi = this.size
     while (low < hi) {
         val diff = hi - low
         val mid = (hi + low) / 2
@@ -82,8 +82,8 @@ fun <T : Comparable<T>> List<T>.findInsertPosition(input: T): Int {
     return low
 }
 
-fun <T> Collection<T>?.firstOrDefault(defaultProvider: () -> T): T = if (this.isNullOrEmpty()) {
-    defaultProvider.invoke()
-} else {
-    this.first()
+fun <T> Int.iterationsOf(valueProvider: () -> T): List<T> = ArrayList<T>().apply {
+    repeat(this@iterationsOf) {
+        add(valueProvider.invoke())
+    }
 }
