@@ -34,6 +34,10 @@ class BoardTestBase extends UserTestBase {
     @Autowired
     private TransactionTemplate txTemplate
 
+    def cleanup() {
+        boardRepo.deleteAll()
+    }
+
     protected final BoardInfo createRandomBoardOf(final CreatedUser owner) {
         return createBoardAs(CreateBoardRequestBuilder.createRandom(), owner)
     }

@@ -7,6 +7,8 @@ package testcase
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
 import com.github.fj.board.persistence.model.user.Status
+import com.github.fj.board.persistence.repository.user.UserRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
@@ -23,6 +25,13 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
  * @since 18 - Jul - 2020
  */
 class UserTestBase extends AuthTestBase {
+    @Autowired
+    private UserRepository userRepo
+
+    def cleanup() {
+        userRepo.deleteAll()
+    }
+
     protected final CreatedUser createRandomUser() {
         final createdAuth = createRandomAuth()
         final request = CreateUserRequestBuilder.createRandom()

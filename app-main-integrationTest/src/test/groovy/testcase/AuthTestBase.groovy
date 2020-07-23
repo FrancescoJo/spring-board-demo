@@ -8,9 +8,11 @@ import com.github.fj.board.component.security.HttpAuthorizationToken
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
+import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import io.restassured.http.Header
 import io.restassured.response.Response
 import io.restassured.specification.RequestSpecification
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
@@ -27,6 +29,13 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*
  * @since 13 - Jul - 2020
  */
 class AuthTestBase extends IntegrationTestBase {
+    @Autowired
+    private AuthenticationRepository authRepo
+
+    def cleanup() {
+        authRepo.deleteAll()
+    }
+
     protected final AuthenticationResponse createRandomAuth() {
         return createAuthFor(AuthenticationRequestBuilder.createRandom())
     }
