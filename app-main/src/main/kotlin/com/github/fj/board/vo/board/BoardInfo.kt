@@ -5,9 +5,9 @@
 package com.github.fj.board.vo.board
 
 import com.github.fj.board.persistence.entity.board.Board
-import com.github.fj.board.persistence.model.board.Access
-import com.github.fj.board.persistence.model.board.Mode
-import com.github.fj.board.persistence.model.board.Status
+import com.github.fj.board.persistence.model.board.BoardAccess
+import com.github.fj.board.persistence.model.board.BoardMode
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.vo.user.UserInfo
 import java.time.LocalDateTime
 import java.util.*
@@ -19,9 +19,9 @@ import java.util.*
 interface BoardInfo {
     val id: Long
     val accessId: UUID
-    val status: Status
-    val access: Access
-    val mode: Mode
+    val status: BoardStatus
+    val access: BoardAccess
+    val mode: BoardMode
     val key: String
     val name: String
     val description: String
@@ -34,9 +34,9 @@ interface BoardInfo {
         private data class Impl(
             override val id: Long,
             override val accessId: UUID,
-            override val status: Status,
-            override val access: Access,
-            override val mode: Mode,
+            override val status: BoardStatus,
+            override val access: BoardAccess,
+            override val mode: BoardMode,
             override val key: String,
             override val name: String,
             override val description: String,
@@ -46,7 +46,7 @@ interface BoardInfo {
             override val creator: UserInfo
         ) : BoardInfo
 
-        fun from(src: Board): BoardInfo = Impl(
+        fun from(src: Board, postsCount: Long): BoardInfo = Impl(
             id = src.id,
             accessId = src.accessId,
             status = src.status,
@@ -55,7 +55,7 @@ interface BoardInfo {
             key = src.key,
             name = src.name,
             description = src.description,
-            postsCount = src.postsCount,
+            postsCount = postsCount,
             createdDate = src.createdDate,
             modifiedDate = src.modifiedDate,
             creator = UserInfo.from(src.creator)

@@ -5,8 +5,7 @@
 package com.github.fj.board.vo.user
 
 import com.github.fj.board.persistence.entity.user.User
-import com.github.fj.board.persistence.model.user.Status
-import com.github.fj.board.vo.auth.AuthenticationResult
+import com.github.fj.board.persistence.model.user.UserStatus
 import java.time.LocalDateTime
 
 /**
@@ -16,7 +15,7 @@ import java.time.LocalDateTime
 data class UserInfo(
     val loginName: String,
     val nickname: String,
-    val status: Status,
+    val status: UserStatus,
     val email: String,
     val createdDate: LocalDateTime,
     val lastActiveDate: LocalDateTime

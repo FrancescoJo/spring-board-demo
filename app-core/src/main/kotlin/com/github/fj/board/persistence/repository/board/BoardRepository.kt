@@ -20,7 +20,7 @@ interface BoardRepository : JpaRepository<Board, Long>, BoardRepositoryExtension
         SELECT b
         FROM Board b
         WHERE b.key = ?1
-          AND b.status <> com.github.fj.board.persistence.model.board.Status.CLOSED
+          AND b.status <> com.github.fj.board.persistence.model.board.BoardStatus.CLOSED
     """
     )
     fun findByKey(key: String): Board?
@@ -30,8 +30,17 @@ interface BoardRepository : JpaRepository<Board, Long>, BoardRepositoryExtension
         SELECT b
         FROM Board b
         WHERE b.accessId = ?1
-          AND b.status <> com.github.fj.board.persistence.model.board.Status.CLOSED
+          AND b.status <> com.github.fj.board.persistence.model.board.BoardStatus.CLOSED
     """
     )
     fun findByAccessId(accessId: UUID): Board?
+
+    @Query(
+        """
+            SELECT COUNT(b.id)
+            FROM Board b
+            WHERE b.id = ?1
+        """
+    )
+    fun getPostsCountById(id: Long): Long
 }

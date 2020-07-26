@@ -7,8 +7,8 @@ package com.github.fj.board.endpoint.v1.board.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.github.fj.board.persistence.model.board.Access
-import com.github.fj.board.persistence.model.board.Mode
+import com.github.fj.board.persistence.model.board.BoardAccess
+import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.validation.UnicodeCharsLength
 import javax.validation.constraints.Pattern
 
@@ -41,11 +41,11 @@ data class CreateBoardRequest(
 
     @JsonProperty
     @JsonPropertyDescription(DESC_ACCESS)
-    val access: Access = Access.PUBLIC,
+    val access: BoardAccess = BoardAccess.PUBLIC,
 
     @JsonProperty
     @JsonPropertyDescription(DESC_MODE)
-    val mode: Mode = Mode.FREE_STYLE
+    val mode: BoardMode = BoardMode.FREE_STYLE
 ) {
     companion object {
         const val KEY_SIZE_MIN = 4

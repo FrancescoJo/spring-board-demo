@@ -18,7 +18,7 @@ import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
-import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
+import test.com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import testcase.IntegrationTestBase
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.*

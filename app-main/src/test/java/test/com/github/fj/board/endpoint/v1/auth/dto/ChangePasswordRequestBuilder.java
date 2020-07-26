@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package test.endpoint.v1.auth.dto;
+package test.com.github.fj.board.endpoint.v1.auth.dto;
 
 import com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequest;
 import com.github.fj.lib.security.HashUtilsKt;

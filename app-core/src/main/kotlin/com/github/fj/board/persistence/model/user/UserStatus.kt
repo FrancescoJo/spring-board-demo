@@ -2,21 +2,20 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.persistence.model.board
+package com.github.fj.board.persistence.model.user
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
- * @since 22 - Jul - 2020
+ * @since 29 - Jun - 2020
  */
-enum class Mode(val key: String) {
-    FREE_STYLE("rw"),
-
-    READ_ONLY("ro"),
-
-    WRITE_ONCE("wo");
+enum class UserStatus(val key: String) {
+    UNVERIFIED("u"),
+    VERIFIED("v"),
+    SUSPENDED("s"),
+    WITHDRAWN("w");
 
     @JsonValue
     @Suppress("unused") // Used by Jackson upon serialising @JsonSerialize annotated classes
@@ -27,6 +26,6 @@ enum class Mode(val key: String) {
     companion object {
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         @JvmStatic
-        fun byKey(key: String?) = values().firstOrNull { it.key == key } ?: FREE_STYLE
+        fun byKey(key: String?) = values().firstOrNull { it.key == key } ?: UNVERIFIED
     }
 }

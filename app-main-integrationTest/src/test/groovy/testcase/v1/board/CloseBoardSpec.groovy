@@ -10,13 +10,13 @@ import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import com.github.fj.board.exception.generic.UnauthorisedException
-import com.github.fj.board.persistence.model.board.Status
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import io.restassured.response.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
-import test.endpoint.ApiPathsHelper
+import test.com.github.fj.board.endpoint.ApiPathsHelper
 import testcase.v1.BoardTestBase
 
 /**
@@ -104,7 +104,7 @@ class CloseBoardSpec extends BoardTestBase {
 
         and:
         final boardEntity = boardRepo.findByAccessId(board.accessId)
-        boardEntity.status = Status.CLOSED
+        boardEntity.status = BoardStatus.CLOSED
         boardRepo.save(boardEntity)
 
         when:

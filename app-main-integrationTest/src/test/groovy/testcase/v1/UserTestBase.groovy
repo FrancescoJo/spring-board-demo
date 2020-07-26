@@ -6,16 +6,14 @@ package testcase.v1
 
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
-import com.github.fj.board.persistence.model.user.Status
 import com.github.fj.board.persistence.repository.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
-import test.endpoint.v1.user.dto.CreateUserRequestBuilder
-
-import java.time.LocalDateTime
+import test.com.github.fj.board.endpoint.v1.user.dto.CreateUserRequestBuilder
+import testcase.common.CreatedUser
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
@@ -75,58 +73,5 @@ class UserTestBase extends AuthTestBase {
         ]
 
         return responseFields(basicFieldsDoc() + fields)
-    }
-
-    static class CreatedUser {
-        final String loginName
-        final String accessToken
-        final LocalDateTime accessTokenExpiresAfter
-        final String refreshToken
-        final LocalDateTime refreshTokenExpiresAfter
-        final String nickname
-        final Status status
-        final String email
-        final LocalDateTime createdDate
-        final LocalDateTime lastActiveDate
-
-        CreatedUser(
-                final String loginName,
-                final String accessToken,
-                final LocalDateTime accessTokenExpiresAfter,
-                final String refreshToken,
-                final LocalDateTime refreshTokenExpiresAfter,
-                final String nickname,
-                final Status status,
-                final String email,
-                final LocalDateTime createdDate,
-                final LocalDateTime lastActiveDate
-        ) {
-            this.loginName = loginName
-            this.accessToken = accessToken
-            this.accessTokenExpiresAfter = accessTokenExpiresAfter
-            this.refreshToken = refreshToken
-            this.refreshTokenExpiresAfter = refreshTokenExpiresAfter
-            this.nickname = nickname
-            this.status = status
-            this.email = email
-            this.createdDate = createdDate
-            this.lastActiveDate = lastActiveDate
-        }
-
-        @Override
-        String toString() {
-            return "CreatedUser{" +
-                    "loginName='$loginName'" +
-                    ", accessToken='$accessToken'" +
-                    ", accessTokenExpiresAfter=$accessTokenExpiresAfter" +
-                    ", refreshToken='$refreshToken" +
-                    ", refreshTokenExpiresAfter=$refreshTokenExpiresAfter" +
-                    ", nickname='$nickname'" +
-                    ", status='$status'" +
-                    ", email='$email'" +
-                    ", createdDate='$createdDate'" +
-                    ", lastActiveDate='$lastActiveDate'" +
-                    '}'
-        }
     }
 }

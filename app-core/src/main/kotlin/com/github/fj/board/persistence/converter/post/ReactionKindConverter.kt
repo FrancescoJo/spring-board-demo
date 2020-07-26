@@ -5,7 +5,6 @@
 package com.github.fj.board.persistence.converter.post
 
 import com.github.fj.board.persistence.model.post.ReactionKind
-import com.github.fj.board.persistence.model.post.Status
 import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 

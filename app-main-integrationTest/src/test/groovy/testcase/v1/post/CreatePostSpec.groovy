@@ -15,10 +15,6 @@ class CreatePostSpec extends PostTestBase {
 
     }
 
-    def "fail if no user is created for authentication"() {
-
-    }
-
     def "fail if board for given boardId is not present"() {
 
     }

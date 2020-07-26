@@ -18,8 +18,8 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
-import test.endpoint.ApiPathsHelper
-import test.endpoint.v1.board.dto.UpdateBoardRequestBuilder
+import test.com.github.fj.board.endpoint.ApiPathsHelper
+import test.com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequestBuilder
 import testcase.v1.BoardTestBase
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath

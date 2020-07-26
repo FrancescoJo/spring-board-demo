@@ -15,8 +15,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
-import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
-import test.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
+import test.com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequestBuilder
+import test.com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
 import testcase.v1.AuthTestBase
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath

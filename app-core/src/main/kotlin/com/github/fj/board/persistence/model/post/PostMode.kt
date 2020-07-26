@@ -9,12 +9,12 @@ import com.fasterxml.jackson.annotation.JsonValue
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
- * @since 05 - Jul - 2020
+ * @since 26 - Jul - 2020
  */
-enum class Status(val key: String) {
-    NOT_REVIEWED(""),
-    REVIEWED("r"),
-    DELETED("d");
+enum class PostMode(val key: String) {
+    FREE_REPLY("frv"),
+
+    REPLY_NOT_ALLOWED("rr");
 
     @JsonValue
     @Suppress("unused") // Used by Jackson upon serialising @JsonSerialize annotated classes
@@ -25,6 +25,6 @@ enum class Status(val key: String) {
     companion object {
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         @JvmStatic
-        fun byKey(key: String?) = values().firstOrNull { it.key == key } ?: NOT_REVIEWED
+        fun byKey(key: String?) = values().firstOrNull { it.key == key } ?: FREE_REPLY
     }
 }

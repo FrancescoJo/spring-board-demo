@@ -16,8 +16,9 @@ import org.springframework.restdocs.payload.FieldDescriptor
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import org.springframework.transaction.support.TransactionTemplate
-import test.endpoint.ApiPathsHelper
-import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
+import test.com.github.fj.board.endpoint.ApiPathsHelper
+import test.com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequestBuilder
+import testcase.common.CreatedUser
 
 import javax.annotation.Nullable
 
@@ -67,7 +68,7 @@ class BoardTestBase extends UserTestBase {
 
         return txTemplate.execute {
             final board = repository.findByAccessId(UUID.fromString(boardInfoResponse.accessId))
-            return new BoardInfo.Companion().from(board)
+            return new BoardInfo.Companion().from(board, 0)
         }
     }
 

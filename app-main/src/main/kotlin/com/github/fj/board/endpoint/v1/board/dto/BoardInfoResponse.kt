@@ -7,9 +7,9 @@ package com.github.fj.board.endpoint.v1.board.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.github.fj.board.persistence.model.board.Access
-import com.github.fj.board.persistence.model.board.Mode
-import com.github.fj.board.persistence.model.board.Status
+import com.github.fj.board.persistence.model.board.BoardAccess
+import com.github.fj.board.persistence.model.board.BoardMode
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.vo.board.BoardInfo
 import java.time.LocalDateTime
 
@@ -25,15 +25,15 @@ data class BoardInfoResponse(
 
     @JsonProperty
     @JsonPropertyDescription(DESC_STATUS)
-    val status: Status,
+    val status: BoardStatus,
 
     @JsonProperty
     @JsonPropertyDescription(DESC_ACCESS)
-    val access: Access,
+    val access: BoardAccess,
 
     @JsonProperty
     @JsonPropertyDescription(DESC_MODE)
-    val mode: Mode,
+    val mode: BoardMode,
 
     @JsonProperty
     @JsonPropertyDescription(DESC_KEY)

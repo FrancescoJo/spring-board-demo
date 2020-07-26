@@ -7,15 +7,15 @@ package testcase.v1.board
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.BoardNotFoundException
-import com.github.fj.board.persistence.model.board.Access
+import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.vo.board.BoardInfo
 import io.restassured.response.Response
 import io.restassured.specification.RequestSpecification
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
-import test.endpoint.ApiPathsHelper
-import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
+import test.com.github.fj.board.endpoint.ApiPathsHelper
+import test.com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequestBuilder
 import testcase.v1.BoardTestBase
 
 /**
@@ -75,7 +75,7 @@ class GetBoardSingleSpec extends BoardTestBase {
 
     def "not authenticated user can not access to members only board"() {
         given:
-        final board = randomBoardWithAccess(Access.MEMBERS_ONLY)
+        final board = randomBoardWithAccess(BoardAccess.MEMBERS_ONLY)
 
         when:
         final response = unauthenticatedRequest(
@@ -93,7 +93,7 @@ class GetBoardSingleSpec extends BoardTestBase {
 
     def "not authenticated user can only access to public board"() {
         given:
-        final board = randomBoardWithAccess(Access.PUBLIC)
+        final board = randomBoardWithAccess(BoardAccess.PUBLIC)
 
         when:
         final rawResponse = unauthenticatedRequest(
@@ -107,7 +107,7 @@ class GetBoardSingleSpec extends BoardTestBase {
 
         expect:
         response.accessId == board.accessId.toString()
-        response.access == Access.PUBLIC
+        response.access == BoardAccess.PUBLIC
     }
 
     @Unroll
@@ -133,11 +133,11 @@ class GetBoardSingleSpec extends BoardTestBase {
 
         where:
         access              | _
-        Access.PUBLIC       | _
-        Access.MEMBERS_ONLY | _
+        BoardAccess.PUBLIC       | _
+        BoardAccess.MEMBERS_ONLY | _
     }
 
-    private BoardInfo randomBoardWithAccess(final Access access) {
+    private BoardInfo randomBoardWithAccess(final BoardAccess access) {
         final boardSpec = new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
                 .access(access)
                 .build()

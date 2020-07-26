@@ -10,9 +10,9 @@ import com.github.fj.board.persistence.converter.board.ModeConverter
 import com.github.fj.board.persistence.converter.board.StatusConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.user.User
-import com.github.fj.board.persistence.model.board.Access
-import com.github.fj.board.persistence.model.board.Mode
-import com.github.fj.board.persistence.model.board.Status
+import com.github.fj.board.persistence.model.board.BoardAccess
+import com.github.fj.board.persistence.model.board.BoardMode
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.util.UuidExtensions
 import java.time.LocalDateTime
@@ -50,13 +50,13 @@ class Board : AbstractIncrementalLockableEntity() {
     var accessId: UUID = UuidExtensions.EMPTY_UUID
 
     @Convert(converter = StatusConverter::class)
-    var status: Status = Status.NORMAL
+    var status: BoardStatus = BoardStatus.NORMAL
 
     @Convert(converter = AccessConverter::class)
-    var access: Access = Access.PUBLIC
+    var access: BoardAccess = BoardAccess.PUBLIC
 
     @Convert(converter = ModeConverter::class)
-    var mode: Mode = Mode.FREE_STYLE
+    var mode: BoardMode = BoardMode.FREE_STYLE
 
     /**
      * Alphanumeric, can be empty, human friendly name to specify a board
@@ -69,9 +69,6 @@ class Board : AbstractIncrementalLockableEntity() {
 
     @Column(columnDefinition = "CLOB")
     var description: String = ""
-
-    @Column(name = "posts_count", nullable = false)
-    var postsCount: Long = 0L
 
     @Column(name = "created_date", nullable = false)
     var createdDate: LocalDateTime = LOCAL_DATE_TIME_MIN
@@ -98,7 +95,6 @@ class Board : AbstractIncrementalLockableEntity() {
             "key='$key', " +
             "name='$name', " +
             "description='$description', " +
-            "postsCount=$postsCount, " +
             "createdDate=$createdDate, " +
             "modifiedDate=$modifiedDate, " +
             "creator=${if (::creator.isInitialized) {

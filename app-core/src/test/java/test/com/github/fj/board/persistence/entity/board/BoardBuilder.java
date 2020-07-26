@@ -6,9 +6,9 @@ package test.com.github.fj.board.persistence.entity.board;
 
 import com.github.fj.board.persistence.entity.board.Board;
 import com.github.fj.board.persistence.entity.user.User;
-import com.github.fj.board.persistence.model.board.Access;
-import com.github.fj.board.persistence.model.board.Mode;
-import com.github.fj.board.persistence.model.board.Status;
+import com.github.fj.board.persistence.model.board.BoardAccess;
+import com.github.fj.board.persistence.model.board.BoardMode;
+import com.github.fj.board.persistence.model.board.BoardStatus;
 import com.github.fj.lib.util.UuidExtensions;
 import test.com.github.fj.board.persistence.entity.user.UserBuilder;
 
@@ -27,13 +27,12 @@ import static com.github.fj.lib.util.RandomUtilsKt.*;
 public class BoardBuilder {
     private long id = 0;
     private UUID accessId = UuidExtensions.INSTANCE.getEMPTY_UUID();
-    private Status status = Status.NORMAL;
-    private Access access = Access.PUBLIC;
-    private Mode mode = Mode.FREE_STYLE;
+    private BoardStatus status = BoardStatus.NORMAL;
+    private BoardAccess access = BoardAccess.PUBLIC;
+    private BoardMode mode = BoardMode.FREE_STYLE;
     private String key = "";
     private String name = "";
     private String description = "";
-    private long postsCount = 0;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private User creator = null;
@@ -48,7 +47,6 @@ public class BoardBuilder {
         this.key = src.getKey();
         this.name = src.getName();
         this.description = src.getDescription();
-        this.postsCount = src.getPostsCount();
         this.createdDate = src.getCreatedDate();
         this.modifiedDate = src.getModifiedDate();
         this.creator = src.getCreator();
@@ -64,17 +62,17 @@ public class BoardBuilder {
         return this;
     }
 
-    public BoardBuilder status(final @Nonnull Status value) {
+    public BoardBuilder status(final @Nonnull BoardStatus value) {
         this.status = value;
         return this;
     }
 
-    public BoardBuilder access(final @Nonnull Access value) {
+    public BoardBuilder access(final @Nonnull BoardAccess value) {
         this.access = value;
         return this;
     }
 
-    public BoardBuilder mode(final @Nonnull Mode value) {
+    public BoardBuilder mode(final @Nonnull BoardMode value) {
         this.mode = value;
         return this;
     }
@@ -91,11 +89,6 @@ public class BoardBuilder {
 
     public BoardBuilder description(final @Nonnull String value) {
         this.description = value;
-        return this;
-    }
-
-    public BoardBuilder postsCount(final long value) {
-        this.postsCount = value;
         return this;
     }
 
@@ -125,7 +118,6 @@ public class BoardBuilder {
         object.setKey(key);
         object.setName(name);
         object.setDescription(description);
-        object.setPostsCount(postsCount);
         object.setCreatedDate(createdDate);
         object.setModifiedDate(modifiedDate);
         object.setCreator(creator);
@@ -139,13 +131,12 @@ public class BoardBuilder {
         return new BoardBuilder()
                 .id(getRandomPositiveLong(1L, Long.MAX_VALUE))
                 .accessId(UUID.randomUUID())
-                .status(Status.NORMAL)
-                .access(Access.PUBLIC)
-                .mode(Mode.FREE_STYLE)
+                .status(BoardStatus.NORMAL)
+                .access(BoardAccess.PUBLIC)
+                .mode(BoardMode.FREE_STYLE)
                 .key(getRandomAlphaNumericString(8))
                 .name("name: " + getRandomAlphaNumericString(12))
                 .description("desc: " + getRandomAlphaNumericString(24))
-                .postsCount(getRandomPositiveInt(0, 100))
                 .createdDate(now)
                 .modifiedDate(now)
                 .creator(UserBuilder.createRandom())

@@ -16,7 +16,7 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
-import test.endpoint.v1.user.dto.CreateUserRequestBuilder
+import test.com.github.fj.board.endpoint.v1.user.dto.CreateUserRequestBuilder
 import testcase.v1.UserTestBase
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString

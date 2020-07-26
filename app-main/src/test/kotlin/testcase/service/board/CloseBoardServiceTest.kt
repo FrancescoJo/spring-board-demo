@@ -8,7 +8,7 @@ import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.persistence.entity.board.Board
-import com.github.fj.board.persistence.model.board.Status
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.service.board.CloseBoardService
 import com.github.fj.board.service.board.impl.CloseBoardServiceImpl
 import com.github.fj.lib.time.utcNow
@@ -92,7 +92,7 @@ class CloseBoardServiceTest : AbstractBoardServiceTestTemplate() {
         val (clientInfo, _) = prepareSelf()
         val targetBoard = UUID.randomUUID()
         val board = BoardBuilder(BoardBuilder.createRandom())
-            .status(Status.CLOSED)
+            .status(BoardStatus.CLOSED)
             .build()
 
         // when:
@@ -124,7 +124,7 @@ class CloseBoardServiceTest : AbstractBoardServiceTestTemplate() {
         val updatedBoard = boardCaptor.firstValue
 
         // expect:
-        assertThat(updatedBoard.status, `is`(Status.CLOSED))
+        assertThat(updatedBoard.status, `is`(BoardStatus.CLOSED))
         assertThat(updatedBoard.modifiedDate, lessThanOrEqualTo(utcNow()))
     }
 }

@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.persistence.converter.board
 
-import com.github.fj.board.persistence.model.board.Status
+import com.github.fj.board.persistence.model.board.BoardStatus
 import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 
@@ -13,8 +13,8 @@ import javax.persistence.Converter
  * @since 21 - Jul - 2020
  */
 @Converter
-class StatusConverter : AttributeConverter<Status, String> {
-    override fun convertToDatabaseColumn(attribute: Status): String = attribute.key
+class StatusConverter : AttributeConverter<BoardStatus, String> {
+    override fun convertToDatabaseColumn(attribute: BoardStatus): String = attribute.key
 
-    override fun convertToEntityAttribute(dbData: String?): Status = Status.byKey(dbData)
+    override fun convertToEntityAttribute(dbData: String?): BoardStatus = BoardStatus.byKey(dbData)
 }

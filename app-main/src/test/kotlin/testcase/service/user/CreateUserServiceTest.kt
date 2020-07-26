@@ -7,7 +7,7 @@ package testcase.service.user
 import com.github.fj.board.exception.client.auth.LoginNameNotFoundException
 import com.github.fj.board.exception.client.user.NicknameAlreadyExistException
 import com.github.fj.board.persistence.entity.user.User
-import com.github.fj.board.persistence.model.user.Status
+import com.github.fj.board.persistence.model.user.UserStatus
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.user.CreateUserService
@@ -30,7 +30,7 @@ import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
 import test.com.github.fj.board.persistence.entity.user.UserBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
-import test.endpoint.v1.user.dto.CreateUserRequestBuilder
+import test.com.github.fj.board.endpoint.v1.user.dto.CreateUserRequestBuilder
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -119,7 +119,7 @@ class CreateUserServiceTest {
         with(actualUser) {
             assertThat(authentication, `is`(mockAuth))
             assertThat(nickname, `is`(req.nickname))
-            assertThat(status, `is`(Status.UNVERIFIED))
+            assertThat(status, `is`(UserStatus.UNVERIFIED))
             assertThat(email, `is`(req.email ?: ""))
             assertThat(createdDate, greaterThanOrEqualTo(now))
             assertThat(createdIp, `is`(clientInfo.remoteAddr))

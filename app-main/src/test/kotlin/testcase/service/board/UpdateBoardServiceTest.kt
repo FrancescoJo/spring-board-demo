@@ -19,7 +19,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.`when`
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
-import test.endpoint.v1.board.dto.UpdateBoardRequestBuilder
+import test.com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequestBuilder
 import java.util.*
 
 /**
@@ -106,7 +106,6 @@ class UpdateBoardServiceTest : AbstractBoardServiceTestTemplate() {
         assertThat(result.key, `is`(board.key))
         assertThat(result.name, `is`(req.name))
         assertThat(result.description, `is`(req.description))
-        assertThat(result.postsCount, `is`(board.postsCount))
         assertThat(result.createdDate, `is`(board.createdDate))
         assertThat(result.modifiedDate, greaterThanOrEqualTo(board.modifiedDate))
         assertThat(result.creator, `is`(UserInfo.from(board.creator)))

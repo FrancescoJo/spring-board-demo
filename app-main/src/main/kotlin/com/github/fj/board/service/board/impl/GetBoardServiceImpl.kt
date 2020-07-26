@@ -8,8 +8,8 @@ import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
-import com.github.fj.board.persistence.model.board.Access
-import com.github.fj.board.persistence.model.board.Status
+import com.github.fj.board.persistence.model.board.BoardAccess
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.service.board.GetBoardService
 import com.github.fj.board.vo.auth.ClientAuthInfo
@@ -33,12 +33,12 @@ internal class GetBoardServiceImpl(
     override fun getOne(accessId: UUID, clientInfo: ClientAuthInfo?): BoardInfo {
         val board = accessId.getBoard()
 
-        if (clientInfo == null && board.access != Access.PUBLIC) {
+        if (clientInfo == null && board.access != BoardAccess.PUBLIC) {
             // We want that such user cannot recognise whether it is even exist or not
             throw BoardNotFoundException()
         }
 
-        return BoardInfo.from(board)
+        return BoardInfo.from(board, board.getPostsCount())
     }
 
     @Transactional
@@ -48,19 +48,19 @@ internal class GetBoardServiceImpl(
         clientInfo: ClientAuthInfo?
     ): List<BoardInfo> {
         val boards = if (clientInfo == null) {
-            boardRepo.findAllByAccess(Access.PUBLIC, sortBy.toPropertyName(), orderBy.toSortDirection())
+            boardRepo.findAllByAccess(BoardAccess.PUBLIC, sortBy.toPropertyName(), orderBy.toSortDirection())
         } else {
             boardRepo.findAll(NormalBoardSearchSpec(), Sort.by(orderBy.toSortDirection(), sortBy.toPropertyName()))
         }
 
-        return boards.map { BoardInfo.from(it) }
+        return boards.map { BoardInfo.from(it, it.getPostsCount()) }
     }
 }
 
 private class NormalBoardSearchSpec : Specification<Board> {
     override fun toPredicate(root: Root<Board>, query: CriteriaQuery<*>, criteriaBuilder: CriteriaBuilder): Predicate? =
         ArrayList<Predicate>().apply {
-            add(criteriaBuilder.`in`(root.get<Status>("status")).apply { value(Status.NORMAL) })
+            add(criteriaBuilder.`in`(root.get<BoardStatus>("status")).apply { value(BoardStatus.NORMAL) })
         }.mergeBy(criteriaBuilder)
 
     private fun List<Predicate>.mergeBy(cb: CriteriaBuilder): Predicate? = cb.and(*this.toTypedArray())

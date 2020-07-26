@@ -10,7 +10,7 @@ import com.github.fj.board.exception.generic.UnauthenticatedException
 import io.restassured.response.Response
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
-import test.endpoint.ApiPathsHelper
+import test.com.github.fj.board.endpoint.ApiPathsHelper
 import testcase.v1.UserTestBase
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString

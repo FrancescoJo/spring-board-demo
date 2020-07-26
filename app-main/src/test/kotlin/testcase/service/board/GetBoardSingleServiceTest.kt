@@ -5,7 +5,7 @@
 package testcase.service.board
 
 import com.github.fj.board.exception.client.board.BoardNotFoundException
-import com.github.fj.board.persistence.model.board.Access
+import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.service.board.GetBoardService
 import com.github.fj.board.service.board.impl.GetBoardServiceImpl
 import org.hamcrest.MatcherAssert.assertThat
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.Mockito.`when`
-import test.com.github.fj.board.persistence.entity.board.BoardBuilder
 import java.util.*
 
 /**
@@ -49,7 +48,7 @@ class GetBoardSingleServiceTest : AbstractBoardServiceTestTemplate() {
     @Test
     fun `not authenticated user can not access to members only board`() {
         // given:
-        val board = randomBoardWithAccess(Access.MEMBERS_ONLY)
+        val board = randomBoardWithAccess(BoardAccess.MEMBERS_ONLY)
         val accessId = board.accessId
 
         // when:
@@ -64,7 +63,7 @@ class GetBoardSingleServiceTest : AbstractBoardServiceTestTemplate() {
     @Test
     fun `not authenticated user can only access to public board`() {
         // given:
-        val access = Access.PUBLIC
+        val access = BoardAccess.PUBLIC
         val board = randomBoardWithAccess(access)
         val accessId = board.accessId
 
@@ -82,7 +81,7 @@ class GetBoardSingleServiceTest : AbstractBoardServiceTestTemplate() {
     @Test
     fun `authenticated user can access to any board`() {
         // given:
-        val access = Access.MEMBERS_ONLY
+        val access = BoardAccess.MEMBERS_ONLY
         val (clientInfo, _) = prepareSelf()
         val board = randomBoardWithAccess(access)
         val accessId = board.accessId
@@ -100,7 +99,7 @@ class GetBoardSingleServiceTest : AbstractBoardServiceTestTemplate() {
 
     @ParameterizedTest(name = "authenticated user can access to {0} board")
     @EnumSource
-    fun `authenticated user can access to any board`(access: Access) {
+    fun `authenticated user can access to any board`(access: BoardAccess) {
         // given:
         val (clientInfo, _) = prepareSelf()
         val board = randomBoardWithAccess(access)
@@ -116,8 +115,4 @@ class GetBoardSingleServiceTest : AbstractBoardServiceTestTemplate() {
         assertThat(result.accessId, `is`(accessId))
         assertThat(result.access, `is`(access))
     }
-
-    private fun randomBoardWithAccess(access: Access) = BoardBuilder(BoardBuilder.createRandom())
-        .access(access)
-        .build()
 }

@@ -7,6 +7,7 @@ package com.github.fj.board.endpoint.v1.post.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.github.fj.board.persistence.model.post.PostMode
 import com.github.fj.board.validation.UnicodeCharsLength
 import javax.validation.constraints.Size
 
@@ -16,6 +17,10 @@ import javax.validation.constraints.Size
  */
 @JsonDeserialize
 data class CreatePostRequest(
+    @JsonProperty
+    @JsonPropertyDescription(DESC_MODE)
+    val mode: PostMode,
+
     @get:UnicodeCharsLength(
         min = 1,
         max = TITLE_SIZE_MAX,
@@ -40,6 +45,7 @@ data class CreatePostRequest(
     companion object {
         const val TITLE_SIZE_MAX = 40
 
+        const val DESC_MODE = "Mode of this post. ['frv': Free to reply, 'rr': Reply not allowed]."
         const val DESC_TITLE = "Title of this post."
         const val DESC_CONTENT = "Content of this post."
         const val DESC_ATTACHMENTS = "Attachments of this post. Maybe null or empty."

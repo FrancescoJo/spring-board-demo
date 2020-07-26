@@ -22,7 +22,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.*
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
-import test.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
+import test.com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

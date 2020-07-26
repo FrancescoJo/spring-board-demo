@@ -15,7 +15,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
+import test.com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import javax.servlet.http.HttpServletRequest
 
 /**

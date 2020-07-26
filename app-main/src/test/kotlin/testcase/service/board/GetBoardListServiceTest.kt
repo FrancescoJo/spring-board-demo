@@ -6,7 +6,7 @@ package testcase.service.board
 
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
-import com.github.fj.board.persistence.model.board.Access
+import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.service.board.GetBoardService
 import com.github.fj.board.service.board.impl.GetBoardServiceImpl
 import com.github.fj.lib.collection.iterationsOf
@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.data.domain.Sort
-import test.com.github.fj.board.persistence.entity.board.BoardBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
 import test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst
 
@@ -38,13 +37,13 @@ class GetBoardListServiceTest : AbstractBoardServiceTestTemplate() {
     @Test
     fun `anonymous users can get list of public boards`() {
         // given:
-        val boards = 5.iterationsOf { randomBoardWithAccess(Access.PUBLIC) } +
-                5.iterationsOf { randomBoardWithAccess(Access.MEMBERS_ONLY) }
+        val boards = 5.iterationsOf { randomBoardWithAccess(BoardAccess.PUBLIC) } +
+                5.iterationsOf { randomBoardWithAccess(BoardAccess.MEMBERS_ONLY) }
         val sort = randomEnumConst(BoardsSortBy::class.java)
         val sortOrder = randomEnumConst(BoardsSortOrderBy::class.java)
 
         // when:
-        `when`(boardRepo.findAllByAccess(Access.PUBLIC, sort.toPropertyName(), sortOrder.toSortDirection()))
+        `when`(boardRepo.findAllByAccess(BoardAccess.PUBLIC, sort.toPropertyName(), sortOrder.toSortDirection()))
             .thenReturn(boards)
 
         // then:
@@ -57,8 +56,8 @@ class GetBoardListServiceTest : AbstractBoardServiceTestTemplate() {
     @Test
     fun `authenticated user can get full list of boards`() {
         // given:
-        val boards = 5.iterationsOf { randomBoardWithAccess(Access.PUBLIC) } +
-                5.iterationsOf { randomBoardWithAccess(Access.MEMBERS_ONLY) }
+        val boards = 5.iterationsOf { randomBoardWithAccess(BoardAccess.PUBLIC) } +
+                5.iterationsOf { randomBoardWithAccess(BoardAccess.MEMBERS_ONLY) }
         val sort = randomEnumConst(BoardsSortBy::class.java)
         val sortOrder = randomEnumConst(BoardsSortOrderBy::class.java)
 
@@ -72,8 +71,4 @@ class GetBoardListServiceTest : AbstractBoardServiceTestTemplate() {
         // expect:
         assertThat(result.size, `is`(10))
     }
-
-    private fun randomBoardWithAccess(access: Access) = BoardBuilder(BoardBuilder.createRandom())
-        .access(access)
-        .build()
 }

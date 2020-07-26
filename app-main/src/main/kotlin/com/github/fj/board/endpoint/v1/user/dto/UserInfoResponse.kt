@@ -7,7 +7,7 @@ package com.github.fj.board.endpoint.v1.user.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.github.fj.board.persistence.model.user.Status
+import com.github.fj.board.persistence.model.user.UserStatus
 import com.github.fj.board.vo.user.UserInfo
 import java.time.LocalDateTime
 
@@ -23,7 +23,7 @@ data class UserInfoResponse(
 
     @JsonProperty
     @JsonPropertyDescription(DESC_STATUS)
-    val status: Status,
+    val status: UserStatus,
 
     @JsonProperty
     @JsonPropertyDescription(DESC_EMAIL)

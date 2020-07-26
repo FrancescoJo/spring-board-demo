@@ -12,7 +12,7 @@ import com.github.fj.lib.time.DateTimeUtilsKt
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import spock.lang.Unroll
-import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
+import test.com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import testcase.v1.AuthTestBase
 
 /**

@@ -9,13 +9,14 @@ import com.github.fj.board.endpoint.v1.board.GetBoardController
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
-import com.github.fj.board.persistence.model.board.Access
+import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.vo.board.BoardInfo
 import com.github.fj.lib.collection.CollectionUtilsKt
 import io.restassured.response.Response
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
-import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
+import test.com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequestBuilder
+import testcase.common.CreatedUser
 import testcase.v1.BoardTestBase
 
 /**
@@ -25,8 +26,8 @@ import testcase.v1.BoardTestBase
 class GetBoardListSpec extends BoardTestBase {
     def "not authenticated user can get list of public boards"() {
         given:
-        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(Access.PUBLIC) }
-        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(Access.MEMBERS_ONLY) }
+        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(BoardAccess.PUBLIC) }
+        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(BoardAccess.MEMBERS_ONLY) }
 
         when:
         final rawResponse = unauthenticatedRequest("getBoardList-noAuth-membersOnly", boardInfoListResponseFieldsDoc())
@@ -36,13 +37,13 @@ class GetBoardListSpec extends BoardTestBase {
 
         expect:
         response.boards.size() == 2
-        !response.boards.any { it.access != Access.PUBLIC }
+        !response.boards.any { it.access != BoardAccess.PUBLIC }
     }
 
     def "authenticated user can access to all boards"() {
         given:
-        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(Access.PUBLIC) }
-        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(Access.MEMBERS_ONLY) }
+        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(BoardAccess.PUBLIC) }
+        CollectionUtilsKt.iterationsOf(2) { createBoardWithAccess(BoardAccess.MEMBERS_ONLY) }
 
         when:
         final rawResponse = sendRequest(
@@ -62,7 +63,7 @@ class GetBoardListSpec extends BoardTestBase {
         given:
         final owner = createRandomUser()
         final createdBoards = CollectionUtilsKt.iterationsOf(4) {
-            createBoardWithAccess(owner, Access.PUBLIC)
+            createBoardWithAccess(owner, BoardAccess.PUBLIC)
         }
 
         and:
@@ -122,13 +123,13 @@ class GetBoardListSpec extends BoardTestBase {
         response2.boards[1].key == board1.key
     }
 
-    private BoardInfo createBoardWithAccess(final Access access) {
+    private BoardInfo createBoardWithAccess(final BoardAccess access) {
         return createBoardBy(new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
                 .access(access)
                 .build())
     }
 
-    private BoardInfo createBoardWithAccess(final CreatedUser owner, final Access access) {
+    private BoardInfo createBoardWithAccess(final CreatedUser owner, final BoardAccess access) {
         return createBoardOf(owner, new CreateBoardRequestBuilder(CreateBoardRequestBuilder.createRandom())
                 .access(access)
                 .build())

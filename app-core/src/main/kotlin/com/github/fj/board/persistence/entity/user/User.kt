@@ -11,7 +11,7 @@ import com.github.fj.board.persistence.converter.user.StatusConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.model.auth.PlatformType
-import com.github.fj.board.persistence.model.user.Status
+import com.github.fj.board.persistence.model.user.UserStatus
 import com.github.fj.lib.net.InetAddressExtensions
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import java.net.InetAddress
@@ -38,7 +38,7 @@ class User : AbstractIncrementalLockableEntity() {
 
     @Convert(converter = StatusConverter::class)
     @Column(length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
-    var status: Status = Status.UNVERIFIED
+    var status: UserStatus = UserStatus.UNVERIFIED
 
     @Column(length = 128, nullable = false, columnDefinition = "VARCHAR(128)")
     var email: String = ""

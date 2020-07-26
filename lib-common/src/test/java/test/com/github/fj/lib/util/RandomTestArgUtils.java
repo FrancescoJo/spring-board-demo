@@ -59,12 +59,43 @@ public class RandomTestArgUtils {
     }
 
     public static String randomEmail() {
-        final String[] domains = new String[]{
-                "company.com", "organisation.org", "institute.edu", "government.gov", "network.net"
-        };
         final int nameLength = getRandomPositiveInt(1, 16);
-        final int domainIdx = getRandomPositiveInt(0, domains.length);
-
-        return getRandomAlphaNumericString(nameLength) + "@" + domains[domainIdx];
+        return getRandomAlphaNumericString(nameLength) + "@" + randomElementOf(DEFAULT_DOMAINS);
     }
+
+    public static String randomUri() {
+        final String scheme = randomElementOf(DEFAULT_SCHEMES);
+        final String host = randomElementOf(DEFAULT_DOMAINS);
+        final StringBuilder pathSegs = new StringBuilder("/");
+        final int iterations = getRandomPositiveInt(1, 4);
+
+        for (int i = 0; i < iterations; i++) {
+            pathSegs.append(getRandomAlphaNumericString(8));
+            if (i < iterations - 1) {
+                pathSegs.append("/");
+            }
+        }
+
+        return scheme + "://" + host + pathSegs.toString();
+    }
+
+    public static String randomMimeType() {
+        return randomElementOf(DEFAULT_MIME_TYPES);
+    }
+
+    private static <T> T randomElementOf(final T[] array) {
+        return array[getRandomPositiveInt(0, array.length)];
+    }
+
+    private static final String[] DEFAULT_SCHEMES = new String[]{
+            "http", "https", "ftp"
+    };
+    private static final String[] DEFAULT_DOMAINS = new String[]{
+            "company.com", "organisation.org", "institute.edu", "government.gov", "network.net"
+    };
+    private static final String[] DEFAULT_MIME_TYPES = new String[]{
+            "image/bmp", "image/gif", "image/jpeg", "image/png", "image/webp", "image/svg+xml",
+            "audio/aac", "audio/mpeg", "audio/ogg", "audio/wav", "audio/webm",
+            "video/x-msvideo", "video/mpeg", "video/ogg", "video/webm",
+    };
 }

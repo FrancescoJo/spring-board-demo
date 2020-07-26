@@ -7,7 +7,6 @@ package com.github.fj.board.endpoint.v1.board.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.github.fj.board.persistence.model.board.Access
 import com.github.fj.board.vo.board.BoardInfo
 
 /**

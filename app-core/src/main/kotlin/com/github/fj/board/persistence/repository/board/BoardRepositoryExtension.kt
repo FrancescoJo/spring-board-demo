@@ -5,7 +5,7 @@
 package com.github.fj.board.persistence.repository.board
 
 import com.github.fj.board.persistence.entity.board.Board
-import com.github.fj.board.persistence.model.board.Access
+import com.github.fj.board.persistence.model.board.BoardAccess
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
@@ -17,7 +17,7 @@ import javax.persistence.PersistenceContext
  */
 interface BoardRepositoryExtension {
     fun findAllByAccess(
-        access: Access,
+        access: BoardAccess,
         orderByProperty: String = "",
         sortDirection: Sort.Direction
     ): List<Board>
@@ -28,13 +28,13 @@ internal class BoardRepositoryExtensionImpl : BoardRepositoryExtension {
     @PersistenceContext
     private lateinit var em: EntityManager
 
-    override fun findAllByAccess(access: Access, orderByProperty: String, sortDirection: Sort.Direction): List<Board> {
+    override fun findAllByAccess(access: BoardAccess, orderByProperty: String, sortDirection: Sort.Direction): List<Board> {
         return em.createQuery(
             """
                 SELECT b
                 FROM Board b
                 WHERE b.access = :access
-                  AND b.status <> com.github.fj.board.persistence.model.board.Status.CLOSED
+                  AND b.status <> com.github.fj.board.persistence.model.board.BoardStatus.CLOSED
                 ORDER BY $orderByProperty $sortDirection
             """.trimIndent(), Board::class.java
         )

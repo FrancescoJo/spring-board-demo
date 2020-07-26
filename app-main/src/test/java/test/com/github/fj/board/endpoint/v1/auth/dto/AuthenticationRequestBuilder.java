@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package test.endpoint.v1.auth.dto;
+package test.com.github.fj.board.endpoint.v1.auth.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest;

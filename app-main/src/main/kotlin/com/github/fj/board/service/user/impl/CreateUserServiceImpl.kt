@@ -8,7 +8,7 @@ import com.github.fj.board.endpoint.v1.user.dto.CreateUserRequest
 import com.github.fj.board.exception.client.auth.LoginNameNotFoundException
 import com.github.fj.board.exception.client.user.NicknameAlreadyExistException
 import com.github.fj.board.persistence.entity.user.User
-import com.github.fj.board.persistence.model.user.Status
+import com.github.fj.board.persistence.model.user.UserStatus
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.user.CreateUserService
@@ -42,7 +42,7 @@ class CreateUserServiceImpl(
         val createdUser = User().apply {
             this.authentication = auth
             this.nickname = req.nickname
-            this.status = Status.UNVERIFIED
+            this.status = UserStatus.UNVERIFIED
             this.email = req.email ?: ""
             this.createdDate = now
             this.createdIp = clientInfo.remoteAddr

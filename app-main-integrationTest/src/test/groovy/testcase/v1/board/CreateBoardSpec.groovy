@@ -11,14 +11,14 @@ import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.DuplicatedBoardKeyException
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthenticatedException
-import com.github.fj.board.persistence.model.board.Status
+import com.github.fj.board.persistence.model.board.BoardStatus
 import io.restassured.response.Response
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
-import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
+import test.com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequestBuilder
 import testcase.v1.BoardTestBase
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
@@ -166,7 +166,7 @@ class CreateBoardSpec extends BoardTestBase {
 
         then:
         !response.accessId.isEmpty()
-        response.status == Status.NORMAL
+        response.status == BoardStatus.NORMAL
         response.access == request.access
         response.mode == request.mode
         response.key == request.key

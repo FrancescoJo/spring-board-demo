@@ -30,8 +30,7 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
-import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
-import java.time.temporal.ChronoUnit
+import test.com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

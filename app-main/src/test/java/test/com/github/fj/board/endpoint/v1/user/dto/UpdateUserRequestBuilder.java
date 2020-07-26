@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package test.endpoint.v1.user.dto;
+package test.com.github.fj.board.endpoint.v1.user.dto;
 
 import com.github.fj.board.endpoint.v1.user.dto.UpdateUserRequest;
 
@@ -17,7 +17,7 @@ import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEmail;
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 20 - Jul - 2020
  */
-public class UpdateUserRequestBuilder {
+public final class UpdateUserRequestBuilder {
     private String nickname = "";
     private String email = null;
 

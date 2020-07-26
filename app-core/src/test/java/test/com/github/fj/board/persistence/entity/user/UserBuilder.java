@@ -7,7 +7,7 @@ package test.com.github.fj.board.persistence.entity.user;
 import com.github.fj.board.persistence.entity.auth.Authentication;
 import com.github.fj.board.persistence.entity.user.User;
 import com.github.fj.board.persistence.model.auth.PlatformType;
-import com.github.fj.board.persistence.model.user.Status;
+import com.github.fj.board.persistence.model.user.UserStatus;
 import com.github.fj.lib.net.InetAddressExtensions;
 import com.github.fj.lib.time.DateTimeUtilsKt;
 import de.skuzzle.semantic.Version;
@@ -32,7 +32,7 @@ public class UserBuilder {
     private long id = 0L;
     private Authentication authentication = null;
     private String nickname = "";
-    private Status status = Status.UNVERIFIED;
+    private UserStatus status = UserStatus.UNVERIFIED;
     private String email = "";
     private LocalDateTime createdDate = DateTimeUtilsKt.getLOCAL_DATE_TIME_MIN();
     private InetAddress createdIp = InetAddressExtensions.INSTANCE.getEMPTY_INET_ADDRESS();
@@ -81,7 +81,7 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder status(final @Nonnull Status value) {
+    public UserBuilder status(final @Nonnull UserStatus value) {
         this.status = value;
         return this;
     }
@@ -163,7 +163,7 @@ public class UserBuilder {
                 .id(getRandomPositiveLong(0, Long.MAX_VALUE))
                 .authentication(AuthenticationBuilder.createRandom())
                 .nickname(getRandomAlphaNumericString(8))
-                .status(randomEnumConst(Status.class))
+                .status(randomEnumConst(UserStatus.class))
                 .email(randomEmail())
                 .createdDate(now)
                 .createdIp(localhost)

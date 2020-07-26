@@ -6,7 +6,6 @@ package com.github.fj.board.persistence.entity.post
 
 import com.github.fj.board.persistence.converter.ByteArrayInetAddressConverter
 import com.github.fj.board.persistence.converter.ByteArrayUuidConverter
-import com.github.fj.board.persistence.converter.SemanticVersionConverter
 import com.github.fj.board.persistence.converter.auth.PlatformTypeConverter
 import com.github.fj.board.persistence.converter.post.ModeConverter
 import com.github.fj.board.persistence.converter.post.StatusConverter
@@ -14,12 +13,11 @@ import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.auth.PlatformType
-import com.github.fj.board.persistence.model.post.Mode
-import com.github.fj.board.persistence.model.post.Status
+import com.github.fj.board.persistence.model.post.PostMode
+import com.github.fj.board.persistence.model.post.PostStatus
 import com.github.fj.lib.net.InetAddressExtensions
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.util.UuidExtensions
-import de.skuzzle.semantic.Version
 import java.net.InetAddress
 import java.time.LocalDateTime
 import java.util.*
@@ -42,10 +40,10 @@ class Post : AbstractIncrementalLockableEntity() {
 
     @Convert(converter = StatusConverter::class)
     @Column(length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
-    var status: Status = Status.NOT_REVIEWED
+    var status: PostStatus = PostStatus.NOT_REVIEWED
 
     @Convert(converter = ModeConverter::class)
-    var mode: Mode = Mode.FREE_REPLY
+    var mode: PostMode = PostMode.FREE_REPLY
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false, updatable = false)
@@ -92,9 +90,6 @@ class Post : AbstractIncrementalLockableEntity() {
     @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
     var attachments: MutableList<Attachment> = mutableListOf()
 
-    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
-    var reactions: MutableList<Reaction> = mutableListOf()
-
     override fun toString() = "Post(id=$id, " +
             "accessId=$accessId, " +
             "status='$status', " +
@@ -114,6 +109,5 @@ class Post : AbstractIncrementalLockableEntity() {
             "title='$title', " +
             "contents='${contents.trim()}', " +
             "viewedCount=$viewedCount, " +
-            "attachments=$attachments, " +
-            "reactions=$reactions)"
+            "attachments=$attachments)"
 }

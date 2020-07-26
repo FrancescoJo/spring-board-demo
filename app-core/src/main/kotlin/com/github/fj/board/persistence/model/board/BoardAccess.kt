@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonValue
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 22 - Jul - 2020
  */
-enum class Access(val key: String) {
+enum class BoardAccess(val key: String) {
     PUBLIC("o"),
     MEMBERS_ONLY("p");
 

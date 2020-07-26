@@ -39,7 +39,7 @@ class UpdateBoardServiceImpl(
             this.modifiedDate = utcNow()
         }
 
-        return BoardInfo.from(updatedBoard).also {
+        return BoardInfo.from(updatedBoard, updatedBoard.getPostsCount()).also {
             boardRepo.save(updatedBoard)
         }
     }
