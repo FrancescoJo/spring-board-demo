@@ -33,16 +33,16 @@ import javax.validation.constraints.Pattern
 @Validated
 interface UpdateBoardController {
     @RequestMapping(
-        path = [ApiPaths.BOARD_ACCESS_ID],
+        path = [ApiPaths.BOARD_ID],
         method = [RequestMethod.PATCH]
     )
     fun update(
         @Pattern(
             regexp = REGEXP_UUID,
-            message = "`accessId` must be in a UUID format."
+            message = "`boardId` must be in a UUID format."
         )
         @PathVariable
-        accessId: String,
+        boardId: String,
         @Valid @RequestBody req: UpdateBoardRequest,
         clientInfo: ClientAuthInfo
     ): BoardInfoResponse
@@ -56,10 +56,10 @@ interface UpdateBoardController {
 class UpdateBoardControllerImpl(
     private val src: UpdateBoardService
 ) : UpdateBoardController {
-    override fun update(accessId: String, req: UpdateBoardRequest, clientInfo: ClientAuthInfo): BoardInfoResponse {
+    override fun update(boardId: String, req: UpdateBoardRequest, clientInfo: ClientAuthInfo): BoardInfoResponse {
         LOG.debug("{}: {}", clientInfo.requestLine, req)
 
-        val result = src.update(UUID.fromString(accessId), req, clientInfo)
+        val result = src.update(UUID.fromString(boardId), req, clientInfo)
 
         return BoardInfoResponse.from(result)
     }

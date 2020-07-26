@@ -169,6 +169,6 @@ class CloseBoardSpec extends BoardTestBase {
             final ResponseFieldsSnippet respDoc
     ) {
         return authenticatedRequest(documentId, accessToken, respDoc)
-                .delete(ApiPathsHelper.BOARD_ACCESS_ID(accessId))
+                .delete(ApiPathsHelper.BOARD_ID(accessId))
     }
 }

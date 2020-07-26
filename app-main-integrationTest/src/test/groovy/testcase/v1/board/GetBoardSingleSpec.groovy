@@ -167,6 +167,6 @@ class GetBoardSingleSpec extends BoardTestBase {
             reqSpec = authenticatedRequest(documentId, accessToken, respDoc)
         }
 
-        return reqSpec.get(ApiPathsHelper.BOARD_ACCESS_ID(accessId))
+        return reqSpec.get(ApiPathsHelper.BOARD_ID(accessId))
     }
 }

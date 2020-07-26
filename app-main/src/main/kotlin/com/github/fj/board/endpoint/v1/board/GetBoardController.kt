@@ -39,16 +39,16 @@ import javax.validation.constraints.Pattern
 @Validated
 interface GetBoardController {
     @RequestMapping(
-        path = [ApiPaths.BOARD_ACCESS_ID],
+        path = [ApiPaths.BOARD_ID],
         method = [RequestMethod.GET]
     )
     fun getOne(
         @Pattern(
             regexp = REGEXP_UUID,
-            message = "`accessId` must be in a UUID format."
+            message = "`boardId` must be in a UUID format."
         )
         @PathVariable
-        accessId: String,
+        boardId: String,
         httpReq: HttpServletRequest
     ): BoardInfoResponse
 
@@ -76,10 +76,10 @@ internal class GetBoardControllerImpl(
     private val svc: GetBoardService,
     private val authDetector: ControllerClientAuthInfoDetector
 ) : GetBoardController {
-    override fun getOne(accessId: String, httpReq: HttpServletRequest): BoardInfoResponse {
+    override fun getOne(boardId: String, httpReq: HttpServletRequest): BoardInfoResponse {
         val clientInfo = from(httpReq)
 
-        val result = svc.getOne(UUID.fromString(accessId), clientInfo)
+        val result = svc.getOne(UUID.fromString(boardId), clientInfo)
 
         return BoardInfoResponse.from(result)
     }

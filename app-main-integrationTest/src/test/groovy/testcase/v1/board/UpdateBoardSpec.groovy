@@ -197,7 +197,7 @@ class UpdateBoardSpec extends BoardTestBase {
     ) {
         return authenticatedRequest(documentId, accessToken, requestFieldsDoc(), respDoc)
                 .body(req)
-                .patch(ApiPathsHelper.BOARD_ACCESS_ID(accessId))
+                .patch(ApiPathsHelper.BOARD_ID(accessId))
     }
 
     private static RequestFieldsSnippet requestFieldsDoc() {

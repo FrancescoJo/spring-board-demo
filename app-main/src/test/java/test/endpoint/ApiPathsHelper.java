@@ -19,9 +19,9 @@ public class ApiPathsHelper {
     }
 
     /**
-     * {@link com.github.fj.board.endpoint.ApiPaths#BOARD_ACCESS_ID}
+     * {@link com.github.fj.board.endpoint.ApiPaths#BOARD_ID}
      */
-    public static String BOARD_ACCESS_ID(final String accessId) {
+    public static String BOARD_ID(final String accessId) {
         return ApiPaths.BOARD + "/" + accessId;
     }
 }

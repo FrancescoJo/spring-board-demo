@@ -30,16 +30,16 @@ import javax.validation.constraints.Pattern
 @Validated
 interface CloseBoardController {
     @RequestMapping(
-        path = [ApiPaths.BOARD_ACCESS_ID],
+        path = [ApiPaths.BOARD_ID],
         method = [RequestMethod.DELETE]
     )
     fun close(
         @Pattern(
             regexp = REGEXP_UUID,
-            message = "`accessId` must be in a UUID format."
+            message = "`boardId` must be in a UUID format."
         )
         @PathVariable
-        accessId: String,
+        boardId: String,
         clientInfo: ClientAuthInfo
     ): OkResponseDto<Boolean>
 }
@@ -52,10 +52,10 @@ interface CloseBoardController {
 internal class CloseBoardControllerImpl(
     private val svc: CloseBoardService
 ) : CloseBoardController {
-    override fun close(accessId: String, clientInfo: ClientAuthInfo): OkResponseDto<Boolean> {
+    override fun close(boardId: String, clientInfo: ClientAuthInfo): OkResponseDto<Boolean> {
         LOG.debug("{}", clientInfo.requestLine)
 
-        val result = svc.close(UUID.fromString(accessId), clientInfo)
+        val result = svc.close(UUID.fromString(boardId), clientInfo)
 
         return OkResponseDto(result)
     }

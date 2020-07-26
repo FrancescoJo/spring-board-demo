@@ -73,7 +73,7 @@ class BoardTestBase extends UserTestBase {
 
     protected final Boolean closeBoard(final CreatedUser owner, final UUID accessId) {
         final response = authenticatedRequest(owner.accessToken)
-                .delete(ApiPathsHelper.BOARD_ACCESS_ID(accessId.toString()))
+                .delete(ApiPathsHelper.BOARD_ID(accessId.toString()))
 
         final okResult = expectGenericResponse(response, HttpStatus.OK, Boolean.class)
 
