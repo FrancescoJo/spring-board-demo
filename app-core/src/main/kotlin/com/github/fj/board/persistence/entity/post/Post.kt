@@ -8,11 +8,13 @@ import com.github.fj.board.persistence.converter.ByteArrayInetAddressConverter
 import com.github.fj.board.persistence.converter.ByteArrayUuidConverter
 import com.github.fj.board.persistence.converter.SemanticVersionConverter
 import com.github.fj.board.persistence.converter.auth.PlatformTypeConverter
+import com.github.fj.board.persistence.converter.post.ModeConverter
 import com.github.fj.board.persistence.converter.post.StatusConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.auth.PlatformType
+import com.github.fj.board.persistence.model.post.Mode
 import com.github.fj.board.persistence.model.post.Status
 import com.github.fj.lib.net.InetAddressExtensions
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
@@ -42,6 +44,9 @@ class Post : AbstractIncrementalLockableEntity() {
     @Column(length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
     var status: Status = Status.NOT_REVIEWED
 
+    @Convert(converter = ModeConverter::class)
+    var mode: Mode = Mode.FREE_REPLY
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false, updatable = false)
     lateinit var board: Board
@@ -54,26 +59,21 @@ class Post : AbstractIncrementalLockableEntity() {
     @JoinColumn(name = "parent_thread", nullable = true)
     var parentThread: Post? = null
 
-    @Column(name = "last_active_date", nullable = false)
-    var lastActiveDate: LocalDateTime = LOCAL_DATE_TIME_MIN
+    @Column(name = "last_modified_date", nullable = false)
+    var lastModifiedDate: LocalDateTime = LOCAL_DATE_TIME_MIN
 
     @Convert(converter = ByteArrayInetAddressConverter::class)
-    @Column(name = "last_active_ip", nullable = false, columnDefinition = "VARBINARY(16)")
-    var lastActiveIp: InetAddress = InetAddressExtensions.EMPTY_INET_ADDRESS
+    @Column(name = "last_modified_ip", nullable = false, columnDefinition = "VARBINARY(16)")
+    var lastModifiedIp: InetAddress = InetAddressExtensions.EMPTY_INET_ADDRESS
 
     @Convert(converter = PlatformTypeConverter::class)
-    @Column(name = "last_active_platform_type", length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
-    var lastActivePlatformType: PlatformType = PlatformType.UNDEFINED
-
-    @Column(name = "last_active_platform_version", nullable = false, columnDefinition = "CLOB")
-    var lastActivePlatformVersion: String = ""
-
-    @Convert(converter = SemanticVersionConverter::class)
-    @Column(name = "last_active_app_version", length = 32, nullable = false, columnDefinition = "VARCHAR(32)")
-    var lastActiveAppVersion: Version = Version.ZERO
+    @Column(name = "last_modified_platform_type", length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
+    var lastModifiedPlatformType: PlatformType = PlatformType.UNDEFINED
 
     @Column(name = "edited", nullable = false, columnDefinition = "BIT")
     var edited: Boolean = false
+
+    var number: Long = 0L
 
     /*
      * Considering emoji input case, client-side length restrictions must be relatively shorter than 255.
@@ -86,6 +86,9 @@ class Post : AbstractIncrementalLockableEntity() {
     @Column(columnDefinition = "CLOB")
     var contents: String = ""
 
+    @Column(name = "viewed_cnt")
+    var viewedCount: Long = 0L
+
     @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
     var attachments: MutableList<Attachment> = mutableListOf()
 
@@ -95,6 +98,7 @@ class Post : AbstractIncrementalLockableEntity() {
     override fun toString() = "Post(id=$id, " +
             "accessId=$accessId, " +
             "status='$status', " +
+            "mode='$mode', " +
             "board=${if (::board.isInitialized) {
                 board.id.toString()
             } else {
@@ -102,14 +106,14 @@ class Post : AbstractIncrementalLockableEntity() {
             }}, " +
             "user=${user.id}, " +
             "parentThread=${parentThread?.id?.toString()}, " +
-            "lastActiveDate=$lastActiveDate, " +
-            "lastActiveIp=$lastActiveIp, " +
-            "lastActivePlatformType=$lastActivePlatformType, " +
-            "lastActivePlatformVersion='$lastActivePlatformVersion', " +
-            "lastActiveAppVersion=$lastActiveAppVersion, " +
+            "lastModifiedDate=$lastModifiedDate, " +
+            "lastModifiedIp=$lastModifiedIp, " +
+            "lastModifiedPlatformType=$lastModifiedPlatformType, " +
             "edited=$edited, " +
+            "number=$number, " +
             "title='$title', " +
             "contents='${contents.trim()}', " +
+            "viewedCount=$viewedCount, " +
             "attachments=$attachments, " +
             "reactions=$reactions)"
 }
