@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.ApiPathsHelper
-import testcase.BoardTestBase
+import testcase.v1.BoardTestBase
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

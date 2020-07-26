@@ -25,6 +25,10 @@ data class PostInfoDetailedResponse(
     val postId: String,
 
     @JsonProperty
+    @JsonPropertyDescription(DESC_POST_NUMBER)
+    val postNumber: Long,
+
+    @JsonProperty
     @JsonPropertyDescription(DESC_WRITER_NICKNAME)
     val writerNickname: String?,
 
@@ -71,6 +75,7 @@ data class PostInfoDetailedResponse(
     companion object {
         const val DESC_BOARD_ID = "An UUID of board which contains this post."
         const val DESC_POST_ID = "An UUID of this post."
+        const val DESC_POST_NUMBER = "A sequence number of this post in board."
         const val DESC_WRITER_NICKNAME = "Writer's nickname of this post. Maybe null depends on board mode."
         const val DESC_LAST_MODIFIED_DATE = "The very last date when this post's writer finished their edits."
         const val DESC_LAST_MODIFIED_IP = "The very last IP address of client " +

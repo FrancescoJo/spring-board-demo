@@ -11,10 +11,9 @@ import io.restassured.response.Response
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.ApiPathsHelper
-import testcase.UserTestBase
+import testcase.v1.UserTestBase
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString
-import static org.hamcrest.CoreMatchers.is
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

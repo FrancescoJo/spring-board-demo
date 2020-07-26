@@ -16,7 +16,7 @@ import io.restassured.response.Response
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
-import testcase.BoardTestBase
+import testcase.v1.BoardTestBase
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

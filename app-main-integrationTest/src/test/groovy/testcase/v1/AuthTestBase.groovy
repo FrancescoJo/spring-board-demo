@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package testcase
+package testcase.v1
 
 import com.github.fj.board.component.security.HttpAuthorizationToken
 import com.github.fj.board.endpoint.ApiPaths
@@ -19,6 +19,7 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
+import testcase.IntegrationTestBase
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.*
 

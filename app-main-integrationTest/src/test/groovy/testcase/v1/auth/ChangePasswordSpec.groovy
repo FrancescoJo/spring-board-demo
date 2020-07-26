@@ -17,7 +17,7 @@ import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import test.endpoint.v1.auth.dto.ChangePasswordRequestBuilder
-import testcase.AuthTestBase
+import testcase.v1.AuthTestBase
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields

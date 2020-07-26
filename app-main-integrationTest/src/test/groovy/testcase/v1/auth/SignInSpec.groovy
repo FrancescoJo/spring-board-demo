@@ -11,9 +11,7 @@ import com.github.fj.board.persistence.model.auth.PlatformType
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
-import testcase.AuthTestBase
-
-import static org.hamcrest.CoreMatchers.is
+import testcase.v1.AuthTestBase
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

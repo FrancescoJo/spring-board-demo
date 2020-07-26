@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package testcase
+package testcase.v1
 
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoListResponse

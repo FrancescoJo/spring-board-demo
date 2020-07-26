@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.RequestFieldsSnippet
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
-import testcase.AuthTestBase
+import testcase.v1.AuthTestBase
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields

@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
 import spock.lang.Unroll
 import test.endpoint.v1.auth.dto.AuthenticationRequestBuilder
-import testcase.AuthTestBase
+import testcase.v1.AuthTestBase
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

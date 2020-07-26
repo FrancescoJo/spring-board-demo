@@ -20,7 +20,7 @@ import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
 import test.endpoint.ApiPathsHelper
 import test.endpoint.v1.board.dto.UpdateBoardRequestBuilder
-import testcase.BoardTestBase
+import testcase.v1.BoardTestBase
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields

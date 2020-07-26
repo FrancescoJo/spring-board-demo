@@ -16,7 +16,7 @@ import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
 import test.endpoint.ApiPathsHelper
 import test.endpoint.v1.board.dto.CreateBoardRequestBuilder
-import testcase.BoardTestBase
+import testcase.v1.BoardTestBase
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

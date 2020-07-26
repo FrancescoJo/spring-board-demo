@@ -18,8 +18,8 @@ import javax.validation.constraints.Size
 data class CreatePostRequest(
     @get:UnicodeCharsLength(
         min = 1,
-        max = KEY_SIZE_MAX,
-        message = "`title` must not be empty and less than $KEY_SIZE_MAX characters long."
+        max = TITLE_SIZE_MAX,
+        message = "`title` must not be empty and less than $TITLE_SIZE_MAX characters long."
     )
     @JsonProperty
     @JsonPropertyDescription(DESC_TITLE)
@@ -38,7 +38,7 @@ data class CreatePostRequest(
     val attachments: List<CreateAttachmentRequest>
 ) {
     companion object {
-        const val KEY_SIZE_MAX = 40
+        const val TITLE_SIZE_MAX = 40
 
         const val DESC_TITLE = "Title of this post."
         const val DESC_CONTENT = "Content of this post."

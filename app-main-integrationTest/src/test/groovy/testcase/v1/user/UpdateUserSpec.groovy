@@ -17,7 +17,7 @@ import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
 import test.endpoint.ApiPathsHelper
 import test.endpoint.v1.user.dto.UpdateUserRequestBuilder
-import testcase.UserTestBase
+import testcase.v1.UserTestBase
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
