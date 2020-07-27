@@ -8,11 +8,20 @@ import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
+import com.github.fj.board.persistence.entity.post.Attachment
+import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
+import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.service.post.CreatePostService
 import com.github.fj.board.service.post.impl.CreatePostServiceImpl
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -21,6 +30,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import test.com.github.fj.board.endpoint.v1.post.dto.CreatePostRequestBuilder
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
@@ -35,13 +45,16 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
     @Mock
     private lateinit var postRepo: PostRepository
 
+    @Mock
+    private lateinit var attachmentRepo: AttachmentRepository
+
     private lateinit var sut: CreatePostService
 
     @BeforeEach
     override fun setup() {
         super.setup()
 
-        this.sut = CreatePostServiceImpl(userRepo, boardRepo, postRepo)
+        this.sut = CreatePostServiceImpl(userRepo, boardRepo, postRepo, attachmentRepo)
     }
 
     @Test
@@ -51,7 +64,7 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
         val req = CreatePostRequestBuilder.createRandom()
 
         // when:
-        Mockito.`when`(userRepo.findByLoginName(clientInfo.loginName)).thenReturn(null)
+        `when`(userRepo.findByLoginName(clientInfo.loginName)).thenReturn(null)
 
         // then:
         assertThrows<UserNotFoundException> {
@@ -67,7 +80,7 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
         val req = CreatePostRequestBuilder.createRandom()
 
         // when:
-        Mockito.`when`(boardRepo.findByAccessId(targetBoardId)).thenReturn(null)
+        `when`(boardRepo.findByAccessId(targetBoardId)).thenReturn(null)
 
         // then:
         assertThrows<BoardNotFoundException> {
@@ -84,7 +97,7 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
         val req = CreatePostRequestBuilder.createRandom()
 
         // when:
-        Mockito.`when`(boardRepo.findByAccessId(targetBoardId)).thenReturn(board)
+        `when`(boardRepo.findByAccessId(targetBoardId)).thenReturn(board)
 
         // then:
         assertThrows<CannotCreatePostException> {
@@ -92,11 +105,41 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
         }
     }
 
+    @Test
     fun `post is created if request is valid`() {
-        // expect:
-        // 1. post is created as requested
-        // 2. post number is increased in board
-        //
+        // given:
+        val (clientInfo, _) = prepareSelf()
+        val board = BoardBuilder.createRandom()
+        val req = CreatePostRequestBuilder.createRandom()
+
+        // when:
+        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
+
+        // then:
+        sut.create(board.accessId, req, clientInfo)
+
+        // and:
+        val postCaptor: KArgumentCaptor<Post> = argumentCaptor()
+        verify(postRepo, times(1)).save(postCaptor.capture())
+        val savedPost = postCaptor.firstValue
+
+        // expect: "Post"
+        assertThat(savedPost.title, `is`(req.title))
+        assertThat(savedPost.contents, `is`(req.content))
+        assertThat(savedPost.mode, `is`(req.mode))
+
+        // and:
+        val attachmentCaptor: KArgumentCaptor<List<Attachment>> = argumentCaptor()
+        verify(attachmentRepo, times(1)).saveAll(attachmentCaptor.capture())
+        val savedAttachments = attachmentCaptor.firstValue
+
+        // expect: "Attachments"
+        assertThat(savedAttachments.size, `is`(req.attachments.size))
+        req.attachments.forEachIndexed { i, r ->
+            assertThat("#$i attachment name is different", savedAttachments[i].name, `is`(r.name))
+            assertThat("#$i attachment mimeType is different", savedAttachments[i].mimeType, `is`(r.mimeType))
+            assertThat("#$i attachment uri is different", savedAttachments[i].uri, `is`(r.uri))
+        }
     }
 
     companion object {

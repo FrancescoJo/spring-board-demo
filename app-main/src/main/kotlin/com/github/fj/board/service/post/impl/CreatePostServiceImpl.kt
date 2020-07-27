@@ -6,15 +6,18 @@ package com.github.fj.board.service.post.impl
 
 import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
 import com.github.fj.board.exception.client.post.CannotCreatePostException
+import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.model.post.PostStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
+import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.post.CreatePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
+import com.github.fj.board.vo.post.PostBriefInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
 import java.util.*
@@ -28,10 +31,11 @@ import javax.transaction.Transactional
 internal class CreatePostServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository,
-    private val postRepo: PostRepository
+    private val postRepo: PostRepository,
+    private val attachmentRepo: AttachmentRepository
 ) : CreatePostService {
     @Transactional
-    override fun create(boardId: UUID, req: CreatePostRequest, clientInfo: ClientAuthInfo) {
+    override fun create(boardId: UUID, req: CreatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
         val self = clientInfo.getCurrentUser()
         val board = boardId.getBoard()
 
@@ -57,8 +61,19 @@ internal class CreatePostServiceImpl(
             this.viewedCount = 0
         }
 
-        // TODO: save attachments if not empty
+        val attachments = req.attachments.map {
+            Attachment().apply {
+                this.accessId = UUID.randomUUID()
+                this.post = createdPost
+                this.name = it.name
+                this.uri = it.uri
+                this.mimeType = it.mimeType
+            }
+        }
 
-        TODO("Not yet implemented")
+        postRepo.save(createdPost)
+        attachmentRepo.saveAll(attachments)
+
+        return PostBriefInfo.from(createdPost)
     }
 }
