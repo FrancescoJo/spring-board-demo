@@ -19,8 +19,8 @@ interface PostBriefInfo {
     val status: PostStatus
     val mode: PostMode
     val boardId: UUID
-    val writerNickname: String
-    val writerLoginName: String
+    val writerNickname: String?
+    val writerLoginName: String?
     val lastModifiedDate: LocalDateTime
     val number: Long
     val title: String
@@ -32,8 +32,8 @@ interface PostBriefInfo {
             override val status: PostStatus,
             override val mode: PostMode,
             override val boardId: UUID,
-            override val writerNickname: String,
-            override val writerLoginName: String,
+            override val writerNickname: String?,
+            override val writerLoginName: String?,
             override val lastModifiedDate: LocalDateTime,
             override val number: Long,
             override val title: String,

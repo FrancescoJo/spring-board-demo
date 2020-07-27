@@ -6,7 +6,7 @@ package com.github.fj.board.endpoint.v1.post
 
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
-import com.github.fj.board.endpoint.v1.post.dto.PostInfoDetailedResponse
+import com.github.fj.board.endpoint.v1.post.dto.PostInfoBriefResponse
 import com.github.fj.board.service.post.CreatePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.util.REGEXP_UUID
@@ -40,19 +40,19 @@ interface CreatePostController {
         @PathVariable
         @Suppress("MVCPathVariableInspection") boardId: String,
         @Valid @RequestBody req: CreatePostRequest, clientInfo: ClientAuthInfo
-    ): PostInfoDetailedResponse
+    ): PostInfoBriefResponse
 }
 
 @RestController
 internal class CreatePostControllerImpl(
     private val svc: CreatePostService
 ) : CreatePostController {
-    override fun create(boardId: String, req: CreatePostRequest, clientInfo: ClientAuthInfo): PostInfoDetailedResponse {
+    override fun create(boardId: String, req: CreatePostRequest, clientInfo: ClientAuthInfo): PostInfoBriefResponse {
         LOG.debug("{}: {}", clientInfo.requestLine, req)
 
         val result = svc.create(UUID.fromString(boardId), req, clientInfo)
 
-        TODO("Not yet implemented")
+        return PostInfoBriefResponse.from(result)
     }
 
     companion object {

@@ -70,7 +70,7 @@ public final class CreatePostRequestBuilder {
                 .title(getRandomAlphaNumericString(16))
                 .content(getRandomAlphaNumericString(512))
                 .attachments(CollectionUtilsKt.iterationsOf(
-                        getRandomPositiveInt(0, 4), CreateAttachmentRequestBuilder::createRandom
+                        getRandomPositiveInt(1, 4), CreateAttachmentRequestBuilder::createRandom
                 ))
                 .build();
     }
