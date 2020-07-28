@@ -5,15 +5,19 @@
 package com.github.fj.board.endpoint.v1.post
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
-import com.github.fj.board.endpoint.v1.post.dto.PostInfoBriefResponse
+import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
+import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
 import com.github.fj.board.service.post.CreatePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.util.REGEXP_UUID
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import javax.validation.Valid
 import javax.validation.constraints.Pattern

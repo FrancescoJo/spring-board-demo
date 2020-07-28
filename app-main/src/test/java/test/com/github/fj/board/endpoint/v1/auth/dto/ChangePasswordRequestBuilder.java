@@ -4,7 +4,7 @@
  */
 package test.com.github.fj.board.endpoint.v1.auth.dto;
 
-import com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequest;
+import com.github.fj.board.endpoint.v1.auth.request.ChangePasswordRequest;
 import com.github.fj.lib.security.HashUtilsKt;
 import com.github.fj.lib.text.StringUtilsKt;
 import com.github.fj.lib.util.ProtectedProperty;

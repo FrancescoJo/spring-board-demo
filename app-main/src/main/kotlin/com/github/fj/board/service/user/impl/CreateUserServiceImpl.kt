@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.user.impl
 
-import com.github.fj.board.endpoint.v1.user.dto.CreateUserRequest
+import com.github.fj.board.endpoint.v1.user.request.CreateUserRequest
 import com.github.fj.board.exception.client.auth.LoginNameNotFoundException
 import com.github.fj.board.exception.client.user.NicknameAlreadyExistException
 import com.github.fj.board.persistence.entity.user.User

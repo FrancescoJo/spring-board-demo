@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.post
 
-import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
+import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
 import com.github.fj.board.service.board.BoardAuthorisationMixin
 import com.github.fj.board.service.user.UserServiceMixin
 import com.github.fj.board.vo.auth.ClientAuthInfo

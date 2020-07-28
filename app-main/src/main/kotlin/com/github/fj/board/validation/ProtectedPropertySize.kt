@@ -9,8 +9,8 @@ import javax.validation.Constraint
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 import javax.validation.Payload
-import kotlin.reflect.KClass
 import javax.validation.constraints.Size
+import kotlin.reflect.KClass
 
 /**
  * Supports validation of ProtectedProperty&lt;T&gt;. Currently [String] generic type is supported.

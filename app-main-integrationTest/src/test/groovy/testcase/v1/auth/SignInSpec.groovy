@@ -4,7 +4,7 @@
  */
 package testcase.v1.auth
 
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
+import com.github.fj.board.endpoint.v1.auth.response.AuthenticationResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.auth.LoginNotAllowedException
 import com.github.fj.board.persistence.model.auth.PlatformType

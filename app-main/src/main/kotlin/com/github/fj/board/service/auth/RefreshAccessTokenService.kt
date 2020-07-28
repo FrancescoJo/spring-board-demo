@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.auth
 
-import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
+import com.github.fj.board.endpoint.v1.auth.request.RefreshTokenRequest
 import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow

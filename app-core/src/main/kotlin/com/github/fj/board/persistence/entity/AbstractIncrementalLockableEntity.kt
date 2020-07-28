@@ -4,10 +4,10 @@
  */
 package com.github.fj.board.persistence.entity
 
-import javax.persistence.Version
 import org.springframework.data.jpa.domain.AbstractPersistable
-import javax.persistence.MappedSuperclass
 import java.io.Serializable
+import javax.persistence.MappedSuperclass
+import javax.persistence.Version
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

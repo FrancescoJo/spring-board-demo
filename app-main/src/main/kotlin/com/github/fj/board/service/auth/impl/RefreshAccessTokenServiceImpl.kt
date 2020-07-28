@@ -6,7 +6,7 @@ package com.github.fj.board.service.auth.impl
 
 import com.github.fj.board.component.auth.AuthTokenManager
 import com.github.fj.board.component.property.AppAuthProperties
-import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
+import com.github.fj.board.endpoint.v1.auth.request.RefreshTokenRequest
 import com.github.fj.board.exception.client.auth.LoginNameNotFoundException
 import com.github.fj.board.exception.client.auth.RefreshTokenMismatchException
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository

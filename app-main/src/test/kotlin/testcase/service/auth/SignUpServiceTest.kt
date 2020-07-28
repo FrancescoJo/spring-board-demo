@@ -29,8 +29,8 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
 import test.com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequestBuilder
+import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

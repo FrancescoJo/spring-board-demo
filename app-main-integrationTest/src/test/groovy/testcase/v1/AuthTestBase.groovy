@@ -6,8 +6,8 @@ package testcase.v1
 
 import com.github.fj.board.component.security.HttpAuthorizationToken
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
+import com.github.fj.board.endpoint.v1.auth.request.AuthenticationRequest
+import com.github.fj.board.endpoint.v1.auth.response.AuthenticationResponse
 import com.github.fj.board.persistence.repository.auth.AuthenticationRepository
 import io.restassured.http.Header
 import io.restassured.response.Response

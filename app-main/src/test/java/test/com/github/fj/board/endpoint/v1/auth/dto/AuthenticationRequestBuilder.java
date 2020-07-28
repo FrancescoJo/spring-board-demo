@@ -5,7 +5,7 @@
 package test.com.github.fj.board.endpoint.v1.auth.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest;
+import com.github.fj.board.endpoint.v1.auth.request.AuthenticationRequest;
 import com.github.fj.board.persistence.model.auth.PlatformType;
 import com.github.fj.lib.security.HashUtilsKt;
 import com.github.fj.lib.text.StringUtilsKt;

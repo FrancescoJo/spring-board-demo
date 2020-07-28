@@ -4,7 +4,7 @@
  */
 package test.com.github.fj.board.endpoint.v1.user.dto;
 
-import com.github.fj.board.endpoint.v1.user.dto.UpdateUserRequest;
+import com.github.fj.board.endpoint.v1.user.request.UpdateUserRequest;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

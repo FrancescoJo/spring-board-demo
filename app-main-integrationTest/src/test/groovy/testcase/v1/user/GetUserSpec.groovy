@@ -4,7 +4,7 @@
  */
 package testcase.v1.user
 
-import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
+import com.github.fj.board.endpoint.v1.user.response.UserInfoResponse
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import io.restassured.response.Response

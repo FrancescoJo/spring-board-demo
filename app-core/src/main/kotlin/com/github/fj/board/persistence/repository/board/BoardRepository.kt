@@ -5,7 +5,6 @@
 package com.github.fj.board.persistence.repository.board
 
 import com.github.fj.board.persistence.entity.board.Board
-import com.github.fj.board.persistence.entity.post.Post
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query

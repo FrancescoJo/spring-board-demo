@@ -5,9 +5,9 @@
 package testcase.v1.post
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.post.dto.CreateAttachmentRequest
-import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
-import com.github.fj.board.endpoint.v1.post.dto.PostInfoBriefResponse
+import com.github.fj.board.endpoint.v1.post.request.CreateAttachmentRequest
+import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
+import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.exception.generic.UnauthenticatedException

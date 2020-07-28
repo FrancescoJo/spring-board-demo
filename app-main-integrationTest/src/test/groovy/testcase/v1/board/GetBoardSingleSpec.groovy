@@ -4,7 +4,7 @@
  */
 package testcase.v1.board
 
-import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
+import com.github.fj.board.endpoint.v1.board.response.BoardInfoResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.persistence.model.board.BoardAccess

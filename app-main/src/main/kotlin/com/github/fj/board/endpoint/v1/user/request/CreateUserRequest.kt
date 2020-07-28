@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.endpoint.v1.user.dto
+package com.github.fj.board.endpoint.v1.user.request
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -17,7 +17,7 @@ import javax.validation.constraints.Size
  * @since 12 - Jul - 2020
  */
 @JsonDeserialize
-data class UpdateUserRequest(
+data class CreateUserRequest(
     @get:UnicodeCharsLength(
         min = NICKNAME_SIZE_MIN,
         max = NICKNAME_SIZE_MAX,
@@ -27,6 +27,7 @@ data class UpdateUserRequest(
     @JsonPropertyDescription(DESC_NICKNAME)
     val nickname: String,
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @get:Size(
         min = EMAIL_SIZE_MIN,
         max = EMAIL_SIZE_MAX,
@@ -35,8 +36,12 @@ data class UpdateUserRequest(
     @get:Email(message = "Not a valid email format.")
     @JsonProperty
     @JsonPropertyDescription(DESC_EMAIL)
+    val email: String?,
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    val email: String?
+    @JsonProperty
+    @JsonPropertyDescription(DESC_INVITED_BY)
+    val invitedBy: String?
 ) {
     companion object {
         const val NICKNAME_SIZE_MIN = 2
@@ -51,5 +56,6 @@ data class UpdateUserRequest(
         const val DESC_NICKNAME = "A distinct name to identify users. Must between " +
                 "$NICKNAME_SIZE_MIN to $NICKNAME_SIZE_MAX characters long."
         const val DESC_EMAIL = "(Optional) Email address. No longer than $EMAIL_SIZE_MAX characters."
+        const val DESC_INVITED_BY = "(Optional) `loginName` of other user whom made this invitation."
     }
 }

@@ -5,8 +5,8 @@
 package com.github.fj.board.endpoint.v1.auth
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
+import com.github.fj.board.endpoint.v1.auth.request.AuthenticationRequest
+import com.github.fj.board.endpoint.v1.auth.response.AuthenticationResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.service.auth.SignInService

@@ -4,14 +4,13 @@
  */
 package test.com.github.fj.board.endpoint.v1.board.dto;
 
-import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest;
+import com.github.fj.board.endpoint.v1.board.request.CreateBoardRequest;
 import com.github.fj.board.persistence.model.board.BoardAccess;
 import com.github.fj.board.persistence.model.board.BoardMode;
 
 import javax.annotation.Nonnull;
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;
-import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

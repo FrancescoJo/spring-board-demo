@@ -4,7 +4,7 @@
  */
 package test.com.github.fj.board.endpoint.v1.board.dto;
 
-import com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequest;
+import com.github.fj.board.endpoint.v1.board.request.UpdateBoardRequest;
 import com.github.fj.board.persistence.model.board.BoardAccess;
 import com.github.fj.board.persistence.model.board.BoardMode;
 

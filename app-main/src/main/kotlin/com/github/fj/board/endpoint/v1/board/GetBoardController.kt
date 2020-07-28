@@ -8,10 +8,10 @@ import com.github.fj.board.component.auth.ControllerClientAuthInfoDetector
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.board.GetBoardController.Companion.GET_LIST_PARAM_ORDER_BY
 import com.github.fj.board.endpoint.v1.board.GetBoardController.Companion.GET_LIST_PARAM_SORT_BY
-import com.github.fj.board.endpoint.v1.board.dto.BoardInfoListResponse
-import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
+import com.github.fj.board.endpoint.v1.board.response.BoardInfoListResponse
+import com.github.fj.board.endpoint.v1.board.response.BoardInfoResponse
 import com.github.fj.board.service.board.GetBoardService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.util.REGEXP_UUID

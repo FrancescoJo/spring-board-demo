@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.user.impl
 
-import com.github.fj.board.endpoint.v1.user.dto.UpdateUserRequest
+import com.github.fj.board.endpoint.v1.user.request.UpdateUserRequest
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.persistence.entity.user.User

@@ -5,8 +5,8 @@
 package testcase.v1.board
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
-import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
+import com.github.fj.board.endpoint.v1.board.request.CreateBoardRequest
+import com.github.fj.board.endpoint.v1.board.response.BoardInfoResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.DuplicatedBoardKeyException
 import com.github.fj.board.exception.client.user.UserNotFoundException

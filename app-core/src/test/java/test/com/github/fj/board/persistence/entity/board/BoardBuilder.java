@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static com.github.fj.lib.time.DateTimeUtilsKt.utcNow;
-import static com.github.fj.lib.util.RandomUtilsKt.*;
+import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;
+import static com.github.fj.lib.util.RandomUtilsKt.getRandomPositiveLong;
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

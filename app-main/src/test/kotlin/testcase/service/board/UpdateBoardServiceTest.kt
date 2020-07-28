@@ -17,9 +17,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.`when`
+import test.com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequestBuilder
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
-import test.com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequestBuilder
 import java.util.*
 
 /**

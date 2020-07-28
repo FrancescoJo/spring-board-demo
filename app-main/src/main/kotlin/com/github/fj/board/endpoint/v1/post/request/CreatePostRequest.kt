@@ -2,14 +2,13 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.endpoint.v1.post.dto
+package com.github.fj.board.endpoint.v1.post.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.fj.board.persistence.model.post.PostMode
 import com.github.fj.board.validation.UnicodeCharsLength
-import javax.validation.constraints.Size
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

@@ -4,8 +4,7 @@
  */
 package com.github.fj.board.service.board.impl
 
-import com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequest
-import com.github.fj.board.exception.generic.UnauthorisedException
+import com.github.fj.board.endpoint.v1.board.request.UpdateBoardRequest
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.board.UpdateBoardService

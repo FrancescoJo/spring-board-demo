@@ -25,12 +25,14 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.NullSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import test.com.github.fj.board.endpoint.v1.user.dto.CreateUserRequestBuilder
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
 import test.com.github.fj.board.persistence.entity.user.UserBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
-import test.com.github.fj.board.endpoint.v1.user.dto.CreateUserRequestBuilder
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

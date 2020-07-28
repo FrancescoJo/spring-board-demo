@@ -6,7 +6,14 @@ package com.github.fj.board.persistence.entity.post
 
 import com.github.fj.board.persistence.entity.user.User
 import java.io.Serializable
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.OneToOne
+import javax.persistence.Table
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

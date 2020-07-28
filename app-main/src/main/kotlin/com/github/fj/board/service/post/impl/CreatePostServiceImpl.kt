@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.post.impl
 
-import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
+import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.persistence.entity.post.Attachment
@@ -46,7 +46,7 @@ internal class CreatePostServiceImpl(
             board.mode == BoardMode.READ_ONLY    -> throw CannotCreatePostException()
         }
 
-        val createdPost = postRepo.save(Post().apply {
+        val createdPost = Post().apply {
             this.accessId = UUID.randomUUID()
             this.status = PostStatus.NOT_REVIEWED
             this.mode = req.mode
@@ -61,9 +61,11 @@ internal class CreatePostServiceImpl(
             this.title = req.title
             this.contents = req.content
             this.viewedCount = 0
-        })
+        }.also {
+            postRepo.save(it)
+        }
 
-        attachmentRepo.saveAll(req.attachments.map {
+        req.attachments.map {
             Attachment().apply {
                 this.accessId = UUID.randomUUID()
                 this.post = createdPost
@@ -71,7 +73,9 @@ internal class CreatePostServiceImpl(
                 this.uri = it.uri
                 this.mimeType = it.mimeType
             }
-        })
+        }.also {
+            attachmentRepo.saveAll(it)
+        }
 
         return PostBriefInfo.from(createdPost)
     }

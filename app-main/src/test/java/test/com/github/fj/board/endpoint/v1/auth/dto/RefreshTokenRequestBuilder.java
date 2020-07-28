@@ -4,7 +4,7 @@
  */
 package test.com.github.fj.board.endpoint.v1.auth.dto;
 
-import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest;
+import com.github.fj.board.endpoint.v1.auth.request.RefreshTokenRequest;
 import com.github.fj.lib.util.ProtectedProperty;
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;

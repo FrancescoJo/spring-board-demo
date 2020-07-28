@@ -6,7 +6,6 @@
  */
 package com.github.fj.lib.util
 
-import java.lang.IllegalArgumentException
 import java.security.SecureRandom
 import java.util.concurrent.ThreadLocalRandom
 

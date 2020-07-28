@@ -5,8 +5,8 @@
 package com.github.fj.board.endpoint.v1.user
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.user.dto.UpdateUserRequest
-import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
+import com.github.fj.board.endpoint.v1.user.request.UpdateUserRequest
+import com.github.fj.board.endpoint.v1.user.response.UserInfoResponse
 import com.github.fj.board.service.user.UpdateUserService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import org.slf4j.LoggerFactory

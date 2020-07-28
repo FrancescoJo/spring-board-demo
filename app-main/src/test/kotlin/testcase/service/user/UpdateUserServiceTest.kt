@@ -26,9 +26,9 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import test.com.github.fj.board.endpoint.v1.user.dto.UpdateUserRequestBuilder
 import test.com.github.fj.board.persistence.entity.user.UserBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
-import test.com.github.fj.board.endpoint.v1.user.dto.UpdateUserRequestBuilder
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

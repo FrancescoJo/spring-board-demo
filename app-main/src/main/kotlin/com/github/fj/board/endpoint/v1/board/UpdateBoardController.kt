@@ -5,8 +5,8 @@
 package com.github.fj.board.endpoint.v1.board
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
-import com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequest
+import com.github.fj.board.endpoint.v1.board.request.UpdateBoardRequest
+import com.github.fj.board.endpoint.v1.board.response.BoardInfoResponse
 import com.github.fj.board.service.board.UpdateBoardService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.util.REGEXP_UUID

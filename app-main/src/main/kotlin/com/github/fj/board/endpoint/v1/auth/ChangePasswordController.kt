@@ -5,8 +5,8 @@
 package com.github.fj.board.endpoint.v1.auth
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
-import com.github.fj.board.endpoint.v1.auth.dto.ChangePasswordRequest
+import com.github.fj.board.endpoint.v1.auth.request.ChangePasswordRequest
+import com.github.fj.board.endpoint.v1.auth.response.AuthenticationResponse
 import com.github.fj.board.service.auth.ChangePasswordService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow

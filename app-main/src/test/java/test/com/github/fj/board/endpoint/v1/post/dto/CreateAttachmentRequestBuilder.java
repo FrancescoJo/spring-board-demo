@@ -4,7 +4,7 @@
  */
 package test.com.github.fj.board.endpoint.v1.post.dto;
 
-import com.github.fj.board.endpoint.v1.post.dto.CreateAttachmentRequest;
+import com.github.fj.board.endpoint.v1.post.request.CreateAttachmentRequest;
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;
 import static test.com.github.fj.lib.util.RandomTestArgUtils.randomMimeType;

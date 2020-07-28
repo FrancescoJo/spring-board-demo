@@ -4,8 +4,8 @@
  */
 package testcase.v1
 
-import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
-import com.github.fj.board.endpoint.v1.post.dto.PostInfoBriefResponse
+import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
+import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.vo.board.BoardInfo

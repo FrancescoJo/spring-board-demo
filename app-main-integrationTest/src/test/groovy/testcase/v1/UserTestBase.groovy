@@ -5,7 +5,7 @@
 package testcase.v1
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.user.dto.UserInfoResponse
+import com.github.fj.board.endpoint.v1.user.response.UserInfoResponse
 import com.github.fj.board.persistence.repository.user.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

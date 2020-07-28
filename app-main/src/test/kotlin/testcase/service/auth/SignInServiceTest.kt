@@ -22,11 +22,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import test.com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
 import test.com.github.fj.board.util.HttpRequestUtils.mockLocalhostServletRequest
-import test.com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequestBuilder
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

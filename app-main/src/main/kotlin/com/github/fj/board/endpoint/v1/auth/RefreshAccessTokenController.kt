@@ -5,8 +5,8 @@
 package com.github.fj.board.endpoint.v1.auth
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationResponse
-import com.github.fj.board.endpoint.v1.auth.dto.RefreshTokenRequest
+import com.github.fj.board.endpoint.v1.auth.request.RefreshTokenRequest
+import com.github.fj.board.endpoint.v1.auth.response.AuthenticationResponse
 import com.github.fj.board.service.auth.RefreshAccessTokenService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow

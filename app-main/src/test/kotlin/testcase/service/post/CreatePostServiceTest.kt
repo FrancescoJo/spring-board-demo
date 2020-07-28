@@ -22,6 +22,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,13 +30,13 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import test.com.github.fj.board.endpoint.v1.post.dto.CreatePostRequestBuilder
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
 import java.util.*
 import java.util.stream.Stream
+import kotlin.reflect.KClass
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -88,9 +89,9 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
         }
     }
 
-    @ParameterizedTest(name = "Cannot write post for \"{0}\" board")
+    @ParameterizedTest(name = "Cannot write post({1}) for \"{0}\" board")
     @MethodSource("testCannotCreatePost")
-    fun `fail if board has some constraints`(constraint: String, board: Board) {
+    fun `fail if board has some constraints`(constraint: String, expectedException: KClass<out Exception>, board: Board) {
         // given:
         val (clientInfo, _) = prepareSelf()
         val targetBoardId = board.accessId
@@ -100,7 +101,7 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
         `when`(boardRepo.findByAccessId(targetBoardId)).thenReturn(board)
 
         // then:
-        assertThrows<CannotCreatePostException> {
+        Assertions.assertThrows(expectedException.java) {
             sut.create(targetBoardId, req, clientInfo)
         }
     }
@@ -148,13 +149,13 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
         fun testCannotCreatePost(): Stream<Arguments> {
             return Stream.of(
                 Arguments.of(
-                    "Status:CLOSED", BoardBuilder(BoardBuilder.createRandom())
+                    "Status:CLOSED", BoardNotFoundException::class, BoardBuilder(BoardBuilder.createRandom())
                         .status(BoardStatus.CLOSED)
                         .mode(BoardMode.FREE_STYLE)
                         .build()
                 ),
                 Arguments.of(
-                    "Mode:READ_ONLY", BoardBuilder(BoardBuilder.createRandom())
+                    "Mode:READ_ONLY", CannotCreatePostException::class, BoardBuilder(BoardBuilder.createRandom())
                         .status(BoardStatus.NORMAL)
                         .mode(BoardMode.READ_ONLY)
                         .build()

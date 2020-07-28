@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.user
 
-import com.github.fj.board.endpoint.v1.user.dto.UpdateUserRequest
+import com.github.fj.board.endpoint.v1.user.request.UpdateUserRequest
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.user.UserInfo
 

@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.board
 
-import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
+import com.github.fj.board.endpoint.v1.board.request.CreateBoardRequest
 import com.github.fj.board.service.user.UserServiceMixin
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.board.BoardInfo

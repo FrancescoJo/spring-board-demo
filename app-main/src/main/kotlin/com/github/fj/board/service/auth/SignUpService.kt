@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.auth
 
-import com.github.fj.board.endpoint.v1.auth.dto.AuthenticationRequest
+import com.github.fj.board.endpoint.v1.auth.request.AuthenticationRequest
 import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.board.vo.auth.ClientAuthInfo
 

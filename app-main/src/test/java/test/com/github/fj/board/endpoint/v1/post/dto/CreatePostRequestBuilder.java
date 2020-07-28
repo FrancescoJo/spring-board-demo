@@ -4,8 +4,8 @@
  */
 package test.com.github.fj.board.endpoint.v1.post.dto;
 
-import com.github.fj.board.endpoint.v1.post.dto.CreateAttachmentRequest;
-import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest;
+import com.github.fj.board.endpoint.v1.post.request.CreateAttachmentRequest;
+import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest;
 import com.github.fj.board.persistence.model.post.PostMode;
 import com.github.fj.lib.collection.CollectionUtilsKt;
 

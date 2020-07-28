@@ -20,7 +20,12 @@ import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.time.utcEpochSecond
 import com.github.fj.lib.time.utcLocalDateTimeOf
 import com.github.fj.lib.time.utcNow
-import com.nimbusds.jose.*
+import com.nimbusds.jose.JOSEException
+import com.nimbusds.jose.JOSEObjectType
+import com.nimbusds.jose.JWSAlgorithm
+import com.nimbusds.jose.JWSHeader
+import com.nimbusds.jose.JWSObject
+import com.nimbusds.jose.Payload
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.text.ParseException
