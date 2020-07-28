@@ -37,7 +37,7 @@ interface BoardAccessMixin {
         Sort.Direction.ASC
     }
 
-    fun Board.getPostsCount(): Long = boardRepo.getPostsCountById(this.id)
+    fun Board.getPostsCount(): Long = boardRepo.getPostsCountById(this)
 
     fun BoardsSortBy.toPropertyName() = when (this) {
         BoardsSortBy.KEY                -> "key"

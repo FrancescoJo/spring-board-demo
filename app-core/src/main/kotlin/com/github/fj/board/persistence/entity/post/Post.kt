@@ -87,7 +87,7 @@ class Post : AbstractIncrementalLockableEntity() {
     @Column(name = "viewed_cnt")
     var viewedCount: Long = 0L
 
-    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     var attachments: MutableList<Attachment> = mutableListOf()
 
     override fun toString() = "Post(id=$id, " +

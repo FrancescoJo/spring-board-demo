@@ -46,7 +46,7 @@ internal class CreatePostServiceImpl(
             board.mode == BoardMode.READ_ONLY    -> throw CannotCreatePostException()
         }
 
-        val createdPost = Post().apply {
+        val createdPost = postRepo.save(Post().apply {
             this.accessId = UUID.randomUUID()
             this.status = PostStatus.NOT_REVIEWED
             this.mode = req.mode
@@ -61,9 +61,9 @@ internal class CreatePostServiceImpl(
             this.title = req.title
             this.contents = req.content
             this.viewedCount = 0
-        }
+        })
 
-        val attachments = req.attachments.map {
+        attachmentRepo.saveAll(req.attachments.map {
             Attachment().apply {
                 this.accessId = UUID.randomUUID()
                 this.post = createdPost
@@ -71,10 +71,7 @@ internal class CreatePostServiceImpl(
                 this.uri = it.uri
                 this.mimeType = it.mimeType
             }
-        }
-
-        postRepo.save(createdPost)
-        attachmentRepo.saveAll(attachments)
+        })
 
         return PostBriefInfo.from(createdPost)
     }

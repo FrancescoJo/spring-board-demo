@@ -4,10 +4,98 @@
  */
 package testcase.v1
 
+import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
+import com.github.fj.board.endpoint.v1.post.dto.PostInfoBriefResponse
+import com.github.fj.board.persistence.repository.post.AttachmentRepository
+import com.github.fj.board.persistence.repository.post.PostRepository
+import com.github.fj.board.vo.board.BoardInfo
+import com.github.fj.board.vo.post.PostBriefInfo
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.restdocs.payload.FieldDescriptor
+import org.springframework.restdocs.payload.JsonFieldType
+import org.springframework.restdocs.payload.ResponseFieldsSnippet
+import org.springframework.transaction.support.TransactionTemplate
+import test.com.github.fj.board.endpoint.ApiPathsHelper
+import testcase.common.CreatedUser
+
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 26 - Jul - 2020
  */
 class PostTestBase extends BoardTestBase {
-    // protected final PostBriefInfo createPostIn(owner, board, postRequest)
+    @Autowired
+    private PostRepository postRepo
+
+    @Autowired
+    private AttachmentRepository attachmentRepo
+
+    @Autowired
+    private TransactionTemplate txTemplate
+
+    def cleanup() {
+        attachmentRepo.deleteAll()
+        postRepo.deleteAll()
+    }
+
+    protected final PostBriefInfo createRandomPostOf(
+            final CreatedUser owner,
+            final BoardInfo board,
+            final CreatePostRequest postRequest
+    ) {
+        final accessToken = owner.accessToken
+
+        final rawResponse = authenticatedRequest(accessToken)
+                .body(postRequest)
+                .post(ApiPathsHelper.BOARD_ID_POST(board.accessId.toString()))
+
+        final response = expectResponse(rawResponse, HttpStatus.OK, PostInfoBriefResponse.class)
+
+        // Fixing groovyc error: reference problem in closures
+        final repository = postRepo
+
+        return txTemplate.execute {
+            final post = repository.findByAccessId(UUID.fromString(response.postId))
+            return new PostBriefInfo.Companion().from(post)
+        }
+    }
+
+    protected static ResponseFieldsSnippet postInfoBriefResponseFieldsDoc() {
+        final List<FieldDescriptor> fields = [
+                fieldWithPath("body.boardId")
+                        .type(JsonFieldType.STRING)
+                        .description(PostInfoBriefResponse.DESC_BOARD_ID),
+                fieldWithPath("body.postId")
+                        .type(JsonFieldType.STRING)
+                        .description(PostInfoBriefResponse.DESC_POST_ID),
+                fieldWithPath("body.postMode")
+                        .type(JsonFieldType.STRING)
+                        .description(PostInfoBriefResponse.DESC_POST_MODE),
+                fieldWithPath("body.postNumber")
+                        .type(JsonFieldType.NUMBER)
+                        .description(PostInfoBriefResponse.DESC_POST_NUMBER),
+                fieldWithPath("body.writerNickname")
+                        .optional()
+                        .type(JsonFieldType.STRING)
+                        .description(PostInfoBriefResponse.DESC_WRITER_NICKNAME),
+                fieldWithPath("body.writerLoginName")
+                        .optional()
+                        .type(JsonFieldType.STRING)
+                        .description(PostInfoBriefResponse.DESC_WRITER_LOGIN_NAME),
+                fieldWithPath("body.lastModifiedDate")
+                        .type(JsonFieldType.STRING)
+                        .description(PostInfoBriefResponse.DESC_LAST_MODIFIED_DATE),
+                fieldWithPath("body.title")
+                        .type(JsonFieldType.STRING)
+                        .description(PostInfoBriefResponse.DESC_TITLE),
+                fieldWithPath("body.viewCount")
+                        .type(JsonFieldType.NUMBER)
+                        .description(PostInfoBriefResponse.DESC_VIEW_COUNT)
+        ]
+
+        return responseFields(basicFieldsDoc() + fields)
+    }
 }

@@ -41,7 +41,7 @@ class Attachment : Serializable {
     override fun toString(): String {
         return "Attachment(id=$id, " +
                 "accessId=$accessId, " +
-                "board=${if (::post.isInitialized) {
+                "post=${if (::post.isInitialized) {
                     post.id.toString()
                 } else {
                     "<uninitialised>"

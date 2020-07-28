@@ -5,6 +5,7 @@
 package com.github.fj.board.persistence.repository.board
 
 import com.github.fj.board.persistence.entity.board.Board
+import com.github.fj.board.persistence.entity.post.Post
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
@@ -37,10 +38,10 @@ interface BoardRepository : JpaRepository<Board, Long>, BoardRepositoryExtension
 
     @Query(
         """
-            SELECT COUNT(b.id)
-            FROM Board b
-            WHERE b.id = ?1
+            SELECT COUNT(p.id)
+            FROM Post p
+            WHERE p.board = ?1
         """
     )
-    fun getPostsCountById(id: Long): Long
+    fun getPostsCountById(board: Board): Long
 }

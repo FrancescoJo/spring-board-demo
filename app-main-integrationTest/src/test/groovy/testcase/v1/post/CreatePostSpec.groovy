@@ -148,7 +148,7 @@ class CreatePostSpec extends PostTestBase {
                 self.accessToken,
                 createdBoard.accessId.toString(),
                 request,
-                errorResponseFieldsDoc()
+                postInfoBriefResponseFieldsDoc()
         )
 
         then:
@@ -166,7 +166,19 @@ class CreatePostSpec extends PostTestBase {
     }
 
     def "consecutive posting increases post number in board"() {
+        given:
+        final self = createRandomUser()
+        final createdBoard = createBoardOf(self, CreateBoardRequestBuilder.createRandom())
+        final firstRandomPost = createRandomPostOf(self, createdBoard, CreatePostRequestBuilder.createRandom())
 
+        expect:
+        firstRandomPost.number == 1
+
+        when:
+        final secondRandomPost = createRandomPostOf(self, createdBoard, CreatePostRequestBuilder.createRandom())
+
+        then:
+        secondRandomPost.number == 2
     }
 
     private Response sendRequest(

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `attachments`
 (
-    `id`        BIGINT        NOT NULL PRIMARY KEY,
+    `id`        BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `access_id` VARBINARY(16) NOT NULL UNIQUE,
     `post_id`   BIGINT        NOT NULL,
     `name`      TEXT,
