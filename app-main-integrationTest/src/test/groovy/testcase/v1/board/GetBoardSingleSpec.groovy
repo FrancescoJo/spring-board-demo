@@ -8,6 +8,7 @@ import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
 import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.persistence.model.board.BoardAccess
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.vo.board.BoardInfo
 import io.restassured.response.Response
 import io.restassured.specification.RequestSpecification
@@ -57,7 +58,7 @@ class GetBoardSingleSpec extends BoardTestBase {
         given:
         final self = createRandomUser()
         final boardInfo = super.createRandomBoardOf(self)
-        closeBoard(self, boardInfo.accessId)
+        updateBoardStatus(boardInfo.accessId, BoardStatus.CLOSED)
 
         when:
         final response = unauthenticatedRequest(

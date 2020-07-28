@@ -10,6 +10,7 @@ import com.github.fj.board.endpoint.v1.board.dto.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
 import com.github.fj.board.persistence.model.board.BoardAccess
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.vo.board.BoardInfo
 import com.github.fj.lib.collection.CollectionUtilsKt
 import io.restassured.response.Response
@@ -68,7 +69,7 @@ class GetBoardListSpec extends BoardTestBase {
 
         and:
         2.times { i ->
-            closeBoard(owner, createdBoards[i].accessId)
+            updateBoardStatus(createdBoards[i].accessId, BoardStatus.CLOSED)
         }
 
         when:

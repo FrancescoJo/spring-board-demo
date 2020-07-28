@@ -18,6 +18,7 @@ import java.util.*
  * @since 27 - Jul - 2020
  */
 interface PostDetailedInfo : PostBriefInfo {
+    override val id: Long
     override val accessId: UUID
     override val status: PostStatus
     override val mode: PostMode
@@ -36,6 +37,7 @@ interface PostDetailedInfo : PostBriefInfo {
 
     companion object {
         private data class Impl(
+            override val id: Long,
             override val accessId: UUID,
             override val status: PostStatus,
             override val mode: PostMode,
@@ -54,6 +56,7 @@ interface PostDetailedInfo : PostBriefInfo {
         ) : PostDetailedInfo
 
         fun from(src: Post, attachments: List<Attachment>): PostDetailedInfo = Impl(
+            id = src.id,
             accessId = src.accessId,
             status = src.status,
             mode = src.mode,

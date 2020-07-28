@@ -33,16 +33,6 @@ public final class CreateBoardRequestBuilder {
         this.description = src.getDescription();
     }
 
-    public CreateBoardRequest build() {
-        return new CreateBoardRequest(
-                /* key */         key,
-                /* name */        name,
-                /* description */ description,
-                /* access */      access,
-                /* mode */        mode
-        );
-    }
-
     public CreateBoardRequestBuilder key(final @Nonnull String value) {
         this.key = value;
         return this;
@@ -68,13 +58,23 @@ public final class CreateBoardRequestBuilder {
         return this;
     }
 
+    public CreateBoardRequest build() {
+        return new CreateBoardRequest(
+                /* key */         key,
+                /* name */        name,
+                /* description */ description,
+                /* access */      access,
+                /* mode */        mode
+        );
+    }
+
     public static CreateBoardRequest createRandom() {
         return new CreateBoardRequestBuilder()
                 .key(getRandomAlphaNumericString(8))
                 .name("name: " + getRandomAlphaNumericString(12))
                 .description("desc: " + getRandomAlphaNumericString(24))
-                .access(randomEnumConst(BoardAccess.class))
-                .mode(randomEnumConst(BoardMode.class))
+                .access(BoardAccess.PUBLIC)
+                .mode(BoardMode.FREE_STYLE)
                 .build();
     }
 }

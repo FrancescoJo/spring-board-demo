@@ -5,9 +5,29 @@
 package testcase.v1.post
 
 import com.github.fj.board.endpoint.ApiPaths
+import com.github.fj.board.endpoint.v1.post.dto.CreateAttachmentRequest
+import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
+import com.github.fj.board.endpoint.v1.post.dto.PostInfoBriefResponse
+import com.github.fj.board.exception.client.board.BoardNotFoundException
+import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.exception.generic.UnauthenticatedException
+import com.github.fj.board.persistence.model.board.BoardMode
+import com.github.fj.board.persistence.model.board.BoardStatus
+import io.restassured.response.Response
+import org.springframework.http.HttpStatus
+import org.springframework.restdocs.payload.JsonFieldType
+import org.springframework.restdocs.payload.RequestFieldsSnippet
+import org.springframework.restdocs.payload.ResponseFieldsSnippet
+import spock.lang.Unroll
+import test.com.github.fj.board.endpoint.ApiPathsHelper
+import test.com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequestBuilder
+import test.com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequestBuilder
 import test.com.github.fj.board.endpoint.v1.post.dto.CreatePostRequestBuilder
 import testcase.v1.PostTestBase
+
+import static com.github.fj.lib.time.DateTimeUtilsKt.utcNow
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -19,7 +39,7 @@ class CreatePostSpec extends PostTestBase {
         final request = CreatePostRequestBuilder.createRandom()
 
         when:
-        final response = jsonRequestSpec("createPost-error-unauthenticated", createRequestFieldsDoc(), errorResponseFieldsDoc())
+        final response = jsonRequestSpec("createPost-error-unauthenticated", requestFieldsDoc(), errorResponseFieldsDoc())
                 .when()
                 .body(request)
                 .post(ApiPaths.BOARD)
@@ -32,22 +52,158 @@ class CreatePostSpec extends PostTestBase {
     }
 
     def "fail if board for given boardId is not present"() {
+        given:
+        final self = createRandomUser()
+        final request = CreatePostRequestBuilder.createRandom()
+        final boardId = UUID.randomUUID()
 
+        when:
+        final response = sendRequest(
+                "createPost-error-noBoardFound",
+                self.accessToken,
+                boardId.toString(),
+                request,
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(response, BoardNotFoundException.STATUS)
+
+        expect:
+        errorBody.cause == BoardNotFoundException.class.simpleName
     }
 
-    def "fail if board for given boardId is not in NORMAL state"() {
+    @Unroll
+    def "fail with #expectedException if board is in #boardStatus state"() {
+        given:
+        final self = createRandomUser()
+        final createdBoard = createRandomBoardOf(self)
+        updateBoardStatus(createdBoard.accessId, boardStatus)
 
+        and:
+        final request = CreatePostRequestBuilder.createRandom()
+        final boardId = createdBoard.accessId
+
+        when:
+        final response = sendRequest(
+                "createPost-error-illegalBoardStatus-#$docId",
+                self.accessToken,
+                boardId.toString(),
+                request,
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(response, httpResponse)
+
+        expect:
+        errorBody.cause == expectedException
+
+        where:
+        boardStatus          | expectedException                    | httpResponse                     | docId
+        BoardStatus.CLOSED   | BoardNotFoundException.simpleName    | BoardNotFoundException.STATUS    | 1
+        BoardStatus.ARCHIVED | CannotCreatePostException.simpleName | CannotCreatePostException.STATUS | 2
     }
 
     def "fail if board for given boardId is in READ ONLY mode"() {
+        given:
+        final self = createRandomUser()
+        final createdBoard = createRandomBoardOf(self)
+        final updateRequest = new UpdateBoardRequestBuilder()
+                .name(createdBoard.name)
+                .description(createdBoard.description)
+                .access(createdBoard.access)
+                .mode(BoardMode.READ_ONLY)
+                .build()
+        updateBoard(self, createdBoard.accessId, updateRequest)
 
+        and:
+        final request = CreatePostRequestBuilder.createRandom()
+
+        when:
+        final response = sendRequest(
+                "createPost-error-readOnlyBoard",
+                self.accessToken,
+                createdBoard.accessId.toString(),
+                request,
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(response, CannotCreatePostException.STATUS)
+
+        expect:
+        errorBody.cause == CannotCreatePostException.class.simpleName
     }
 
     def "success if request is valid"() {
+        given:
+        final self = createRandomUser()
+        final createdBoard = createBoardOf(self, CreateBoardRequestBuilder.createRandom())
+        final request = CreatePostRequestBuilder.createRandom()
 
+        when:
+        final rawResponse = sendRequest(
+                "createPost",
+                self.accessToken,
+                createdBoard.accessId.toString(),
+                request,
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final response = expectResponse(rawResponse, HttpStatus.OK, PostInfoBriefResponse.class)
+
+        expect: "Expecting a firstly created post"
+        response.boardId == createdBoard.accessId.toString()
+        response.postMode == request.mode
+        response.postNumber == 1
+        response.writerNickname == self.nickname
+        response.writerLoginName == self.loginName
+        response.lastModifiedDate <= utcNow()
+        response.title == request.title
+        response.viewCount == 0
     }
 
     def "consecutive posting increases post number in board"() {
 
+    }
+
+    private Response sendRequest(
+            final String documentId,
+            final String accessToken,
+            final String boardId,
+            final CreatePostRequest req,
+            final ResponseFieldsSnippet respDoc
+    ) {
+        return authenticatedRequest(documentId, accessToken, requestFieldsDoc(), respDoc)
+                .body(req)
+                .post(ApiPathsHelper.BOARD_ID_POST(boardId))
+    }
+
+    static RequestFieldsSnippet requestFieldsDoc() {
+        return requestFields(
+                fieldWithPath("mode")
+                        .type(JsonFieldType.STRING)
+                        .description(CreatePostRequest.DESC_MODE),
+                fieldWithPath("title")
+                        .type(JsonFieldType.STRING)
+                        .description(CreatePostRequest.DESC_TITLE),
+                fieldWithPath("content")
+                        .type(JsonFieldType.STRING)
+                        .description(CreatePostRequest.DESC_CONTENT),
+                fieldWithPath("attachments[]")
+                        .type(JsonFieldType.ARRAY)
+                        .description(CreatePostRequest.DESC_CONTENT),
+                fieldWithPath("attachments[].uri")
+                        .type(JsonFieldType.STRING)
+                        .description(CreateAttachmentRequest.DESC_URI),
+                fieldWithPath("attachments[].mimeType")
+                        .type(JsonFieldType.STRING)
+                        .description(CreateAttachmentRequest.DESC_MIME_TYPE),
+                fieldWithPath("attachments[].name")
+                        .type(JsonFieldType.STRING)
+                        .description(CreateAttachmentRequest.DESC_NAME)
+        )
     }
 }

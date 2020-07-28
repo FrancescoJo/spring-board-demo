@@ -5,6 +5,7 @@
 package com.github.fj.board.service.post.impl
 
 import com.github.fj.board.endpoint.v1.post.dto.CreatePostRequest
+import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
@@ -40,8 +41,9 @@ internal class CreatePostServiceImpl(
         val board = boardId.getBoard()
 
         when {
-            board.status != BoardStatus.NORMAL -> throw CannotCreatePostException()
-            board.mode == BoardMode.READ_ONLY  -> throw CannotCreatePostException()
+            board.status == BoardStatus.CLOSED   -> throw BoardNotFoundException()
+            board.status == BoardStatus.ARCHIVED -> throw CannotCreatePostException()
+            board.mode == BoardMode.READ_ONLY    -> throw CannotCreatePostException()
         }
 
         val createdPost = Post().apply {

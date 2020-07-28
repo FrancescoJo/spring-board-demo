@@ -8,6 +8,8 @@ import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.dto.BoardInfoResponse
 import com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequest
+import com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequest
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.vo.board.BoardInfo
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,9 +24,7 @@ import testcase.common.CreatedUser
 
 import javax.annotation.Nullable
 
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
-import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath
+import static org.springframework.restdocs.payload.PayloadDocumentation.*
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -72,13 +72,29 @@ class BoardTestBase extends UserTestBase {
         }
     }
 
-    protected final Boolean closeBoard(final CreatedUser owner, final UUID accessId) {
-        final response = authenticatedRequest(owner.accessToken)
-                .delete(ApiPathsHelper.BOARD_ID(accessId.toString()))
+    protected final void updateBoardStatus(final UUID accessId, final BoardStatus status) {
+        // Fixing groovyc error: reference problem in closures
+        final repository = boardRepo
 
-        final okResult = expectGenericResponse(response, HttpStatus.OK, Boolean.class)
+        txTemplate.execute {
+            final board = repository.findByAccessId(accessId)
 
-        return okResult
+            board.status = status
+
+            repository.save(board)
+        }
+    }
+
+    protected final BoardInfoResponse updateBoard(
+            final CreatedUser owner,
+            final UUID accessId,
+            final UpdateBoardRequest request
+    ) {
+        final rawResponse = authenticatedRequest(owner.accessToken)
+                .body(request)
+                .patch(ApiPathsHelper.BOARD_ID(accessId.toString()))
+
+        return expectResponse(rawResponse, HttpStatus.OK, BoardInfoResponse.class)
     }
 
     protected static ResponseFieldsSnippet boardInfoListResponseFieldsDoc() {

@@ -46,10 +46,6 @@ data class PostInfoBriefResponse(
     val lastModifiedDate: LocalDateTime,
 
     @JsonProperty
-    @JsonPropertyDescription(DESC_NUMBER)
-    val number: Long,
-
-    @JsonProperty
     @JsonPropertyDescription(DESC_TITLE)
     val title: String,
 
@@ -65,7 +61,6 @@ data class PostInfoBriefResponse(
         const val DESC_WRITER_NICKNAME = "Writer's nickname of this post. Maybe null depends on board mode."
         const val DESC_WRITER_LOGIN_NAME = "Writer's login name of this post. Maybe null depends on board mode."
         const val DESC_LAST_MODIFIED_DATE = "The very last date when this post's writer finished their edits."
-        const val DESC_NUMBER = "Number of this post in board."
         const val DESC_TITLE = "Title of this post."
         const val DESC_VIEW_COUNT = "View count of this post."
 
@@ -77,7 +72,6 @@ data class PostInfoBriefResponse(
             writerNickname = src.writerNickname,
             writerLoginName = src.writerLoginName,
             lastModifiedDate = src.lastModifiedDate,
-            number = src.number,
             title = src.title,
             viewCount = src.viewedCount
         )
