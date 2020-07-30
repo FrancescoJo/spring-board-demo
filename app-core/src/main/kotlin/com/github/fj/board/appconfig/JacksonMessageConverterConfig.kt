@@ -7,6 +7,7 @@ package com.github.fj.board.appconfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.fj.board.appconfig.jackson.JacksonMsgConverterModule
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -24,6 +25,9 @@ class JacksonMessageConverterConfig @Inject constructor(
         converters: MutableList<HttpMessageConverter<*>>?
     ): Unit = with(defaultObjMapper) {
         registerModule(KotlinModule())
-        registerModule(JacksonMsgConverterModule())
+        registerModule(jacksonMsgConverterModule())
     }
+
+    @Bean
+    fun jacksonMsgConverterModule() = JacksonMsgConverterModule()
 }

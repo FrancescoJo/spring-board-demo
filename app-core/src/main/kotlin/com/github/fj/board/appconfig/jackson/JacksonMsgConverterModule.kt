@@ -12,7 +12,7 @@ import de.skuzzle.semantic.Version
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 08 - Nov - 2018
  */
-internal class JacksonMsgConverterModule : SimpleModule(JacksonMsgConverterModule::class.java.canonicalName) {
+class JacksonMsgConverterModule : SimpleModule(JacksonMsgConverterModule::class.java.canonicalName) {
     init {
         addSerializer(ProtectedPropertyJacksonSerialiser())
         addSerializer(SemanticVersionJacksonSerialiser())
