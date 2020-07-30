@@ -4,6 +4,7 @@
  */
 package com.github.fj.board.endpoint.v1.post.request
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
@@ -14,21 +15,21 @@ import javax.validation.constraints.Pattern
  * @since 26 - Jul - 2020
  */
 @JsonDeserialize
-data class CreateAttachmentRequest(
+data class CreateAttachmentRequest @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
     @get:Pattern(
         /* https://tools.ietf.org/html/rfc3986#appendix-B */
         regexp = "^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?",
         message = "`uri` must be in form of RFC 3986 standard."
     )
-    @JsonProperty
+    @JsonProperty("uri")
     @JsonPropertyDescription(DESC_URI)
     val uri: String,
 
-    @JsonProperty
+    @JsonProperty("mimeType")
     @JsonPropertyDescription(DESC_MIME_TYPE)
     val mimeType: String,
 
-    @JsonProperty
+    @JsonProperty("name")
     @JsonPropertyDescription(DESC_NAME)
     val name: String
 ) {
