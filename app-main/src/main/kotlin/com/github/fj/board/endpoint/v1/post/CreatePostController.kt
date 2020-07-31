@@ -9,7 +9,7 @@ import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
 import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
 import com.github.fj.board.service.post.CreatePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
-import com.github.fj.lib.util.REGEXP_UUID
+import com.github.fj.lib.text.REGEX_UUID
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.validation.annotation.Validated
@@ -38,7 +38,7 @@ interface CreatePostController {
     )
     fun create(
         @Pattern(
-            regexp = REGEXP_UUID,
+            regexp = REGEX_UUID,
             message = "`boardId` must be in a UUID format."
         )
         @PathVariable

@@ -8,7 +8,7 @@ import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.OkResponseDto
 import com.github.fj.board.service.board.CloseBoardService
 import com.github.fj.board.vo.auth.ClientAuthInfo
-import com.github.fj.lib.util.REGEXP_UUID
+import com.github.fj.lib.text.REGEX_UUID
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.validation.annotation.Validated
@@ -35,7 +35,7 @@ interface CloseBoardController {
     )
     fun close(
         @Pattern(
-            regexp = REGEXP_UUID,
+            regexp = REGEX_UUID,
             message = "`boardId` must be in a UUID format."
         )
         @PathVariable

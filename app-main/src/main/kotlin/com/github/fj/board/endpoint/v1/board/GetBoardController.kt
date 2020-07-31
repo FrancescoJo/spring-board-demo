@@ -14,7 +14,7 @@ import com.github.fj.board.endpoint.v1.board.response.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoResponse
 import com.github.fj.board.service.board.GetBoardService
 import com.github.fj.board.vo.auth.ClientAuthInfo
-import com.github.fj.lib.util.REGEXP_UUID
+import com.github.fj.lib.text.REGEX_UUID
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.util.MultiValueMap
@@ -44,7 +44,7 @@ interface GetBoardController {
     )
     fun getOne(
         @Pattern(
-            regexp = REGEXP_UUID,
+            regexp = REGEX_UUID,
             message = "`boardId` must be in a UUID format."
         )
         @PathVariable
