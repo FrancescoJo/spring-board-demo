@@ -5,12 +5,7 @@
 package com.github.fj.board.service.post.impl
 
 import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
-import com.github.fj.board.exception.client.board.BoardNotFoundException
-import com.github.fj.board.exception.client.post.CannotCreatePostException
-import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
-import com.github.fj.board.persistence.model.board.BoardMode
-import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
@@ -38,12 +33,8 @@ internal class CreatePostServiceImpl(
     @Transactional
     override fun create(boardId: UUID, req: CreatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
         val self = clientInfo.getCurrentUser()
-        val board = boardId.getBoard()
-
-        when {
-            board.status == BoardStatus.CLOSED   -> throw BoardNotFoundException()
-            board.status == BoardStatus.ARCHIVED -> throw CannotCreatePostException()
-            board.mode == BoardMode.READ_ONLY    -> throw CannotCreatePostException()
+        val board = boardId.getBoard().also {
+            it.isWritableOrThrowFor(self)
         }
 
         val createdPost = Post().apply {
@@ -53,26 +44,19 @@ internal class CreatePostServiceImpl(
             this.board = board
             this.user = self
             this.parentThread = null
-            this.lastModifiedDate = utcNow()
-            this.lastModifiedIp = clientInfo.remoteAddr
-            this.lastModifiedPlatformType = clientInfo.platformType
             this.edited = false
             this.number = board.getPostsCount() + 1
             this.title = req.title
             this.contents = req.content
             this.viewedCount = 0
+
+            applyLastActivityWith(clientInfo, utcNow())
         }.also {
             postRepo.save(it)
         }
 
         req.attachments.map {
-            Attachment().apply {
-                this.accessId = UUID.randomUUID()
-                this.post = createdPost
-                this.name = it.name
-                this.uri = it.uri
-                this.mimeType = it.mimeType
-            }
+            it.toEntityOf(createdPost)
         }.also {
             attachmentRepo.saveAll(it)
         }

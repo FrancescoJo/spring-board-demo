@@ -4,7 +4,6 @@
  */
 package com.github.fj.board.endpoint.v1.post.response
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -33,7 +32,6 @@ data class AttachmentInfoResponse(
 
     @JsonProperty
     @JsonPropertyDescription(DESC_NAME)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     val name: String
 ) {
     companion object {

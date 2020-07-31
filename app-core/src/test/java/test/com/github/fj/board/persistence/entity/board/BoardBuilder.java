@@ -9,6 +9,7 @@ import com.github.fj.board.persistence.entity.user.User;
 import com.github.fj.board.persistence.model.board.BoardAccess;
 import com.github.fj.board.persistence.model.board.BoardMode;
 import com.github.fj.board.persistence.model.board.BoardStatus;
+import com.github.fj.lib.time.DateTimeUtilsKt;
 import com.github.fj.lib.util.UuidExtensions;
 import test.com.github.fj.board.persistence.entity.user.UserBuilder;
 
@@ -34,8 +35,8 @@ public class BoardBuilder {
     private String key = "";
     private String name = "";
     private String description = "";
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
+    private LocalDateTime createdDate = DateTimeUtilsKt.getLOCAL_DATE_TIME_MIN();
+    private LocalDateTime modifiedDate = DateTimeUtilsKt.getLOCAL_DATE_TIME_MIN();
     private User creator = null;
 
     public BoardBuilder() {
