@@ -13,7 +13,7 @@ import javax.persistence.Converter
  * @since 21 - Jul - 2020
  */
 @Converter
-class StatusConverter : AttributeConverter<BoardStatus, String> {
+class BoardStatusConverter : AttributeConverter<BoardStatus, String> {
     override fun convertToDatabaseColumn(attribute: BoardStatus): String = attribute.key
 
     override fun convertToEntityAttribute(dbData: String?): BoardStatus = BoardStatus.byKey(dbData)

@@ -7,14 +7,14 @@ package com.github.fj.board.persistence.entity.post
 import com.github.fj.board.persistence.converter.ByteArrayInetAddressConverter
 import com.github.fj.board.persistence.converter.ByteArrayUuidConverter
 import com.github.fj.board.persistence.converter.auth.PlatformTypeConverter
-import com.github.fj.board.persistence.converter.post.ModeConverter
-import com.github.fj.board.persistence.converter.post.StatusConverter
+import com.github.fj.board.persistence.converter.post.PostModeConverter
+import com.github.fj.board.persistence.converter.post.ContentStatusConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.persistence.model.post.PostMode
-import com.github.fj.board.persistence.model.post.PostStatus
+import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.lib.net.InetAddressExtensions
 import com.github.fj.lib.time.LOCAL_DATE_TIME_MIN
 import com.github.fj.lib.util.UuidExtensions
@@ -50,11 +50,11 @@ class Post : AbstractIncrementalLockableEntity() {
     @Column(name = "access_id", nullable = false, columnDefinition = "VARBINARY(16)")
     var accessId: UUID = UuidExtensions.EMPTY_UUID
 
-    @Convert(converter = StatusConverter::class)
+    @Convert(converter = ContentStatusConverter::class)
     @Column(length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
-    var status: PostStatus = PostStatus.NOT_REVIEWED
+    var status: ContentStatus = ContentStatus.NOT_REVIEWED
 
-    @Convert(converter = ModeConverter::class)
+    @Convert(converter = PostModeConverter::class)
     var mode: PostMode = PostMode.FREE_REPLY
 
     @ManyToOne(fetch = FetchType.LAZY)

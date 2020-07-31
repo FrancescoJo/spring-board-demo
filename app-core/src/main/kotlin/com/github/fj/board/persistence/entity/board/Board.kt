@@ -5,9 +5,9 @@
 package com.github.fj.board.persistence.entity.board
 
 import com.github.fj.board.persistence.converter.ByteArrayUuidConverter
-import com.github.fj.board.persistence.converter.board.AccessConverter
-import com.github.fj.board.persistence.converter.board.ModeConverter
-import com.github.fj.board.persistence.converter.board.StatusConverter
+import com.github.fj.board.persistence.converter.board.BoardAccessConverter
+import com.github.fj.board.persistence.converter.board.BoardModeConverter
+import com.github.fj.board.persistence.converter.board.BoardStatusConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.board.BoardAccess
@@ -49,13 +49,13 @@ class Board : AbstractIncrementalLockableEntity() {
     @Column(name = "access_id", nullable = false, columnDefinition = "VARBINARY(16)")
     var accessId: UUID = UuidExtensions.EMPTY_UUID
 
-    @Convert(converter = StatusConverter::class)
+    @Convert(converter = BoardStatusConverter::class)
     var status: BoardStatus = BoardStatus.NORMAL
 
-    @Convert(converter = AccessConverter::class)
+    @Convert(converter = BoardAccessConverter::class)
     var access: BoardAccess = BoardAccess.PUBLIC
 
-    @Convert(converter = ModeConverter::class)
+    @Convert(converter = BoardModeConverter::class)
     var mode: BoardMode = BoardMode.FREE_STYLE
 
     /**

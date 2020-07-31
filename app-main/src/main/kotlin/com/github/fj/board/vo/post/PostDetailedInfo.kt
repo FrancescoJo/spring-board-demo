@@ -8,7 +8,7 @@ import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.persistence.model.post.PostMode
-import com.github.fj.board.persistence.model.post.PostStatus
+import com.github.fj.board.persistence.model.post.ContentStatus
 import java.net.InetAddress
 import java.time.LocalDateTime
 import java.util.*
@@ -20,7 +20,7 @@ import java.util.*
 interface PostDetailedInfo : PostBriefInfo {
     override val id: Long
     override val accessId: UUID
-    override val status: PostStatus
+    override val status: ContentStatus
     override val mode: PostMode
     override val boardId: UUID
     override val writerNickname: String
@@ -39,7 +39,7 @@ interface PostDetailedInfo : PostBriefInfo {
         private data class Impl(
             override val id: Long,
             override val accessId: UUID,
-            override val status: PostStatus,
+            override val status: ContentStatus,
             override val mode: PostMode,
             override val boardId: UUID,
             override val writerNickname: String,

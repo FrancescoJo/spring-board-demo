@@ -11,7 +11,7 @@ import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
-import com.github.fj.board.persistence.model.post.PostStatus
+import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
@@ -48,7 +48,7 @@ internal class CreatePostServiceImpl(
 
         val createdPost = Post().apply {
             this.accessId = UUID.randomUUID()
-            this.status = PostStatus.NOT_REVIEWED
+            this.status = ContentStatus.NOT_REVIEWED
             this.mode = req.mode
             this.board = board
             this.user = self

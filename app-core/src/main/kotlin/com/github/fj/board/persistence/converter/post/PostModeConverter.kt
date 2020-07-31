@@ -13,7 +13,7 @@ import javax.persistence.Converter
  * @since 26 - Jul - 2020
  */
 @Converter
-class ModeConverter : AttributeConverter<PostMode, String> {
+class PostModeConverter : AttributeConverter<PostMode, String> {
     override fun convertToDatabaseColumn(attribute: PostMode): String = attribute.key
 
     override fun convertToEntityAttribute(dbData: String?): PostMode = PostMode.byKey(dbData)

@@ -6,7 +6,7 @@ package com.github.fj.board.vo.post
 
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.model.post.PostMode
-import com.github.fj.board.persistence.model.post.PostStatus
+import com.github.fj.board.persistence.model.post.ContentStatus
 import java.time.LocalDateTime
 import java.util.*
 
@@ -17,7 +17,7 @@ import java.util.*
 interface PostBriefInfo {
     val id: Long
     val accessId: UUID
-    val status: PostStatus
+    val status: ContentStatus
     val mode: PostMode
     val boardId: UUID
     val writerNickname: String?
@@ -31,7 +31,7 @@ interface PostBriefInfo {
         private data class Impl(
             override val id: Long,
             override val accessId: UUID,
-            override val status: PostStatus,
+            override val status: ContentStatus,
             override val mode: PostMode,
             override val boardId: UUID,
             override val writerNickname: String?,

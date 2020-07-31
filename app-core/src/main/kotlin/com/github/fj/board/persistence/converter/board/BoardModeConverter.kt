@@ -13,7 +13,7 @@ import javax.persistence.Converter
  * @since 22 - Jul - 2020
  */
 @Converter
-class ModeConverter : AttributeConverter<BoardMode, String> {
+class BoardModeConverter : AttributeConverter<BoardMode, String> {
     override fun convertToDatabaseColumn(attribute: BoardMode): String = attribute.key
 
     override fun convertToEntityAttribute(dbData: String?): BoardMode = BoardMode.byKey(dbData)

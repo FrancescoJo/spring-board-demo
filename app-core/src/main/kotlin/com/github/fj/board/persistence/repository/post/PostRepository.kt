@@ -19,7 +19,7 @@ interface PostRepository : JpaRepository<Post, Long> {
         SELECT p
         FROM Post p
         WHERE p.accessId = ?1
-          AND p.status <> com.github.fj.board.persistence.model.post.PostStatus.DELETED
+          AND p.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
     """
     )
     fun findByAccessId(accessId: UUID): Post

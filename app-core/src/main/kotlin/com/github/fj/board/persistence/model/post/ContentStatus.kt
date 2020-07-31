@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonValue
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 05 - Jul - 2020
  */
-enum class PostStatus(val key: String) {
+enum class ContentStatus(val key: String) {
     NOT_REVIEWED(""),
     REVIEWED("r"),
     DELETED("d");

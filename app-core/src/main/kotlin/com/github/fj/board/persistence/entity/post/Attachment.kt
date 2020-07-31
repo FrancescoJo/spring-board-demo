@@ -5,6 +5,8 @@
 package com.github.fj.board.persistence.entity.post
 
 import com.github.fj.board.persistence.converter.ByteArrayUuidConverter
+import com.github.fj.board.persistence.converter.post.ContentStatusConverter
+import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.lib.util.UuidExtensions
 import java.io.Serializable
 import java.util.*
@@ -38,6 +40,10 @@ class Attachment : Serializable {
     @JoinColumn(name = "post_id", nullable = false, updatable = false)
     lateinit var post: Post
 
+    @Convert(converter = ContentStatusConverter::class)
+    @Column(length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
+    var status: ContentStatus = ContentStatus.NOT_REVIEWED
+
     @Column(columnDefinition = "CLOB")
     var name: String = ""
 
@@ -55,6 +61,7 @@ class Attachment : Serializable {
                 } else {
                     "<uninitialised>"
                 }}, " +
+                "status=$status, " +
                 "name='$name', " +
                 "uri='$uri', " +
                 "mimeType='$mimeType')"

@@ -7,7 +7,7 @@ package com.github.fj.board.persistence.entity.user
 import com.github.fj.board.persistence.converter.ByteArrayInetAddressConverter
 import com.github.fj.board.persistence.converter.SemanticVersionConverter
 import com.github.fj.board.persistence.converter.auth.PlatformTypeConverter
-import com.github.fj.board.persistence.converter.user.StatusConverter
+import com.github.fj.board.persistence.converter.user.UserStatusConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
 import com.github.fj.board.persistence.entity.auth.Authentication
 import com.github.fj.board.persistence.model.auth.PlatformType
@@ -48,7 +48,7 @@ class User : AbstractIncrementalLockableEntity() {
     @Column(length = 64, nullable = false, columnDefinition = "VARCHAR(64)")
     var nickname: String = ""
 
-    @Convert(converter = StatusConverter::class)
+    @Convert(converter = UserStatusConverter::class)
     @Column(length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
     var status: UserStatus = UserStatus.UNVERIFIED
 
