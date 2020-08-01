@@ -34,7 +34,7 @@ public final class UpdatePostRequestBuilder {
     public UpdatePostRequestBuilder(final UpdatePostRequest src) {
         this.accessId = src.getAccessId();
         this.title = src.getTitle();
-        this.content = src.getContent();
+        this.content = src.getContents();
         this.attachments = src.getAttachments();
     }
 

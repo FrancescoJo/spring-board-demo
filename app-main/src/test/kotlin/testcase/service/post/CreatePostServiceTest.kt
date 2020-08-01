@@ -10,12 +10,13 @@ import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
+import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
-import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.service.post.CreatePostService
 import com.github.fj.board.service.post.impl.CreatePostServiceImpl
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.times
@@ -43,9 +44,6 @@ import kotlin.reflect.KClass
  * @since 26 - Jul - 2020
  */
 class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
-    @Mock
-    private lateinit var postRepo: PostRepository
-
     @Mock
     private lateinit var attachmentRepo: AttachmentRepository
 
@@ -76,22 +74,25 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
     @Test
     fun `fail if board for given boardId is not present`() {
         // given:
-        val (clientInfo, _) = prepareSelf()
-        val targetBoardId = UUID.randomUUID()
+        val (clientInfo, _, board) = postPreconditions()
         val req = CreatePostRequestBuilder.createRandom()
 
         // when:
-        `when`(boardRepo.findByAccessId(targetBoardId)).thenReturn(null)
+        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(null)
 
         // then:
         assertThrows<BoardNotFoundException> {
-            sut.create(targetBoardId, req, clientInfo)
+            sut.create(board.accessId, req, clientInfo)
         }
     }
 
     @ParameterizedTest(name = "Cannot write post({1}) for \"{0}\" board")
     @MethodSource("testCannotCreatePost")
-    fun `fail if board has some constraints`(constraint: String, expectedException: KClass<out Exception>, board: Board) {
+    fun `fail if board has some constraints`(
+        constraint: String,
+        expectedException: KClass<out Exception>,
+        board: Board
+    ) {
         // given:
         val (clientInfo, _) = prepareSelf()
         val targetBoardId = board.accessId
@@ -109,8 +110,7 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
     @Test
     fun `post is created if request is valid`() {
         // given:
-        val (clientInfo, _) = prepareSelf()
-        val board = BoardBuilder.createRandom()
+        val (clientInfo, _, board) = postPreconditions()
         val req = CreatePostRequestBuilder.createRandom()
 
         // when:
