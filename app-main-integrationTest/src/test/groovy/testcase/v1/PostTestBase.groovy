@@ -9,7 +9,7 @@ import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.vo.board.BoardInfo
-import com.github.fj.board.vo.post.PostBriefInfo
+import com.github.fj.board.vo.post.PostDetailedInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.FieldDescriptor
@@ -17,6 +17,7 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import org.springframework.transaction.support.TransactionTemplate
 import test.com.github.fj.board.endpoint.ApiPathsHelper
+import test.com.github.fj.board.endpoint.v1.post.dto.CreatePostRequestBuilder
 import testcase.common.CreatedUser
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
@@ -41,7 +42,11 @@ class PostTestBase extends BoardTestBase {
         postRepo.deleteAll()
     }
 
-    protected final PostBriefInfo createRandomPostOf(
+    protected final PostDetailedInfo createRandomPostOf(final CreatedUser owner, final BoardInfo board) {
+        return createRandomPostOf(owner, board, CreatePostRequestBuilder.createRandom())
+    }
+
+    protected final PostDetailedInfo createRandomPostOf(
             final CreatedUser owner,
             final BoardInfo board,
             final CreatePostRequest postRequest
@@ -55,11 +60,14 @@ class PostTestBase extends BoardTestBase {
         final response = expectResponse(rawResponse, HttpStatus.OK, PostInfoBriefResponse.class)
 
         // Fixing groovyc error: reference problem in closures
-        final repository = postRepo
+        final postRepo = postRepo
+        final attachmentRepo = attachmentRepo
 
         return txTemplate.execute {
-            final post = repository.findByAccessId(UUID.fromString(response.postId))
-            return new PostBriefInfo.Companion().from(post)
+            final post = postRepo.findByAccessId(UUID.fromString(response.postId))
+            final attachments = attachmentRepo.findAllByPost(post)
+
+            return new PostDetailedInfo.Companion().from(post, attachments)
         }
     }
 

@@ -10,8 +10,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.fj.board.persistence.model.post.PostMode
 import com.github.fj.board.validation.UnicodeCharsLength
-import com.github.fj.lib.text.REGEX_UUID
-import javax.validation.constraints.Pattern
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -19,14 +17,6 @@ import javax.validation.constraints.Pattern
  */
 @JsonDeserialize
 data class UpdatePostRequest(
-    @get:Pattern(
-        regexp = REGEX_UUID,
-        message = "`accessId` must be in a UUID format."
-    )
-    @JsonProperty("accessId")
-    @JsonPropertyDescription(DESC_ACCESS_ID)
-    val accessId: String,
-
     @JsonProperty
     @JsonPropertyDescription(DESC_MODE)
     val mode: PostMode,
@@ -56,7 +46,6 @@ data class UpdatePostRequest(
     companion object {
         const val TITLE_SIZE_MAX = 40
 
-        const val DESC_ACCESS_ID = "An UUID of target post to edit."
         const val DESC_MODE = "Mode of this post. ['frv': Free to reply, 'rr': Reply not allowed]."
         const val DESC_TITLE = "Title of  target post to edit."
         const val DESC_CONTENTS = "Contents of target post to edit."

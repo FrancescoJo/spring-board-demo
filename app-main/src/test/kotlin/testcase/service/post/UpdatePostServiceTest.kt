@@ -11,7 +11,7 @@ import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.AttachmentNotFoundException
-import com.github.fj.board.exception.client.post.CannotCreatePostException
+import com.github.fj.board.exception.client.post.CannotEditPostException
 import com.github.fj.board.exception.client.post.PostNotFoundException
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
@@ -45,9 +45,11 @@ import org.mockito.Mockito.verify
 import test.com.github.fj.board.endpoint.v1.post.dto.CreateAttachmentRequestBuilder
 import test.com.github.fj.board.endpoint.v1.post.dto.DeleteAttachmentRequestBuilder
 import test.com.github.fj.board.endpoint.v1.post.dto.UpdateAttachmentRequestBuilder
+import test.com.github.fj.board.endpoint.v1.post.dto.UpdateAttachmentRequestBuilder.createRandomBulk
 import test.com.github.fj.board.endpoint.v1.post.dto.UpdatePostRequestBuilder
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
 import test.com.github.fj.board.persistence.entity.post.PostBuilder
+import test.com.github.fj.board.persistence.entity.user.UserBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
 import java.util.*
 import java.util.stream.Stream
@@ -81,7 +83,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // then:
         assertThrows<UserNotFoundException> {
-            sut.update(UUID.randomUUID(), req, clientInfo)
+            sut.update(UUID.randomUUID(), UUID.randomUUID(), req, clientInfo)
         }
     }
 
@@ -96,7 +98,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // then:
         assertThrows<BoardNotFoundException> {
-            sut.update(board.accessId, req, clientInfo)
+            sut.update(board.accessId, UUID.randomUUID(), req, clientInfo)
         }
     }
 
@@ -117,7 +119,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // then:
         Assertions.assertThrows(expectedException.java) {
-            sut.update(targetBoardId, req, clientInfo)
+            sut.update(targetBoardId, UUID.randomUUID(), req, clientInfo)
         }
     }
 
@@ -132,7 +134,24 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // then:
         assertThrows<PostNotFoundException> {
-            sut.update(board.accessId, req, clientInfo)
+            sut.update(board.accessId, UUID.randomUUID(), req, clientInfo)
+        }
+    }
+
+    @Test
+    fun `fail if target post is not owned`() {
+        // given:
+        val (clientInfo, _, board) = postPreconditions()
+        val post = PostBuilder.createRandomOf(board, UserBuilder.createRandom())
+        val req = UpdatePostRequestBuilder.createRandom()
+
+        // when:
+        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
+        `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
+
+        // then:
+        assertThrows<CannotEditPostException> {
+            sut.update(board.accessId, post.accessId, req, clientInfo)
         }
     }
 
@@ -142,15 +161,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         val (clientInfo, user, board) = postPreconditions()
         val post = PostBuilder.createRandomOf(board, user)
         val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
-            .accessId(post.accessId.toString())
-            .attachments(
-                listOf(
-                    UpdateAttachmentRequestBuilder()
-                        .mode(UpdateAttachmentMode.DELETE)
-                        .payload(DeleteAttachmentRequestBuilder.createRandom())
-                        .build()
-                )
-            )
+            .attachments(createRandomBulk(UpdateAttachmentMode.DELETE))
             .build()
 
         // when:
@@ -159,7 +170,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // then:
         assertThrows<AttachmentNotFoundException> {
-            sut.update(board.accessId, req, clientInfo)
+            sut.update(board.accessId, post.accessId, req, clientInfo)
         }
     }
 
@@ -171,7 +182,6 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         // and:
         val post = PostBuilder.createRandomOf(board, user)
         val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
-            .accessId(post.accessId.toString())
             .attachments(emptyList())
             .build()
 
@@ -182,7 +192,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         verify(postRepo, times(1)).save(any<Post>())
 
         // expect:
-        assertThat(result.accessId.toString(), `is`(req.accessId))
+        assertThat(result.accessId, `is`(post.accessId))
         assertThat(result.title, `is`(req.title))
         assertThat(result.mode, `is`(req.mode))
         assertThat(actual.contents, `is`(req.contents))
@@ -198,11 +208,10 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
             .attachments(emptyList())
             .build()
 
-        val addRequest = createAddAttachmentsRequest()
+        val addRequest = createRandomBulk(UpdateAttachmentMode.CREATE)
         val creationRequest = addRequest.map { it.payload as CreateAttachmentRequest }
 
         val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
-            .accessId(post.accessId.toString())
             .attachments(addRequest)
             .build()
 
@@ -237,7 +246,6 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         // and:
         val post = PostBuilder.createRandomOf(board, user)
         val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
-            .accessId(post.accessId.toString())
             .attachments(post.attachments.toDeleteRequests())
             .build()
 
@@ -269,7 +277,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         `when`(postRepo.save(any<Post>())).thenReturn(expected)
 
         // then:
-        val actual = sut.update(targetBoard.accessId, request, clientInfo)
+        val actual = sut.update(targetBoard.accessId, targetPost.accessId, request, clientInfo)
 
         return actual to expected
     }
@@ -304,14 +312,6 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         }
     }
 
-    private fun createAddAttachmentsRequest(): List<UpdateAttachmentRequest> =
-        getRandomPositiveInt(1, 4).iterationsOf {
-            UpdateAttachmentRequestBuilder()
-                .mode(UpdateAttachmentMode.CREATE)
-                .payload(CreateAttachmentRequestBuilder.createRandom())
-                .build()
-        }
-
     private fun List<Attachment>.toDeleteRequests(): List<UpdateAttachmentRequest> = this.map {
         UpdateAttachmentRequestBuilder()
             .mode(UpdateAttachmentMode.DELETE)
@@ -335,7 +335,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
                         .build()
                 ),
                 Arguments.of(
-                    "Mode:READ_ONLY", CannotCreatePostException::class, BoardBuilder(BoardBuilder.createRandom())
+                    "Mode:READ_ONLY", CannotEditPostException::class, BoardBuilder(BoardBuilder.createRandom())
                         .status(BoardStatus.NORMAL)
                         .mode(BoardMode.READ_ONLY)
                         .build()

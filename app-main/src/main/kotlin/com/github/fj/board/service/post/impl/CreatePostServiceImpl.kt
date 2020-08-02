@@ -5,7 +5,11 @@
 package com.github.fj.board.service.post.impl
 
 import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
+import com.github.fj.board.exception.client.board.BoardNotFoundException
+import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.persistence.entity.post.Post
+import com.github.fj.board.persistence.model.board.BoardMode
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
@@ -34,7 +38,11 @@ internal class CreatePostServiceImpl(
     override fun create(boardId: UUID, req: CreatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
         val self = clientInfo.getCurrentUser()
         val board = boardId.getBoard().also {
-            it.isWritableOrThrowFor(self)
+            when {
+                it.status == BoardStatus.CLOSED   -> throw BoardNotFoundException()
+                it.status == BoardStatus.ARCHIVED -> throw CannotCreatePostException()
+                it.mode == BoardMode.READ_ONLY    -> throw CannotCreatePostException()
+            }
         }
 
         val createdPost = Post().apply {
@@ -42,7 +50,7 @@ internal class CreatePostServiceImpl(
             this.status = ContentStatus.NOT_REVIEWED
             this.mode = req.mode
             this.board = board
-            this.user = self
+            this.creator = self
             this.parentThread = null
             this.edited = false
             this.number = board.getPostsCount() + 1

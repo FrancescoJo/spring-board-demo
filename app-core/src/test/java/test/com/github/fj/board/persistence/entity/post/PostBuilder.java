@@ -53,7 +53,7 @@ public final class PostBuilder {
 
     public PostBuilder(final @Nonnull Post src) {
         this.board = src.getBoard();
-        this.user = src.getUser();
+        this.user = src.getCreator();
         this.parentThread = src.getParentThread();
 
         this.id = src.getId();
@@ -156,7 +156,7 @@ public final class PostBuilder {
         final Post object = new Post();
 
         object.setBoard(board);
-        object.setUser(user);
+        object.setCreator(user);
         object.setParentThread(parentThread);
 
         object.setId(id);

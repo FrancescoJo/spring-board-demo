@@ -16,5 +16,5 @@ import java.util.*
  * @since 31 - Jul - 2020
  */
 interface UpdatePostService : UserServiceMixin, BoardAuthorisationMixin, PostServiceMixin, PostAccessMixin {
-    fun update(boardId: UUID, req: UpdatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo
+    fun update(boardId: UUID, postId: UUID, req: UpdatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo
 }

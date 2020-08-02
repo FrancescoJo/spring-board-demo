@@ -63,7 +63,7 @@ class Post : AbstractIncrementalLockableEntity() {
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
-    lateinit var user: User
+    lateinit var creator: User
 
     @ManyToOne(cascade = [CascadeType.ALL], optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_thread", nullable = true)
@@ -111,7 +111,7 @@ class Post : AbstractIncrementalLockableEntity() {
             } else {
                 "<uninitialised>"
             }}, " +
-            "user=${user.id}, " +
+            "creator=${creator.id}, " +
             "parentThread=${parentThread?.id?.toString()}, " +
             "lastModifiedDate=$lastModifiedDate, " +
             "lastModifiedIp=$lastModifiedIp, " +

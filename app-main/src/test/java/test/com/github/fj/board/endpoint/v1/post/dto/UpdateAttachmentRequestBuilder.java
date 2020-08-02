@@ -6,7 +6,11 @@ package test.com.github.fj.board.endpoint.v1.post.dto;
 
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentMode;
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest;
+import com.github.fj.lib.collection.CollectionUtilsKt;
 
+import java.util.List;
+
+import static com.github.fj.lib.util.RandomUtilsKt.getRandomPositiveInt;
 import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
 
 /**
@@ -42,8 +46,17 @@ public final class UpdateAttachmentRequestBuilder {
         );
     }
 
+    public static List<UpdateAttachmentRequest> createRandomBulk(final UpdateAttachmentMode mode) {
+        return CollectionUtilsKt.iterationsOf(
+                getRandomPositiveInt(1, 4), () -> createRandom(mode)
+        );
+    }
+
     public static UpdateAttachmentRequest createRandom() {
-        final UpdateAttachmentMode mode = randomEnumConst(UpdateAttachmentMode.class);
+        return createRandom(randomEnumConst(UpdateAttachmentMode.class));
+    }
+
+    public static UpdateAttachmentRequest createRandom(final UpdateAttachmentMode mode) {
         final Object payload;
 
         switch (mode) {

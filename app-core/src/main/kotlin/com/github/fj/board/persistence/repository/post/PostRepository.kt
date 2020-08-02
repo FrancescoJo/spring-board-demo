@@ -22,5 +22,5 @@ interface PostRepository : JpaRepository<Post, Long> {
           AND p.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
     """
     )
-    fun findByAccessId(accessId: UUID): Post
+    fun findByAccessId(accessId: UUID): Post?
 }

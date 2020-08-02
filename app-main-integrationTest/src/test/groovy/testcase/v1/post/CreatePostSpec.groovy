@@ -21,7 +21,6 @@ import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
 import test.com.github.fj.board.endpoint.ApiPathsHelper
 import test.com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequestBuilder
-import test.com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequestBuilder
 import test.com.github.fj.board.endpoint.v1.post.dto.CreatePostRequestBuilder
 import testcase.v1.PostTestBase
 
@@ -109,13 +108,7 @@ class CreatePostSpec extends PostTestBase {
         given:
         final self = createRandomUser()
         final createdBoard = createRandomBoardOf(self)
-        final updateRequest = new UpdateBoardRequestBuilder()
-                .name(createdBoard.name)
-                .description(createdBoard.description)
-                .access(createdBoard.access)
-                .mode(BoardMode.READ_ONLY)
-                .build()
-        updateBoard(self, createdBoard.accessId, updateRequest)
+        updateBoardMode(self, createdBoard, BoardMode.READ_ONLY)
 
         and:
         final request = CreatePostRequestBuilder.createRandom()
@@ -169,13 +162,13 @@ class CreatePostSpec extends PostTestBase {
         given:
         final self = createRandomUser()
         final createdBoard = createBoardOf(self, CreateBoardRequestBuilder.createRandom())
-        final firstRandomPost = createRandomPostOf(self, createdBoard, CreatePostRequestBuilder.createRandom())
+        final firstRandomPost = createRandomPostOf(self, createdBoard)
 
         expect:
         firstRandomPost.number == 1
 
         when:
-        final secondRandomPost = createRandomPostOf(self, createdBoard, CreatePostRequestBuilder.createRandom())
+        final secondRandomPost = createRandomPostOf(self, createdBoard)
 
         then:
         secondRandomPost.number == 2
@@ -193,7 +186,7 @@ class CreatePostSpec extends PostTestBase {
                 .post(ApiPathsHelper.BOARD_ID_POST(boardId))
     }
 
-    static RequestFieldsSnippet requestFieldsDoc() {
+    private static RequestFieldsSnippet requestFieldsDoc() {
         return requestFields(
                 fieldWithPath("mode")
                         .type(JsonFieldType.STRING)

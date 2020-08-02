@@ -5,6 +5,7 @@
 package com.github.fj.board.persistence.repository.post
 
 import com.github.fj.board.persistence.entity.post.Attachment
+import com.github.fj.board.persistence.entity.post.Post
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.util.*
@@ -22,4 +23,13 @@ interface AttachmentRepository : JpaRepository<Attachment, Long> {
     """
     )
     fun findAllByAccessIds(accessIds: List<UUID>): List<Attachment>
+
+    @Query(
+        """
+        SELECT a
+        FROM Attachment a
+        WHERE a.post = ?1
+    """
+    )
+    fun findAllByPost(post: Post): List<Attachment>
 }

@@ -9,9 +9,13 @@ import com.github.fj.board.endpoint.v1.post.request.DeleteAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentMode
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
+import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.AttachmentNotFoundException
+import com.github.fj.board.exception.client.post.CannotEditPostException
 import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
+import com.github.fj.board.persistence.model.board.BoardMode
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
@@ -38,12 +42,24 @@ internal class UpdatePostServiceImpl(
     private val attachmentRepo: AttachmentRepository
 ) : UpdatePostService {
     @Transactional
-    override fun update(boardId: UUID, req: UpdatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
+    override fun update(
+        boardId: UUID,
+        postId: UUID,
+        req: UpdatePostRequest,
+        clientInfo: ClientAuthInfo
+    ): PostBriefInfo {
         val self = clientInfo.getCurrentUser()
-        val board = boardId.getBoard().also {
-            it.isWritableOrThrowFor(self)
+        boardId.getBoard().also {
+            when {
+                it.status == BoardStatus.CLOSED   -> throw BoardNotFoundException()
+                it.status == BoardStatus.ARCHIVED -> throw CannotEditPostException()
+                it.mode == BoardMode.READ_ONLY    -> throw CannotEditPostException()
+            }
         }
-        val post = UUID.fromString(req.accessId).getPost()
+        val post = postId.getPost()
+        if (post.creator.id != self.id) {
+            throw CannotEditPostException()
+        }
 
         attachmentRepo.saveAll(updateAttachmentsOf(post, req))
 

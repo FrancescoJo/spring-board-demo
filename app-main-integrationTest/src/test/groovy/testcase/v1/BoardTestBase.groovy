@@ -9,6 +9,7 @@ import com.github.fj.board.endpoint.v1.board.request.CreateBoardRequest
 import com.github.fj.board.endpoint.v1.board.request.UpdateBoardRequest
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoResponse
+import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.vo.board.BoardInfo
@@ -20,6 +21,7 @@ import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import org.springframework.transaction.support.TransactionTemplate
 import test.com.github.fj.board.endpoint.ApiPathsHelper
 import test.com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequestBuilder
+import test.com.github.fj.board.endpoint.v1.board.dto.UpdateBoardRequestBuilder
 import testcase.common.CreatedUser
 
 import javax.annotation.Nullable
@@ -83,6 +85,17 @@ class BoardTestBase extends UserTestBase {
 
             repository.save(board)
         }
+    }
+
+    protected final void updateBoardMode(final CreatedUser owner, final BoardInfo board, final BoardMode mode) {
+        final updateRequest = new UpdateBoardRequestBuilder()
+                .name(board.name)
+                .description(board.description)
+                .access(board.access)
+                .mode(mode)
+                .build()
+
+        updateBoard(owner, board.accessId, updateRequest)
     }
 
     protected final BoardInfoResponse updateBoard(

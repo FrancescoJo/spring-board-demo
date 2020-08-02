@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 import javax.validation.Valid
 import javax.validation.constraints.Pattern
 
@@ -32,16 +33,22 @@ import javax.validation.constraints.Pattern
 @Validated
 interface UpdatePostController {
     @RequestMapping(
-        path = [ApiPaths.BOARD_ID_POST],
+        path = [ApiPaths.BOARD_ID_POST_ID],
         method = [RequestMethod.PATCH]
     )
-    fun create(
+    fun update(
         @Pattern(
             regexp = REGEX_UUID,
             message = "`boardId` must be in a UUID format."
         )
         @PathVariable
         @Suppress("MVCPathVariableInspection") boardId: String,
+        @Pattern(
+            regexp = REGEX_UUID,
+            message = "`boardId` must be in a UUID format."
+        )
+        @PathVariable
+        postId: String,
         @Valid @RequestBody req: UpdatePostRequest, clientInfo: ClientAuthInfo
     ): PostInfoBriefResponse
 }
@@ -50,10 +57,17 @@ interface UpdatePostController {
 internal class UpdatePostControllerImpl(
     private val svc: UpdatePostService
 ) : UpdatePostController {
-    override fun create(boardId: String, req: UpdatePostRequest, clientInfo: ClientAuthInfo): PostInfoBriefResponse {
+    override fun update(
+        boardId: String,
+        postId: String,
+        req: UpdatePostRequest,
+        clientInfo: ClientAuthInfo
+    ): PostInfoBriefResponse {
         LOG.debug("{}: {}", clientInfo.requestLine, req)
 
-        TODO("Not yet implemented")
+        val result = svc.update(UUID.fromString(boardId), UUID.fromString(postId), req, clientInfo)
+
+        return PostInfoBriefResponse.from(result)
     }
 
     companion object {
