@@ -11,6 +11,7 @@ import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.AttachmentNotFoundException
+import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.exception.client.post.CannotEditPostException
 import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
@@ -50,11 +51,7 @@ internal class UpdatePostServiceImpl(
     ): PostBriefInfo {
         val self = clientInfo.getCurrentUser()
         boardId.getBoard().also {
-            when {
-                it.status == BoardStatus.CLOSED   -> throw BoardNotFoundException()
-                it.status == BoardStatus.ARCHIVED -> throw CannotEditPostException()
-                it.mode == BoardMode.READ_ONLY    -> throw CannotEditPostException()
-            }
+            it.checkIsWritableFor(self, onForbiddenException = { CannotEditPostException() })
         }
         val post = postId.getPost()
         if (post.creator.id != self.id) {

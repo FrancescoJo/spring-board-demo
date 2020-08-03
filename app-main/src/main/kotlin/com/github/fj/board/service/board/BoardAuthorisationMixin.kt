@@ -4,9 +4,14 @@
  */
 package com.github.fj.board.service.board
 
+import com.github.fj.board.exception.GeneralHttpException
+import com.github.fj.board.exception.client.board.BoardNotFoundException
+import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.user.User
+import com.github.fj.board.persistence.model.board.BoardMode
+import com.github.fj.board.persistence.model.board.BoardStatus
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -20,6 +25,14 @@ interface BoardAuthorisationMixin : BoardAccessMixin {
     fun User.assertAuthorityOf(board: Board) {
         if (this.id != board.creator.id) {
             throw UnauthorisedException()
+        }
+    }
+
+    fun Board.checkIsWritableFor(user: User, onForbiddenException: () -> GeneralHttpException) {
+        when {
+            status == BoardStatus.CLOSED   -> throw BoardNotFoundException()
+            status == BoardStatus.ARCHIVED -> throw onForbiddenException.invoke()
+            mode == BoardMode.READ_ONLY    -> throw onForbiddenException.invoke()
         }
     }
 }

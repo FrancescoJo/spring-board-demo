@@ -38,11 +38,7 @@ internal class CreatePostServiceImpl(
     override fun create(boardId: UUID, req: CreatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
         val self = clientInfo.getCurrentUser()
         val board = boardId.getBoard().also {
-            when {
-                it.status == BoardStatus.CLOSED   -> throw BoardNotFoundException()
-                it.status == BoardStatus.ARCHIVED -> throw CannotCreatePostException()
-                it.mode == BoardMode.READ_ONLY    -> throw CannotCreatePostException()
-            }
+            it.checkIsWritableFor(self, onForbiddenException = { CannotCreatePostException() })
         }
 
         val createdPost = Post().apply {

@@ -20,6 +20,7 @@ interface AttachmentRepository : JpaRepository<Attachment, Long> {
         SELECT a
         FROM Attachment a
         WHERE a.accessId IN ?1
+          AND a.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
     """
     )
     fun findAllByAccessIds(accessIds: List<UUID>): List<Attachment>
@@ -29,6 +30,7 @@ interface AttachmentRepository : JpaRepository<Attachment, Long> {
         SELECT a
         FROM Attachment a
         WHERE a.post = ?1
+          AND a.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
     """
     )
     fun findAllByPost(post: Post): List<Attachment>
