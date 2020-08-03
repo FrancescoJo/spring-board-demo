@@ -6,7 +6,7 @@
  */
 package com.github.fj.lib.text
 
-import java.util.UUID
+import java.util.*
 
 const val REGEX_HEXADECIMAL = "[0-9a-fA-F]"
 

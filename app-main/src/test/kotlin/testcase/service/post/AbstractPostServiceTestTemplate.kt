@@ -6,6 +6,7 @@ package testcase.service.post
 
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.user.User
+import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.service.post.PostAccessMixin
 import com.github.fj.board.service.post.PostServiceMixin
@@ -24,6 +25,9 @@ import testcase.service.board.AbstractBoardServiceTestTemplate
 abstract class AbstractPostServiceTestTemplate : AbstractBoardServiceTestTemplate(), PostServiceMixin, PostAccessMixin {
     @Mock
     override lateinit var postRepo: PostRepository
+
+    @Mock
+    protected lateinit var attachmentRepo: AttachmentRepository
 
     @BeforeEach
     @CallSuper

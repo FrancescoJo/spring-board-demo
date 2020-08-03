@@ -19,13 +19,10 @@ import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
-import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.service.post.UpdatePostService
 import com.github.fj.board.service.post.impl.UpdatePostServiceImpl
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.post.PostBriefInfo
-import com.github.fj.lib.collection.iterationsOf
-import com.github.fj.lib.util.getRandomPositiveInt
 import com.nhaarman.mockitokotlin2.any
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
@@ -38,11 +35,9 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.ArgumentMatchers.anyList
-import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
-import test.com.github.fj.board.endpoint.v1.post.dto.CreateAttachmentRequestBuilder
 import test.com.github.fj.board.endpoint.v1.post.dto.DeleteAttachmentRequestBuilder
 import test.com.github.fj.board.endpoint.v1.post.dto.UpdateAttachmentRequestBuilder
 import test.com.github.fj.board.endpoint.v1.post.dto.UpdateAttachmentRequestBuilder.createRandomBulk
@@ -60,9 +55,6 @@ import kotlin.reflect.KClass
  * @since 31 - Jul - 2020
  */
 class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
-    @Mock
-    private lateinit var attachmentRepo: AttachmentRepository
-
     private lateinit var sut: UpdatePostService
 
     @BeforeEach
@@ -102,7 +94,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         }
     }
 
-    @ParameterizedTest(name = "Cannot write post({1}) for \"{0}\" board")
+    @ParameterizedTest(name = "Cannot update post({1}) for \"{0}\" board")
     @MethodSource("testCannotUpdatePost")
     fun `fail if board has some constraints`(
         constraint: String,

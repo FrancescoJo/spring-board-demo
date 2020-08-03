@@ -10,13 +10,10 @@ import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
-import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
-import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.service.post.CreatePostService
 import com.github.fj.board.service.post.impl.CreatePostServiceImpl
-import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.times
@@ -30,7 +27,6 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import test.com.github.fj.board.endpoint.v1.post.dto.CreatePostRequestBuilder
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
@@ -44,9 +40,6 @@ import kotlin.reflect.KClass
  * @since 26 - Jul - 2020
  */
 class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
-    @Mock
-    private lateinit var attachmentRepo: AttachmentRepository
-
     private lateinit var sut: CreatePostService
 
     @BeforeEach

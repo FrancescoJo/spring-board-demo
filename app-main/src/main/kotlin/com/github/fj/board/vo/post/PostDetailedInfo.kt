@@ -7,8 +7,8 @@ package com.github.fj.board.vo.post
 import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.model.auth.PlatformType
-import com.github.fj.board.persistence.model.post.PostMode
 import com.github.fj.board.persistence.model.post.ContentStatus
+import com.github.fj.board.persistence.model.post.PostMode
 import java.net.InetAddress
 import java.time.LocalDateTime
 import java.util.*
