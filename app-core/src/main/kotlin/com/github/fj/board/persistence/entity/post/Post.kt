@@ -21,7 +21,6 @@ import com.github.fj.lib.util.UuidExtensions
 import java.net.InetAddress
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Convert
 import javax.persistence.Entity
@@ -64,10 +63,6 @@ class Post : AbstractIncrementalLockableEntity() {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     lateinit var creator: User
-
-    @ManyToOne(cascade = [CascadeType.ALL], optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_thread", nullable = true)
-    var parentThread: Post? = null
 
     @Column(name = "last_modified_date", nullable = false)
     var lastModifiedDate: LocalDateTime = LOCAL_DATE_TIME_MIN
@@ -112,7 +107,6 @@ class Post : AbstractIncrementalLockableEntity() {
                 "<uninitialised>"
             }}, " +
             "creator=${creator.id}, " +
-            "parentThread=${parentThread?.id?.toString()}, " +
             "lastModifiedDate=$lastModifiedDate, " +
             "lastModifiedIp=$lastModifiedIp, " +
             "lastModifiedPlatformType=$lastModifiedPlatformType, " +

@@ -40,6 +40,7 @@ interface DeletePostController {
         )
         @PathVariable
         postId: String,
+
         clientInfo: ClientAuthInfo
     ): OkResponseDto<Boolean>
 }

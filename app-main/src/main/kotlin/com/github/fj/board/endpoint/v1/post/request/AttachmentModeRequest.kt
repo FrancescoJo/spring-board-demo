@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 30 - Jul - 2020
  */
-enum class UpdateAttachmentMode(val key: String, val expectedRequestClass: KClass<*>) {
+enum class AttachmentModeRequest(val key: String, val expectedRequestClass: KClass<*>) {
     CREATE("+", CreateAttachmentRequest::class),
     DELETE("-", DeleteAttachmentRequest::class),
     UNDEFINED("", Nothing::class);

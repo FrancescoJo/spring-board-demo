@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.endpoint.v1.post.response
+package com.github.fj.board.endpoint.v1.reply.response
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription

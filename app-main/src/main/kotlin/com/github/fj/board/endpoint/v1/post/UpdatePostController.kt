@@ -43,7 +43,11 @@ interface UpdatePostController {
         )
         @PathVariable
         postId: String,
-        @Valid @RequestBody req: UpdatePostRequest, clientInfo: ClientAuthInfo
+
+        @Valid @RequestBody
+        req: UpdatePostRequest,
+
+        clientInfo: ClientAuthInfo
     ): PostInfoBriefResponse
 }
 

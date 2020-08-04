@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentMode.UNDEFINED
+import com.github.fj.board.endpoint.v1.post.request.AttachmentModeRequest.UNDEFINED
 import com.github.fj.lib.annotation.VisibleForTesting
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
@@ -29,7 +29,7 @@ class UpdateAttachmentsDeserialiser : StdDeserializer<UpdateAttachmentRequest>(
         val modeStr = node.get("mode").textValue()
         val payloadNode = node.get("payload")
 
-        val mode = UpdateAttachmentMode.byKey(modeStr).also {
+        val mode = AttachmentModeRequest.byKey(modeStr).also {
             if (it == UNDEFINED) {
                 throw JsonParseException(p, "Cannot determine `mode` for input string '$modeStr'")
             }

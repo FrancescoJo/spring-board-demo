@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 data class UpdateAttachmentRequest(
     @JsonProperty
     @JsonPropertyDescription(DESC_MODE)
-    val mode: UpdateAttachmentMode,
+    val mode: AttachmentModeRequest,
 
     @JsonProperty
     @JsonPropertyDescription(DESC_PAYLOAD)

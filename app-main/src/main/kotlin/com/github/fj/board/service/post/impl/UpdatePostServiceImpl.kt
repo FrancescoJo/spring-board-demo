@@ -6,7 +6,7 @@ package com.github.fj.board.service.post.impl
 
 import com.github.fj.board.endpoint.v1.post.request.CreateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.DeleteAttachmentRequest
-import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentMode
+import com.github.fj.board.endpoint.v1.post.request.AttachmentModeRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
 import com.github.fj.board.exception.client.post.AttachmentNotFoundException
@@ -67,11 +67,11 @@ internal class UpdatePostServiceImpl(
         val attachmentReqGroup = req.attachments?.groupBy { it.mode } ?: emptyMap()
 
         @Suppress("UNCHECKED_CAST")
-        val additions = (attachmentReqGroup.getMode(UpdateAttachmentMode.CREATE) as List<CreateAttachmentRequest>)
+        val additions = (attachmentReqGroup.getMode(AttachmentModeRequest.CREATE) as List<CreateAttachmentRequest>)
             .map { it.toEntityOf(post) }
 
         @Suppress("UNCHECKED_CAST")
-        val deleteTargets = (attachmentReqGroup.getMode(UpdateAttachmentMode.DELETE) as List<DeleteAttachmentRequest>)
+        val deleteTargets = (attachmentReqGroup.getMode(AttachmentModeRequest.DELETE) as List<DeleteAttachmentRequest>)
             .map { UUID.fromString(it.accessId) }
 
         val deletions = attachmentRepo.findAllByAccessIds(deleteTargets).also { entities ->
@@ -93,12 +93,12 @@ internal class UpdatePostServiceImpl(
      * For additions: `List<CreateAttachmentRequest>`
      */
     @VisibleForTesting
-    fun Map<UpdateAttachmentMode, List<UpdateAttachmentRequest>>.getMode(mode: UpdateAttachmentMode): List<Any> {
+    fun Map<AttachmentModeRequest, List<UpdateAttachmentRequest>>.getMode(mode: AttachmentModeRequest): List<Any> {
         val list = (this[mode] ?: emptyList())
 
         return when (mode) {
-            UpdateAttachmentMode.DELETE -> list.map { it.payload as DeleteAttachmentRequest }
-            UpdateAttachmentMode.CREATE -> list.map { it.payload as CreateAttachmentRequest }
+            AttachmentModeRequest.DELETE -> list.map { it.payload as DeleteAttachmentRequest }
+            AttachmentModeRequest.CREATE -> list.map { it.payload as CreateAttachmentRequest }
             else -> list
         }
     }

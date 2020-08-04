@@ -198,6 +198,7 @@ class CreatePostSpec extends PostTestBase {
                         .type(JsonFieldType.STRING)
                         .description(CreatePostRequest.DESC_CONTENT),
                 fieldWithPath("attachments[]")
+                        .optional()
                         .type(JsonFieldType.ARRAY)
                         .description(CreatePostRequest.DESC_CONTENT),
                 fieldWithPath("attachments[].uri")

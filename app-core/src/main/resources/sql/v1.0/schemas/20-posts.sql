@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS `posts`
     `mode`                        VARCHAR(4)    NOT NULL DEFAULT '',
     `board_id`                    BIGINT        NOT NULL,
     `user_id`                     BIGINT        NOT NULL,
-    `parent_thread`               BIGINT,
     `last_modified_date`          DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `last_modified_ip`            VARBINARY(16) NOT NULL,
     `last_modified_platform_type` VARCHAR(4)    NOT NULL DEFAULT '',

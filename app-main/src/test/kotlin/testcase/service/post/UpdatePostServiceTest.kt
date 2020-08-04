@@ -6,7 +6,7 @@ package testcase.service.post
 
 import com.github.fj.board.endpoint.v1.post.request.CreateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.DeleteAttachmentRequest
-import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentMode
+import com.github.fj.board.endpoint.v1.post.request.AttachmentModeRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
 import com.github.fj.board.exception.client.board.BoardNotFoundException
@@ -135,7 +135,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         val (clientInfo, _, post) = postPreconditions()
         val board = post.board
         val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
-            .attachments(createRandomBulk(UpdateAttachmentMode.DELETE))
+            .attachments(createRandomBulk(AttachmentModeRequest.DELETE))
             .build()
 
         // when:
@@ -178,7 +178,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         post.attachments = ArrayList()
 
         // and:
-        val addRequest = createRandomBulk(UpdateAttachmentMode.CREATE)
+        val addRequest = createRandomBulk(AttachmentModeRequest.CREATE)
         val creationRequest = addRequest.map { it.payload as CreateAttachmentRequest }
 
         val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
@@ -263,7 +263,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         val reqGroup = req.groupBy { it.mode }
         val (deleteReqs, createReqs) = with(sut as UpdatePostServiceImpl) {
-            reqGroup.getMode(UpdateAttachmentMode.DELETE) to reqGroup.getMode(UpdateAttachmentMode.CREATE)
+            reqGroup.getMode(AttachmentModeRequest.DELETE) to reqGroup.getMode(AttachmentModeRequest.CREATE)
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -281,7 +281,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
     private fun List<Attachment>.toDeleteRequests(): List<UpdateAttachmentRequest> = this.map {
         UpdateAttachmentRequestBuilder()
-            .mode(UpdateAttachmentMode.DELETE)
+            .mode(AttachmentModeRequest.DELETE)
             .payload(
                 DeleteAttachmentRequestBuilder()
                     .accessId(it.accessId.toString())

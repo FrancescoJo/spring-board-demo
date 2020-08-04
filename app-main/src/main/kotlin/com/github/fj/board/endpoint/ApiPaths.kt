@@ -30,5 +30,8 @@ object ApiPaths {
     const val POST = "$LATEST_VERSION/post"
     const val BOARD_ID_POST = "$BOARD_ID/post"
     const val POST_ID = "$POST/{postId}"
-    const val BOARD_ID_POSTS = "$BOARD_ID/posts"
+
+    const val REPLY = "$LATEST_VERSION/reply"
+    const val POST_ID_REPLY = "$POST_ID/reply"
+    const val REPLY_ID = "$REPLY/{replyId}"
 }

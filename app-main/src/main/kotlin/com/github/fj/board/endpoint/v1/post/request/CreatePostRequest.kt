@@ -39,7 +39,7 @@ data class CreatePostRequest(
 
     @JsonProperty
     @JsonPropertyDescription(DESC_ATTACHMENTS)
-    val attachments: List<CreateAttachmentRequest>
+    val attachments: List<CreateAttachmentRequest>?
 ) {
     companion object {
         const val TITLE_SIZE_MAX = 40

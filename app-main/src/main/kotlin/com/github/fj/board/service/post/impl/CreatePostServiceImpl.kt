@@ -44,7 +44,6 @@ internal class CreatePostServiceImpl(
             this.mode = req.mode
             this.board = board
             this.creator = self
-            this.parentThread = null
             this.edited = false
             this.number = board.getPostsCount() + 1
             this.title = req.title
@@ -56,9 +55,9 @@ internal class CreatePostServiceImpl(
             postRepo.save(it)
         }
 
-        req.attachments.map {
+        req.attachments?.map {
             it.toEntityOf(createdPost)
-        }.also {
+        }?.also {
             attachmentRepo.saveAll(it)
         }
 

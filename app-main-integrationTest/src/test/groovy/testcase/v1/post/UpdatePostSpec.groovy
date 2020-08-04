@@ -5,7 +5,7 @@
 package testcase.v1.post
 
 import com.github.fj.board.endpoint.v1.post.request.DeleteAttachmentRequest
-import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentMode
+import com.github.fj.board.endpoint.v1.post.request.AttachmentModeRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
 import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
@@ -158,7 +158,7 @@ class UpdatePostSpec extends PostTestBase {
     def "fail if target attachments for deletion are not found"() {
         given:
         final request = new UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
-                .attachments(UpdateAttachmentRequestBuilder.createRandomBulk(UpdateAttachmentMode.DELETE))
+                .attachments(UpdateAttachmentRequestBuilder.createRandomBulk(AttachmentModeRequest.DELETE))
                 .build()
 
         when:

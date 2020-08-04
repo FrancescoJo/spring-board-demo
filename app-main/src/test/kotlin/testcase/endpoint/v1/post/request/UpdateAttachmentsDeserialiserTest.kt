@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.deser.BeanDeserializerFactory
 import com.fasterxml.jackson.databind.deser.DefaultDeserializationContext
-import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentMode
+import com.github.fj.board.endpoint.v1.post.request.AttachmentModeRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentsDeserialiser
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
@@ -123,7 +123,7 @@ class UpdateAttachmentsDeserialiserTest {
 
     @ParameterizedTest(name = "update attachment works in {0} mode")
     @MethodSource("testUpdateAttachmentRequest")
-    fun `update attachment mode works as expected`(mode: UpdateAttachmentMode, payload: Any) {
+    fun `update attachment mode works as expected`(mode: AttachmentModeRequest, payload: Any) {
         sut.afterPropertiesSet()
         // given:
         val request = UpdateAttachmentRequestBuilder()
@@ -151,8 +151,8 @@ class UpdateAttachmentsDeserialiserTest {
         @Suppress("unused")
         fun testUpdateAttachmentRequest(): Stream<Arguments> {
             return Stream.of(
-                Arguments.of(UpdateAttachmentMode.CREATE, CreateAttachmentRequestBuilder.createRandom()),
-                Arguments.of(UpdateAttachmentMode.DELETE, DeleteAttachmentRequestBuilder.createRandom())
+                Arguments.of(AttachmentModeRequest.CREATE, CreateAttachmentRequestBuilder.createRandom()),
+                Arguments.of(AttachmentModeRequest.DELETE, DeleteAttachmentRequestBuilder.createRandom())
             )
         }
     }

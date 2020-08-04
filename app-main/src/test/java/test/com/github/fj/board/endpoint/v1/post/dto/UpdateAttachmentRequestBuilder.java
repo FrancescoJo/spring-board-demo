@@ -4,7 +4,7 @@
  */
 package test.com.github.fj.board.endpoint.v1.post.dto;
 
-import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentMode;
+import com.github.fj.board.endpoint.v1.post.request.AttachmentModeRequest;
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest;
 import com.github.fj.lib.collection.CollectionUtilsKt;
 
@@ -18,7 +18,7 @@ import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
  * @since 30 - Jul - 2020
  */
 public final class UpdateAttachmentRequestBuilder {
-    private UpdateAttachmentMode mode = UpdateAttachmentMode.UNDEFINED;
+    private AttachmentModeRequest mode = AttachmentModeRequest.UNDEFINED;
     private Object payload = null;
 
     public UpdateAttachmentRequestBuilder() {
@@ -29,7 +29,7 @@ public final class UpdateAttachmentRequestBuilder {
         this.payload = src.getPayload();
     }
 
-    public UpdateAttachmentRequestBuilder mode(final UpdateAttachmentMode value) {
+    public UpdateAttachmentRequestBuilder mode(final AttachmentModeRequest value) {
         this.mode = value;
         return this;
     }
@@ -46,17 +46,17 @@ public final class UpdateAttachmentRequestBuilder {
         );
     }
 
-    public static List<UpdateAttachmentRequest> createRandomBulk(final UpdateAttachmentMode mode) {
+    public static List<UpdateAttachmentRequest> createRandomBulk(final AttachmentModeRequest mode) {
         return CollectionUtilsKt.iterationsOf(
                 getRandomPositiveInt(1, 4), () -> createRandom(mode)
         );
     }
 
     public static UpdateAttachmentRequest createRandom() {
-        return createRandom(randomEnumConst(UpdateAttachmentMode.class));
+        return createRandom(randomEnumConst(AttachmentModeRequest.class));
     }
 
-    public static UpdateAttachmentRequest createRandom(final UpdateAttachmentMode mode) {
+    public static UpdateAttachmentRequest createRandom(final AttachmentModeRequest mode) {
         final Object payload;
 
         switch (mode) {

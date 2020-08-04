@@ -42,8 +42,13 @@ interface CreatePostController {
             message = "`boardId` must be in a UUID format."
         )
         @PathVariable
-        @Suppress("MVCPathVariableInspection") boardId: String,
-        @Valid @RequestBody req: CreatePostRequest, clientInfo: ClientAuthInfo
+        @Suppress("MVCPathVariableInspection")
+        boardId: String,
+
+        @Valid @RequestBody
+        req: CreatePostRequest,
+
+        clientInfo: ClientAuthInfo
     ): PostInfoBriefResponse
 }
 

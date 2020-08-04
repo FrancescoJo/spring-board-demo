@@ -35,7 +35,6 @@ import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
 public final class PostBuilder {
     private final Board board;
     private final User user;
-    private final Post parentThread;
 
     private long id = 0L;
     private UUID accessId = UuidExtensions.INSTANCE.getEMPTY_UUID();
@@ -54,7 +53,6 @@ public final class PostBuilder {
     public PostBuilder(final @Nonnull Post src) {
         this.board = src.getBoard();
         this.user = src.getCreator();
-        this.parentThread = src.getParentThread();
 
         this.id = src.getId();
         this.accessId = src.getAccessId();
@@ -71,20 +69,9 @@ public final class PostBuilder {
         this.attachments = src.getAttachments();
     }
 
-    // null parameter, only for inner usage
-    @SuppressWarnings("ConstantConditions")
     public PostBuilder(final @Nonnull Board parentBoard, final @Nonnull User creator) {
-        this(parentBoard, creator, null);
-    }
-
-    public PostBuilder(
-            final @Nonnull Board parentBoard,
-            final @Nonnull User creator,
-            final @Nonnull Post parentThread
-    ) {
         this.board = parentBoard;
         this.user = creator;
-        this.parentThread = parentThread;
     }
 
     public PostBuilder id(final long value) {
@@ -157,7 +144,6 @@ public final class PostBuilder {
 
         object.setBoard(board);
         object.setCreator(user);
-        object.setParentThread(parentThread);
 
         object.setId(id);
         object.setAccessId(accessId);
@@ -176,22 +162,14 @@ public final class PostBuilder {
         return object;
     }
 
-    // null parameter, only for inner usage
-    @SuppressWarnings("ConstantConditions")
     public static Post createRandomOf(
             final @Nonnull Board parentBoard,
             final @Nonnull User creator
     ) throws UnknownHostException {
-        return createRandomOf(parentBoard, creator, null);
-    }
-
-    public static Post createRandomOf(final @Nonnull Board parentBoard,
-                                      final @Nonnull User creator,
-                                      final @Nonnull Post parentThread) throws UnknownHostException {
         final LocalDateTime now = utcNow();
         final InetAddress localhost = InetAddress.getLocalHost();
 
-        final Post post = new PostBuilder(parentBoard, creator, parentThread)
+        final Post post = new PostBuilder(parentBoard, creator)
                 .id(getRandomPositiveLong(1L, Long.MAX_VALUE))
                 .accessId(UUID.randomUUID())
                 .status(ContentStatus.NOT_REVIEWED)
