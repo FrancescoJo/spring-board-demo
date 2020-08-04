@@ -5,11 +5,8 @@
 package com.github.fj.board.service.post.impl
 
 import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
-import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.persistence.entity.post.Post
-import com.github.fj.board.persistence.model.board.BoardMode
-import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.AttachmentRepository

@@ -33,9 +33,9 @@ public class ApiPathsHelper {
     }
 
     /**
-     * {@link com.github.fj.board.endpoint.ApiPaths#BOARD_ID_POST_ID}
+     * {@link com.github.fj.board.endpoint.ApiPaths#POST_ID}
      */
-    public static String BOARD_ID_POST_ID(final String boardAccessId, final String postAccessId) {
-        return ApiPaths.BOARD + "/" + boardAccessId + "/post/" + postAccessId;
+    public static String POST_ID(final String postAccessId) {
+        return ApiPaths.POST + "/" + postAccessId;
     }
 }

@@ -14,5 +14,5 @@ import java.util.*
  * @since 03 - Aug - 2020
  */
 interface DeletePostService : UserServiceMixin, BoardAuthorisationMixin, PostAccessMixin {
-    fun delete(boardId: UUID, postId: UUID, clientInfo: ClientAuthInfo): Boolean
+    fun delete(postId: UUID, clientInfo: ClientAuthInfo): Boolean
 }

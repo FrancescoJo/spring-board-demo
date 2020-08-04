@@ -67,8 +67,9 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
     @Test
     fun `fail if board for given boardId is not present`() {
         // given:
-        val (clientInfo, _, board) = postPreconditions()
+        val (clientInfo, _, post) = postPreconditions()
         val req = CreatePostRequestBuilder.createRandom()
+        val board = post.board
 
         // when:
         `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(null)
@@ -103,8 +104,9 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
     @Test
     fun `post is created if request is valid`() {
         // given:
-        val (clientInfo, _, board) = postPreconditions()
+        val (clientInfo, _, post) = postPreconditions()
         val req = CreatePostRequestBuilder.createRandom()
+        val board = post.board
 
         // when:
         `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)

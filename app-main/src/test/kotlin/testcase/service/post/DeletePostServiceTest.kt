@@ -18,7 +18,6 @@ import com.github.fj.board.service.post.DeletePostService
 import com.github.fj.board.service.post.impl.DeletePostServiceImpl
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.times
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Assertions
@@ -30,6 +29,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
 import test.com.github.fj.board.persistence.entity.post.PostBuilder
@@ -63,21 +63,35 @@ class DeletePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // then:
         assertThrows<UserNotFoundException> {
-            sut.delete(UUID.randomUUID(), UUID.randomUUID(), clientInfo)
+            sut.delete(UUID.randomUUID(), clientInfo)
         }
     }
 
     @Test
-    fun `fail if board for given boardId is not present`() {
+    fun `fail if target post is not found`() {
         // given:
-        val (clientInfo, _, board) = postPreconditions()
+        val (clientInfo, _, post) = postPreconditions()
+
+        // expect:
+        assertThrows<PostNotFoundException> {
+            sut.delete(post.accessId, clientInfo)
+        }
+    }
+
+    @Test
+    fun `fail if target post is not owned`() {
+        // given:
+        val (clientInfo, _, post) = postPreconditions()
+        val board = post.board
+        val otherUserPost = PostBuilder.createRandomOf(board, UserBuilder.createRandom())
 
         // when:
-        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(null)
+        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
+        `when`(postRepo.findByAccessId(otherUserPost.accessId)).thenReturn(otherUserPost)
 
         // then:
-        assertThrows<BoardNotFoundException> {
-            sut.delete(board.accessId, UUID.randomUUID(), clientInfo)
+        assertThrows<CannotDeletePostException> {
+            sut.delete(otherUserPost.accessId, clientInfo)
         }
     }
 
@@ -89,59 +103,31 @@ class DeletePostServiceTest : AbstractPostServiceTestTemplate() {
         board: Board
     ) {
         // given:
-        val (clientInfo, _) = prepareSelf()
+        val (clientInfo, user) = prepareSelf()
+        val post = PostBuilder.createRandomOf(board, user)
 
         // when:
+        `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
         `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
 
         // then:
         Assertions.assertThrows(expectedException.java) {
-            sut.delete(board.accessId, UUID.randomUUID(), clientInfo)
-        }
-    }
-
-    @Test
-    fun `fail if target post is not found`() {
-        // given:
-        val (clientInfo, _, board) = postPreconditions()
-
-        // when:
-        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
-
-        // then:
-        assertThrows<PostNotFoundException> {
-            sut.delete(board.accessId, UUID.randomUUID(), clientInfo)
-        }
-    }
-
-    @Test
-    fun `fail if target post is not owned`() {
-        // given:
-        val (clientInfo, _, board) = postPreconditions()
-        val post = PostBuilder.createRandomOf(board, UserBuilder.createRandom())
-
-        // when:
-        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
-        `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
-
-        // then:
-        assertThrows<CannotDeletePostException> {
-            sut.delete(board.accessId, post.accessId, clientInfo)
+            sut.delete(post.accessId, clientInfo)
         }
     }
 
     @Test
     fun `post is deleted if request is valid`() {
         // given:
-        val (clientInfo, user, board) = postPreconditions()
-        val post = PostBuilder.createRandomOf(board, user)
+        val (clientInfo, _, post) = postPreconditions()
+        val board = post.board
 
         // when:
         `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
         `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
 
         // then:
-        val result = sut.delete(board.accessId, post.accessId, clientInfo)
+        val result = sut.delete(post.accessId, clientInfo)
 
         // expect:
         assertTrue(result)

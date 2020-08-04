@@ -28,14 +28,14 @@ internal class DeletePostServiceImpl(
     private val attachmentRepo: AttachmentRepository
 ) : DeletePostService {
     @Transactional
-    override fun delete(boardId: UUID, postId: UUID, clientInfo: ClientAuthInfo): Boolean {
+    override fun delete(postId: UUID, clientInfo: ClientAuthInfo): Boolean {
         val self = clientInfo.getCurrentUser()
-        boardId.getBoard().also {
-            it.checkIsWritableFor(self, onForbiddenException = { CannotDeletePostException() })
-        }
         val post = postId.getPost()
         if (post.creator.id != self.id) {
             throw CannotDeletePostException()
+        }
+        post.board.also {
+            it.checkIsWritableFor(self, onForbiddenException = { CannotDeletePostException() })
         }
 
         post.apply {

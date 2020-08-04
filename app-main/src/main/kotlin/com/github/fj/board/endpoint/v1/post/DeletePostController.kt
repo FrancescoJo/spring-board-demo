@@ -30,16 +30,10 @@ import javax.validation.constraints.Pattern
 @Validated
 interface DeletePostController {
     @RequestMapping(
-        path = [ApiPaths.BOARD_ID_POST_ID],
+        path = [ApiPaths.POST_ID],
         method = [RequestMethod.DELETE]
     )
     fun delete(
-        @Pattern(
-            regexp = REGEX_UUID,
-            message = "`boardId` must be in a UUID format."
-        )
-        @PathVariable
-        @Suppress("MVCPathVariableInspection") boardId: String,
         @Pattern(
             regexp = REGEX_UUID,
             message = "`boardId` must be in a UUID format."
@@ -54,10 +48,10 @@ interface DeletePostController {
 internal class DeletePostControllerImpl(
     private val svc: DeletePostService
 ) : DeletePostController {
-    override fun delete(boardId: String, postId: String, clientInfo: ClientAuthInfo): OkResponseDto<Boolean> {
+    override fun delete(postId: String, clientInfo: ClientAuthInfo): OkResponseDto<Boolean> {
         LOG.debug("{}", clientInfo.requestLine)
 
-        val result = svc.delete(UUID.fromString(boardId), UUID.fromString(postId), clientInfo)
+        val result = svc.delete(UUID.fromString(postId), clientInfo)
 
         return OkResponseDto(result)
     }

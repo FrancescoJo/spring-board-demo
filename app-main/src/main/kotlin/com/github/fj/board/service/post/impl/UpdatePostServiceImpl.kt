@@ -9,14 +9,10 @@ import com.github.fj.board.endpoint.v1.post.request.DeleteAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentMode
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
-import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.AttachmentNotFoundException
-import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.exception.client.post.CannotEditPostException
 import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
-import com.github.fj.board.persistence.model.board.BoardMode
-import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
@@ -43,19 +39,14 @@ internal class UpdatePostServiceImpl(
     private val attachmentRepo: AttachmentRepository
 ) : UpdatePostService {
     @Transactional
-    override fun update(
-        boardId: UUID,
-        postId: UUID,
-        req: UpdatePostRequest,
-        clientInfo: ClientAuthInfo
-    ): PostBriefInfo {
+    override fun update(postId: UUID, req: UpdatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
         val self = clientInfo.getCurrentUser()
-        boardId.getBoard().also {
-            it.checkIsWritableFor(self, onForbiddenException = { CannotEditPostException() })
-        }
         val post = postId.getPost()
         if (post.creator.id != self.id) {
             throw CannotEditPostException()
+        }
+        post.board.also {
+            it.checkIsWritableFor(self, onForbiddenException = { CannotEditPostException() })
         }
 
         attachmentRepo.saveAll(updateAttachmentsOf(post, req))

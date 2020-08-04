@@ -6,7 +6,6 @@ package com.github.fj.board.service.board
 
 import com.github.fj.board.exception.GeneralHttpException
 import com.github.fj.board.exception.client.board.BoardNotFoundException
-import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.user.User

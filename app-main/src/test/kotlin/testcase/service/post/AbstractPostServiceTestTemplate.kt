@@ -4,7 +4,7 @@
  */
 package testcase.service.post
 
-import com.github.fj.board.persistence.entity.board.Board
+import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
+import test.com.github.fj.board.persistence.entity.post.PostBuilder
 import testcase.service.board.AbstractBoardServiceTestTemplate
 
 /**
@@ -35,8 +36,9 @@ abstract class AbstractPostServiceTestTemplate : AbstractBoardServiceTestTemplat
         MockitoAnnotations.initMocks(this)
     }
 
-    protected fun postPreconditions(): Triple<ClientAuthInfo, User, Board> {
+    protected fun postPreconditions(): Triple<ClientAuthInfo, User, Post> {
         val (clientInfo, user) = prepareSelf()
-        return Triple(clientInfo, user, BoardBuilder.createRandom())
+        val board = BoardBuilder.createRandom()
+        return Triple(clientInfo, user, PostBuilder.createRandomOf(board, user))
     }
 }

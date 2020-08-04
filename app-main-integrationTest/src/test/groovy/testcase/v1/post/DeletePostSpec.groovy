@@ -4,7 +4,6 @@
  */
 package testcase.v1.post
 
-
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.CannotDeletePostException
 import com.github.fj.board.exception.client.post.PostNotFoundException
@@ -47,21 +46,6 @@ class DeletePostSpec extends PostTestBase {
 
         expect:
         errorBody.cause == UnauthenticatedException.class.simpleName
-    }
-
-    def "fail if board for given boardId is not present"() {
-        when:
-        final response = sendRequest(
-                "deletePost-error-noBoardFound",
-                requestUrl(UUID.randomUUID(), post.accessId),
-                errorResponseFieldsDoc()
-        )
-
-        then:
-        final errorBody = expectError(response, BoardNotFoundException.STATUS)
-
-        expect:
-        errorBody.cause == BoardNotFoundException.class.simpleName
     }
 
     @Unroll
@@ -110,7 +94,7 @@ class DeletePostSpec extends PostTestBase {
         when:
         final response = sendRequest(
                 "deletePost-error-noPostFound",
-                requestUrl(board.accessId, UUID.randomUUID()),
+                requestUrl(UUID.randomUUID()),
                 errorResponseFieldsDoc()
         )
 
@@ -128,7 +112,7 @@ class DeletePostSpec extends PostTestBase {
         when:
         final response = sendRequest(
                 "deletePost-error-otherUserPost",
-                requestUrl(board.accessId, otherUserPost.accessId),
+                requestUrl(otherUserPost.accessId),
                 errorResponseFieldsDoc()
         )
 
@@ -156,11 +140,11 @@ class DeletePostSpec extends PostTestBase {
     }
 
     private String currentRequestUrl() {
-        return requestUrl(board.accessId, post.accessId)
+        return requestUrl(post.accessId)
     }
 
-    private static String requestUrl(final UUID boardId, final UUID post) {
-        return ApiPathsHelper.BOARD_ID_POST_ID(boardId.toString(), post.toString())
+    private static String requestUrl(final UUID post) {
+        return ApiPathsHelper.POST_ID(post.toString())
     }
 
     private Response sendRequest(

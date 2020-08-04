@@ -64,24 +64,45 @@ class UpdatePostSpec extends PostTestBase {
         errorBody.cause == UnauthenticatedException.class.simpleName
     }
 
-    def "fail if board for given boardId is not present"() {
+    def "fail if target post is not found"() {
         given:
         final request = UpdatePostRequestBuilder.createRandom()
 
         when:
         final response = sendRequest(
-                "updatePost-error-noBoardFound",
-                requestUrl(UUID.randomUUID(), post.accessId),
+                "updatePost-error-noPostFound",
+                requestUrl(UUID.randomUUID()),
                 request,
                 genericRequestFieldsDoc(),
                 errorResponseFieldsDoc()
         )
 
         then:
-        final errorBody = expectError(response, BoardNotFoundException.STATUS)
+        final errorBody = expectError(response, PostNotFoundException.STATUS)
 
         expect:
-        errorBody.cause == BoardNotFoundException.class.simpleName
+        errorBody.cause == PostNotFoundException.class.simpleName
+    }
+
+    def "fail if target post is not owned"() {
+        given:
+        final otherUserPost = createRandomPostOf(createRandomUser(), board)
+        final request = UpdatePostRequestBuilder.createRandom()
+
+        when:
+        final response = sendRequest(
+                "updatePost-error-otherUserPost",
+                requestUrl(otherUserPost.accessId),
+                request,
+                genericRequestFieldsDoc(),
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(response, CannotEditPostException.STATUS)
+
+        expect:
+        errorBody.cause == CannotEditPostException.class.simpleName
     }
 
     @Unroll
@@ -122,47 +143,6 @@ class UpdatePostSpec extends PostTestBase {
         final response = sendRequest(
                 "updatePost-error-readOnlyBoard",
                 currentRequestUrl(),
-                request,
-                genericRequestFieldsDoc(),
-                errorResponseFieldsDoc()
-        )
-
-        then:
-        final errorBody = expectError(response, CannotEditPostException.STATUS)
-
-        expect:
-        errorBody.cause == CannotEditPostException.class.simpleName
-    }
-
-    def "fail if target post is not found"() {
-        given:
-        final request = UpdatePostRequestBuilder.createRandom()
-
-        when:
-        final response = sendRequest(
-                "updatePost-error-noPostFound",
-                requestUrl(board.accessId, UUID.randomUUID()),
-                request,
-                genericRequestFieldsDoc(),
-                errorResponseFieldsDoc()
-        )
-
-        then:
-        final errorBody = expectError(response, PostNotFoundException.STATUS)
-
-        expect:
-        errorBody.cause == PostNotFoundException.class.simpleName
-    }
-
-    def "fail if target post is not owned"() {
-        given:
-        final otherUserPost = createRandomPostOf(createRandomUser(), board)
-        final request = UpdatePostRequestBuilder.createRandom()
-
-        when:
-        final response = sendRequest(
-                "updatePost-error-otherUserPost",
-                requestUrl(board.accessId, otherUserPost.accessId),
                 request,
                 genericRequestFieldsDoc(),
                 errorResponseFieldsDoc()
@@ -223,11 +203,11 @@ class UpdatePostSpec extends PostTestBase {
     }
 
     private String currentRequestUrl() {
-        return requestUrl(board.accessId, post.accessId)
+        return requestUrl(post.accessId)
     }
 
-    private static String requestUrl(final UUID boardId, final UUID post) {
-        return ApiPathsHelper.BOARD_ID_POST_ID(boardId.toString(), post.toString())
+    private static String requestUrl(final UUID post) {
+        return ApiPathsHelper.POST_ID(post.toString())
     }
 
     private Response sendRequest(

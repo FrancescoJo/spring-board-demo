@@ -9,8 +9,6 @@ package com.github.fj.board.endpoint
  * @since 22 - Oct - 2018
  */
 object ApiPaths {
-    const val HELLO = "/hello"
-
     /** Used by Spring default */
     const val ERROR = "/error"
 
@@ -29,7 +27,8 @@ object ApiPaths {
     const val BOARD_ID = "$LATEST_VERSION/board/{boardId}"
     const val BOARDS = "$LATEST_VERSION/boards"
 
+    const val POST = "$LATEST_VERSION/post"
     const val BOARD_ID_POST = "$BOARD_ID/post"
-    const val BOARD_ID_POST_ID = "$BOARD_ID/post/{postId}"
+    const val POST_ID = "$POST/{postId}"
     const val BOARD_ID_POSTS = "$BOARD_ID/posts"
 }

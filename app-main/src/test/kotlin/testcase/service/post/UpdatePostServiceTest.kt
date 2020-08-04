@@ -75,22 +75,35 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // then:
         assertThrows<UserNotFoundException> {
-            sut.update(UUID.randomUUID(), UUID.randomUUID(), req, clientInfo)
+            sut.update(UUID.randomUUID(), req, clientInfo)
         }
     }
 
     @Test
-    fun `fail if board for given boardId is not present`() {
+    fun `fail if target post is not found`() {
         // given:
-        val (clientInfo, _, board) = postPreconditions()
+        val (clientInfo, _, post) = postPreconditions()
+        val req = UpdatePostRequestBuilder.createRandom()
+
+        // expect:
+        assertThrows<PostNotFoundException> {
+            sut.update(post.accessId, req, clientInfo)
+        }
+    }
+
+    @Test
+    fun `fail if target post is not owned`() {
+        // given:
+        val (clientInfo, _, post) = postPreconditions()
+        val otherUserPost = PostBuilder.createRandomOf(post.board, UserBuilder.createRandom())
         val req = UpdatePostRequestBuilder.createRandom()
 
         // when:
-        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(null)
+        `when`(postRepo.findByAccessId(otherUserPost.accessId)).thenReturn(otherUserPost)
 
         // then:
-        assertThrows<BoardNotFoundException> {
-            sut.update(board.accessId, UUID.randomUUID(), req, clientInfo)
+        assertThrows<CannotEditPostException> {
+            sut.update(otherUserPost.accessId, req, clientInfo)
         }
     }
 
@@ -102,83 +115,51 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         board: Board
     ) {
         // given:
-        val (clientInfo, _) = prepareSelf()
-        val targetBoardId = UUID.randomUUID()
+        val (clientInfo, user) = prepareSelf()
+        val post = PostBuilder.createRandomOf(board, user)
         val req = UpdatePostRequestBuilder.createRandom()
 
         // when:
-        `when`(boardRepo.findByAccessId(targetBoardId)).thenReturn(board)
+        `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
+        `when`(boardRepo.findByAccessId(post.board.accessId)).thenReturn(board)
 
         // then:
         Assertions.assertThrows(expectedException.java) {
-            sut.update(targetBoardId, UUID.randomUUID(), req, clientInfo)
-        }
-    }
-
-    @Test
-    fun `fail if target post is not found`() {
-        // given:
-        val (clientInfo, _, board) = postPreconditions()
-        val req = UpdatePostRequestBuilder.createRandom()
-
-        // when:
-        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
-
-        // then:
-        assertThrows<PostNotFoundException> {
-            sut.update(board.accessId, UUID.randomUUID(), req, clientInfo)
-        }
-    }
-
-    @Test
-    fun `fail if target post is not owned`() {
-        // given:
-        val (clientInfo, _, board) = postPreconditions()
-        val post = PostBuilder.createRandomOf(board, UserBuilder.createRandom())
-        val req = UpdatePostRequestBuilder.createRandom()
-
-        // when:
-        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
-        `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
-
-        // then:
-        assertThrows<CannotEditPostException> {
-            sut.update(board.accessId, post.accessId, req, clientInfo)
+            sut.update(post.accessId, req, clientInfo)
         }
     }
 
     @Test
     fun `fail if target attachments for deletion are not found`() {
         // given:
-        val (clientInfo, user, board) = postPreconditions()
-        val post = PostBuilder.createRandomOf(board, user)
+        val (clientInfo, _, post) = postPreconditions()
+        val board = post.board
         val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
             .attachments(createRandomBulk(UpdateAttachmentMode.DELETE))
             .build()
 
         // when:
-        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
         `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
+        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
 
         // then:
         assertThrows<AttachmentNotFoundException> {
-            sut.update(board.accessId, post.accessId, req, clientInfo)
+            sut.update(post.accessId, req, clientInfo)
         }
     }
 
     @Test
     fun `post is updated if request is valid`() {
         // given:
-        val (clientInfo, user, board) = postPreconditions()
+        val (clientInfo, _, post) = postPreconditions()
 
         // and:
-        val post = PostBuilder.createRandomOf(board, user)
         val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
             .attachments(emptyList())
             .build()
 
         // when:
-        val (result, actual) = runSuccessfulUpdate(clientInfo, board, post, req)
+        val (result, actual) = runSuccessfulUpdate(clientInfo, post, req)
 
         // then: "Ensure save is called only once to prove mocking save operation reflects actual result"
         verify(postRepo, times(1)).save(any<Post>())
@@ -193,13 +174,10 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
     @Test
     fun `attachment is added if request contains additional attachment`() {
         // given:
-        val (clientInfo, user, board) = postPreconditions()
+        val (clientInfo, _, post) = postPreconditions()
+        post.attachments = ArrayList()
 
         // and:
-        val post = PostBuilder(PostBuilder.createRandomOf(board, user))
-            .attachments(emptyList())
-            .build()
-
         val addRequest = createRandomBulk(UpdateAttachmentMode.CREATE)
         val creationRequest = addRequest.map { it.payload as CreateAttachmentRequest }
 
@@ -211,12 +189,12 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         `when`(attachmentRepo.findAllByAccessIds(anyList())).thenReturn(emptyList())
 
         // then:
-        val (_, actual) = runSuccessfulUpdate(clientInfo, board, post, req)
+        val (_, actual) = runSuccessfulUpdate(clientInfo, post, req)
 
         // expect: "Ensure save is called only once to prove mocking save operation reflects actual result"
         verify(postRepo, times(1)).save(any<Post>())
 
-        // then:
+        // when:
         val expectedUris = creationRequest.map { it.uri }
         val actualUris = actual.attachments.map { it.uri }
         val expectedMimeTypes = creationRequest.map { it.mimeType }
@@ -224,7 +202,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         val expectedNames = creationRequest.map { it.name }
         val actualNames = actual.attachments.map { it.name }
 
-        // expect:
+        // then:
         assertThat(actualUris, `is`(expectedUris))
         assertThat(actualMimeTypes, `is`(expectedMimeTypes))
         assertThat(actualNames, `is`(expectedNames))
@@ -233,10 +211,9 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
     @Test
     fun `attachment is deleted if post has requested attachments for deletion`() {
         // given:
-        val (clientInfo, user, board) = postPreconditions()
+        val (clientInfo, _, post) = postPreconditions()
 
         // and:
-        val post = PostBuilder.createRandomOf(board, user)
         val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
             .attachments(post.attachments.toDeleteRequests())
             .build()
@@ -245,7 +222,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         `when`(attachmentRepo.findAllByAccessIds(post.attachments.map { it.accessId })).thenReturn(post.attachments)
 
         // then:
-        val (_, actual) = runSuccessfulUpdate(clientInfo, board, post, req)
+        val (_, actual) = runSuccessfulUpdate(clientInfo, post, req)
 
         // expect: "Ensure save is called only once to prove mocking save operation reflects actual result"
         verify(postRepo, times(1)).save(any<Post>())
@@ -256,7 +233,6 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
     private fun runSuccessfulUpdate(
         clientInfo: ClientAuthInfo,
-        targetBoard: Board,
         targetPost: Post,
         request: UpdatePostRequest
     ): Pair<PostBriefInfo, Post> {
@@ -264,12 +240,11 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         val expected = targetPost.applyRequest(request)
 
         // when:
-        `when`(boardRepo.findByAccessId(targetBoard.accessId)).thenReturn(targetBoard)
         `when`(postRepo.findByAccessId(targetPost.accessId)).thenReturn(targetPost)
         `when`(postRepo.save(any<Post>())).thenReturn(expected)
 
         // then:
-        val actual = sut.update(targetBoard.accessId, targetPost.accessId, request, clientInfo)
+        val actual = sut.update(targetPost.accessId, request, clientInfo)
 
         return actual to expected
     }
