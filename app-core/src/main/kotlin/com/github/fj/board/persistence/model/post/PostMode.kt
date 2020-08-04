@@ -12,9 +12,11 @@ import com.fasterxml.jackson.annotation.JsonValue
  * @since 26 - Jul - 2020
  */
 enum class PostMode(val key: String) {
-    FREE_REPLY("frv"),
+    FREE_REPLY("r+"),
 
-    REPLY_NOT_ALLOWED("rr");
+    REPLY_ONCE("r1"),
+
+    REPLY_NOT_ALLOWED("r-");
 
     @JsonValue
     @Suppress("unused") // Used by Jackson upon serialising @JsonSerialize annotated classes
