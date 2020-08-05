@@ -12,8 +12,14 @@ import com.fasterxml.jackson.annotation.JsonValue
  * @since 26 - Jul - 2020
  */
 enum class PostMode(val key: String) {
+    /**
+     * Free to write, edit, delete reply
+     */
     FREE_REPLY("r+"),
 
+    /**
+     * Write once: cannot edit again
+     */
     REPLY_ONCE("r1"),
 
     REPLY_NOT_ALLOWED("r-");

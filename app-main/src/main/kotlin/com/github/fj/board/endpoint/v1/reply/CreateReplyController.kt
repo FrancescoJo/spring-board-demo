@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 import javax.validation.Valid
 import javax.validation.constraints.Pattern
 
@@ -57,7 +58,7 @@ internal class CreateReplyControllerImpl(
     override fun create(postId: String, req: CreateReplyRequest, clientInfo: ClientAuthInfo): ReplyInfoResponse {
         LOG.debug("{}: {}", clientInfo.requestLine, req)
 
-        val result = svc.create(postId, req, clientInfo)
+        val result = svc.create(UUID.fromString(postId), req, clientInfo)
 
         return ReplyInfoResponse.from(result)
     }

@@ -23,4 +23,13 @@ interface PostRepository : JpaRepository<Post, Long> {
     """
     )
     fun findByAccessId(accessId: UUID): Post?
+
+    @Query(
+        """
+            SELECT COUNT(r.id)
+            FROM Reply r
+            WHERE r.post = ?1
+        """
+    )
+    fun getRepliesCountById(post: Post): Long
 }
