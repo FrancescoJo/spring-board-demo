@@ -66,7 +66,7 @@ public final class CreatePostRequestBuilder {
 
     public static CreatePostRequest createRandom() {
         return new CreatePostRequestBuilder()
-                .mode(randomEnumConst(PostMode.class))
+                .mode(PostMode.FREE_REPLY)
                 .title(getRandomAlphaNumericString(16))
                 .content(getRandomAlphaNumericString(512))
                 .attachments(CollectionUtilsKt.iterationsOf(

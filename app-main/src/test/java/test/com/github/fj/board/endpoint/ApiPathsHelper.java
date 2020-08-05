@@ -38,4 +38,12 @@ public class ApiPathsHelper {
     public static String POST_ID(final String postAccessId) {
         return ApiPaths.POST + "/" + postAccessId;
     }
+
+    /**
+     * {@link com.github.fj.board.endpoint.ApiPaths#POST_ID}
+     */
+    public static String POST_ID_REPLY(final String postAccessId) {
+
+        return ApiPaths.POST + "/" + postAccessId + "/reply";
+    }
 }

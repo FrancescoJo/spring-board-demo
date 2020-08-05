@@ -6,6 +6,7 @@ package testcase.v1
 
 import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
 import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
+import com.github.fj.board.persistence.model.post.PostMode
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.vo.board.BoardInfo
@@ -68,6 +69,16 @@ class PostTestBase extends BoardTestBase {
             final attachments = attachmentRepo.findAllByPost(post)
 
             return new PostDetailedInfo.Companion().from(post, attachments)
+        }
+    }
+
+    protected final void updatePostMode(final CreatedUser owner, final PostDetailedInfo post, final PostMode mode) {
+        // Fixing groovyc error: reference problem in closures
+        final postRepo = postRepo
+
+        txTemplate.execute {
+            final postEntity = postRepo.findByAccessId(post.accessId)
+            postEntity.setMode(mode)
         }
     }
 
