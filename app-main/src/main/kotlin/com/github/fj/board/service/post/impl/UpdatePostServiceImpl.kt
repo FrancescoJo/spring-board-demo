@@ -4,9 +4,9 @@
  */
 package com.github.fj.board.service.post.impl
 
+import com.github.fj.board.endpoint.v1.post.request.AttachmentModeRequest
 import com.github.fj.board.endpoint.v1.post.request.CreateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.DeleteAttachmentRequest
-import com.github.fj.board.endpoint.v1.post.request.AttachmentModeRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
 import com.github.fj.board.exception.client.post.AttachmentNotFoundException
@@ -40,14 +40,7 @@ internal class UpdatePostServiceImpl(
 ) : UpdatePostService {
     @Transactional
     override fun update(postId: UUID, req: UpdatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
-        val self = clientInfo.getCurrentUser()
-        val post = postId.getPost()
-        if (post.creator.id != self.id) {
-            throw CannotEditPostException()
-        }
-        post.board.also {
-            it.checkIsWritableFor(self, onForbiddenException = { CannotEditPostException() })
-        }
+        val (_, post) = checkEditable(postId, clientInfo, onForbiddenException = { CannotEditPostException() })
 
         attachmentRepo.saveAll(updateAttachmentsOf(post, req))
 

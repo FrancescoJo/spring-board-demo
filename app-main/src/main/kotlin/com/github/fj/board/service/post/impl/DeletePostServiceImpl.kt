@@ -12,6 +12,7 @@ import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.post.DeletePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
+import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -29,23 +30,17 @@ internal class DeletePostServiceImpl(
 ) : DeletePostService {
     @Transactional
     override fun delete(postId: UUID, clientInfo: ClientAuthInfo): Boolean {
-        val self = clientInfo.getCurrentUser()
-        val post = postId.getPost()
-        if (post.creator.id != self.id) {
-            throw CannotDeletePostException()
-        }
-        post.board.also {
-            it.checkIsWritableFor(self, onForbiddenException = { CannotDeletePostException() })
-        }
+        val (_, post) = checkEditable(postId, clientInfo, onForbiddenException = { CannotDeletePostException() })
 
         post.apply {
             this.status = ContentStatus.DELETED
-        }
-
-        post.attachments.forEach {
-            it.apply {
-                this.status = ContentStatus.DELETED
+            attachments.forEach {
+                it.apply {
+                    this.status = ContentStatus.DELETED
+                }
             }
+
+            applyLastActivityWith(clientInfo, utcNow())
         }
 
         attachmentRepo.saveAll(post.attachments)

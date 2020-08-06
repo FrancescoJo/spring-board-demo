@@ -14,7 +14,6 @@ import java.util.List;
 
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;
 import static com.github.fj.lib.util.RandomUtilsKt.getRandomPositiveInt;
-import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

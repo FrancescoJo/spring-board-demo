@@ -8,6 +8,7 @@ import com.github.fj.board.endpoint.v1.reply.request.CreateReplyRequest
 import com.github.fj.board.exception.client.reply.CannotCreateReplyException
 import com.github.fj.board.persistence.entity.reply.Reply
 import com.github.fj.board.persistence.model.post.ContentStatus
+import com.github.fj.board.persistence.model.post.PostMode
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.persistence.repository.reply.ReplyRepository
@@ -29,14 +30,18 @@ internal class CreateReplyServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository,
     override val postRepo: PostRepository,
-    private val replyRepo: ReplyRepository
+    override val replyRepo: ReplyRepository
 ) : CreateReplyService {
     @Transactional
     override fun create(postId: UUID, req: CreateReplyRequest, clientInfo: ClientAuthInfo): ReplyInfo {
         val self = clientInfo.getCurrentUser()
         val post = postId.getPost()
-        post.board.checkIsWritableFor(self, onForbiddenException = { CannotCreateReplyException() })
-        post.checkIsReplyWritable()
+        with (post) {
+            board.checkIsWritableFor(self, onForbiddenException = { CannotCreateReplyException() })
+            if (mode == PostMode.REPLY_NOT_ALLOWED) {
+                throw CannotCreateReplyException()
+            }
+        }
 
         val reply = Reply().apply {
             this.accessId = UUID.randomUUID()

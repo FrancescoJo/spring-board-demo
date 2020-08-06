@@ -4,13 +4,12 @@
  */
 package com.github.fj.board.service.reply
 
-import com.github.fj.board.exception.GeneralHttpException
-import com.github.fj.board.exception.client.reply.CannotCreateReplyException
-import com.github.fj.board.exception.client.reply.CannotDeleteReplyException
-import com.github.fj.board.exception.client.reply.CannotEditReplyException
+import com.github.fj.board.exception.client.reply.ReplyNotFoundException
 import com.github.fj.board.persistence.entity.post.Post
-import com.github.fj.board.persistence.model.post.PostMode
+import com.github.fj.board.persistence.entity.reply.Reply
 import com.github.fj.board.persistence.repository.post.PostRepository
+import com.github.fj.board.persistence.repository.reply.ReplyRepository
+import java.util.*
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -18,27 +17,12 @@ import com.github.fj.board.persistence.repository.post.PostRepository
  */
 interface ReplyAccessMixin {
     val postRepo: PostRepository
-
-    fun Post.checkIsReplyWritable() = checkOrThrow(
-        mode == PostMode.FREE_REPLY || mode == PostMode.REPLY_ONCE,
-        CannotCreateReplyException()
-    )
-
-    fun Post.checkIsReplyEditable() = checkOrThrow(
-        mode == PostMode.FREE_REPLY,
-        CannotEditReplyException()
-    )
-
-    fun Post.checkIsReplyDeletable() = checkOrThrow(
-        mode == PostMode.FREE_REPLY || mode == PostMode.REPLY_NOT_ALLOWED,
-        CannotDeleteReplyException()
-    )
+    val replyRepo: ReplyRepository
 
     fun Post.getRepliesCount(): Long = postRepo.getRepliesCountById(this)
 
-    private fun checkOrThrow(predicate: Boolean, exception: GeneralHttpException) {
-        if (!predicate) {
-            throw exception
-        }
-    }
+    fun UUID.findReply(): Reply? = replyRepo.findByAccessId(this)
+
+    @Throws(ReplyNotFoundException::class)
+    fun UUID.getReply() = findReply() ?: throw ReplyNotFoundException()
 }

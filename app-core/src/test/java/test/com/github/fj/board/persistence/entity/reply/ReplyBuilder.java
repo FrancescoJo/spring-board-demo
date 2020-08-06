@@ -4,28 +4,24 @@
  */
 package test.com.github.fj.board.persistence.entity.reply;
 
-import com.github.fj.board.persistence.entity.post.Attachment;
 import com.github.fj.board.persistence.entity.post.Post;
 import com.github.fj.board.persistence.entity.reply.Reply;
 import com.github.fj.board.persistence.entity.user.User;
 import com.github.fj.board.persistence.model.auth.PlatformType;
 import com.github.fj.board.persistence.model.post.ContentStatus;
-import com.github.fj.lib.collection.CollectionUtilsKt;
 import com.github.fj.lib.net.InetAddressExtensions;
 import com.github.fj.lib.time.DateTimeUtilsKt;
 import com.github.fj.lib.util.UuidExtensions;
-import test.com.github.fj.board.persistence.entity.post.AttachmentBuilder;
 
 import javax.annotation.Nonnull;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import static com.github.fj.lib.time.DateTimeUtilsKt.utcNow;
-import static com.github.fj.lib.util.RandomUtilsKt.*;
+import static com.github.fj.lib.util.RandomUtilsKt.getRandomAlphaNumericString;
+import static com.github.fj.lib.util.RandomUtilsKt.getRandomPositiveLong;
 import static test.com.github.fj.lib.util.RandomTestArgUtils.randomEnumConst;
 
 /**

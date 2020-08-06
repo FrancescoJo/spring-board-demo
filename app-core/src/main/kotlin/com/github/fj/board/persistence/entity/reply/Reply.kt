@@ -9,7 +9,6 @@ import com.github.fj.board.persistence.converter.ByteArrayUuidConverter
 import com.github.fj.board.persistence.converter.auth.PlatformTypeConverter
 import com.github.fj.board.persistence.converter.post.ContentStatusConverter
 import com.github.fj.board.persistence.entity.AbstractIncrementalLockableEntity
-import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.user.User
 import com.github.fj.board.persistence.model.auth.PlatformType
@@ -29,7 +28,6 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import javax.persistence.Table
 
