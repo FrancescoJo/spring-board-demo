@@ -80,7 +80,7 @@ class CreateReplyServiceTest : AbstractReplyServiceTestTemplate() {
         }
     }
 
-    @ParameterizedTest(name = "Cannot update post({1}) for \"{0}\" board")
+    @ParameterizedTest(name = "Cannot create reply({1}) for \"{0}\" board")
     @MethodSource("testCannotCreateReply")
     fun `fail if board has some constraints`(
         constraint: String,
