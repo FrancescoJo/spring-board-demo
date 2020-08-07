@@ -8,7 +8,9 @@ import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
+import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.persistence.repository.board.BoardRepository
+import com.github.fj.board.vo.auth.ClientAuthInfo
 import org.springframework.data.domain.Sort
 import java.util.*
 
@@ -30,6 +32,13 @@ interface BoardAccessMixin {
      */
     @Throws(BoardNotFoundException::class)
     fun UUID.getBoard(): Board = findBoard() ?: throw BoardNotFoundException()
+
+    fun Board.checkAccessibleFor(auth: ClientAuthInfo?) {
+        if (auth == null && access != BoardAccess.PUBLIC) {
+            // We want that such user cannot recognise whether it is even exist or not
+            throw BoardNotFoundException()
+        }
+    }
 
     fun BoardsSortOrderBy.toSortDirection() = if (this == BoardsSortOrderBy.DESCENDING) {
         Sort.Direction.DESC

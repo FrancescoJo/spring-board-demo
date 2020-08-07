@@ -7,13 +7,14 @@ package com.github.fj.board.service.post
 import com.github.fj.board.exception.client.post.PostNotFoundException
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.repository.post.PostRepository
+import com.github.fj.board.service.board.BoardAccessMixin
 import java.util.*
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 31 - Jul - 2020
  */
-interface PostAccessMixin {
+interface PostAccessMixin : BoardAccessMixin {
     val postRepo: PostRepository
 
     /**

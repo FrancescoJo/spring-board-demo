@@ -34,11 +34,8 @@ internal class GetBoardServiceImpl(
 ) : GetBoardService {
     @Transactional
     override fun getOne(accessId: UUID, clientInfo: ClientAuthInfo?): BoardInfo {
-        val board = accessId.getBoard()
-
-        if (clientInfo == null && board.access != BoardAccess.PUBLIC) {
-            // We want that such user cannot recognise whether it is even exist or not
-            throw BoardNotFoundException()
+        val board = accessId.getBoard().also {
+            it.checkAccessibleFor(clientInfo)
         }
 
         return BoardInfo.from(board, board.getPostsCount())
