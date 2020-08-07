@@ -46,4 +46,12 @@ public class ApiPathsHelper {
 
         return ApiPaths.POST + "/" + postAccessId + "/reply";
     }
+
+    /**
+     * {@link com.github.fj.board.endpoint.ApiPaths#REPLY_ID}
+     */
+    public static String REPLY_ID(final String replyAccessId) {
+
+        return ApiPaths.REPLY + "/" + replyAccessId;
+    }
 }
