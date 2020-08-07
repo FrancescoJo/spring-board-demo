@@ -62,7 +62,7 @@ class UpdateReplySpec extends ReplyTestBase {
 
         when:
         final response = sendRequest(
-                "updateReply-error-noPostFound",
+                "updateReply-error-noReplyFound",
                 requestUrl(UUID.randomUUID()),
                 request,
                 requestFieldsDoc(),
