@@ -6,6 +6,7 @@ package com.github.fj.board.endpoint.v1.board
 
 import com.github.fj.board.component.auth.ControllerClientAuthInfoDetector
 import com.github.fj.board.endpoint.ApiPaths
+import com.github.fj.board.endpoint.v1.OptionalClientAuthInfoMixin
 import com.github.fj.board.endpoint.v1.board.GetBoardController.Companion.GET_LIST_PARAM_ORDER_BY
 import com.github.fj.board.endpoint.v1.board.GetBoardController.Companion.GET_LIST_PARAM_SORT_BY
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
@@ -73,11 +74,11 @@ interface GetBoardController {
  */
 @RestController
 internal class GetBoardControllerImpl(
-    private val svc: GetBoardService,
-    private val authDetector: ControllerClientAuthInfoDetector
-) : GetBoardController {
+    override val authDetector: ControllerClientAuthInfoDetector,
+    private val svc: GetBoardService
+) : GetBoardController, OptionalClientAuthInfoMixin {
     override fun getOne(boardId: String, httpReq: HttpServletRequest): BoardInfoResponse {
-        val clientInfo = from(httpReq)
+        val clientInfo = httpReq.maybeClientAuthInfo(LOG)
 
         val result = svc.getOne(UUID.fromString(boardId), clientInfo)
 
@@ -88,7 +89,7 @@ internal class GetBoardControllerImpl(
         params: MultiValueMap<String, String>,
         httpReq: HttpServletRequest
     ): BoardInfoListResponse {
-        val clientInfo = from(httpReq)
+        val clientInfo = httpReq.maybeClientAuthInfo(LOG)
 
         val sortBy = params.getFirst(GET_LIST_PARAM_SORT_BY)?.let {
             BoardsSortBy.fromString(it)
@@ -100,16 +101,6 @@ internal class GetBoardControllerImpl(
         val result = svc.getList(sortBy, orderBy, clientInfo)
 
         return BoardInfoListResponse.from(result)
-    }
-
-    private fun from(httpReq: HttpServletRequest): ClientAuthInfo? = authDetector.detectClientAuthInfo().also {
-        if (it == null) {
-            val queryStr = httpReq.queryString?.let { q -> "?$q" } ?: ""
-
-            LOG.debug("{} {}{}", httpReq.method, httpReq.requestURI, queryStr)
-        } else {
-            LOG.debug("{}", it.requestLine)
-        }
     }
 
     companion object {

@@ -30,6 +30,11 @@ class UrlAccessConfig {
         // Get Board: GetBoardController#getOne
         "${ApiPaths.BOARD}/**" to HttpMethod.GET,
         // Get Board: GetBoardController#getList
-        ApiPaths.BOARDS to HttpMethod.GET
+        ApiPaths.BOARDS to HttpMethod.GET,
+
+        // Get Replies: GetRepliesController#getLatest
+        "${ApiPaths.POST_ID}/**/replies/**" to HttpMethod.GET,
+        // Get Replies: GetRepliesController#getLatest
+        "${ApiPaths.POST_ID}/**/replies" to HttpMethod.GET
     )
 }
