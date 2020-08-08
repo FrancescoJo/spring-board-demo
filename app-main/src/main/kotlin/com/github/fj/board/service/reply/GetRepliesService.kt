@@ -14,5 +14,5 @@ import java.util.*
  * @since 06 - Aug - 2020
  */
 interface GetRepliesService : ReplyAccessMixin {
-    fun getListOf(postId: UUID, clientInfo: ClientAuthInfo?): Pagable<ReplyInfo>
+    fun getLatestListOf(postId: UUID, clientInfo: ClientAuthInfo?): Pagable<ReplyInfo>
 }

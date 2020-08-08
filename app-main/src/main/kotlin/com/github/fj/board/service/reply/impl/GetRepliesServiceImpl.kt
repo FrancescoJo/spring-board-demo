@@ -26,7 +26,15 @@ class GetRepliesServiceImpl(
     override val replyRepo: ReplyRepository
 ) : GetRepliesService {
     @Transactional
-    override fun getListOf(postId: UUID, clientInfo: ClientAuthInfo?): Pagable<ReplyInfo> {
-        TODO("Not yet implemented")
+    override fun getLatestListOf(postId: UUID, clientInfo: ClientAuthInfo?): Pagable<ReplyInfo> {
+        val post = postId.getPost().also {
+            it.board.checkAccessibleFor(clientInfo)
+        }
+
+        val totalCount = replyRepo.getCountOf(post)
+        val data = replyRepo.findLatestByPost(post).map { ReplyInfo.from(it) }
+        val offset = totalCount - data.size
+
+        return Pagable.create(offset, totalCount, data)
     }
 }

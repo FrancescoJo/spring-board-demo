@@ -28,17 +28,20 @@ internal class BoardRepositoryExtensionImpl : BoardRepositoryExtension {
     @PersistenceContext
     private lateinit var em: EntityManager
 
-    override fun findAllByAccess(access: BoardAccess, orderByProperty: String, sortDirection: Sort.Direction): List<Board> {
-        return em.createQuery(
-            """
-                SELECT b
-                FROM Board b
-                WHERE b.access = :access
-                  AND b.status <> com.github.fj.board.persistence.model.board.BoardStatus.CLOSED
-                ORDER BY $orderByProperty $sortDirection
-            """.trimIndent(), Board::class.java
-        )
-            .setParameter("access", access)
-            .resultList
-    }
+    override fun findAllByAccess(
+        access: BoardAccess,
+        orderByProperty: String,
+        sortDirection: Sort.Direction
+    ): List<Board> = em.createQuery(
+        """
+            SELECT b
+            FROM Board b
+            WHERE b.access = :access
+              AND b.status <> com.github.fj.board.persistence.model.board.BoardStatus.CLOSED
+            ORDER BY $orderByProperty $sortDirection
+        """.trimIndent(),
+        Board::class.java
+    )
+        .setParameter("access", access)
+        .resultList
 }

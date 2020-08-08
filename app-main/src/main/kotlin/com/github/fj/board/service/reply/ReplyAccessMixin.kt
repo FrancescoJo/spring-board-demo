@@ -18,7 +18,7 @@ import java.util.*
 interface ReplyAccessMixin : PostAccessMixin {
     val replyRepo: ReplyRepository
 
-    fun Post.getRepliesCount(): Long = postRepo.getRepliesCountById(this)
+    fun Post.getRepliesCount(): Long = replyRepo.getCountOf(this)
 
     fun UUID.findReply(): Reply? = replyRepo.findByAccessId(this)
 

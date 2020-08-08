@@ -9,11 +9,27 @@ package com.github.fj.board.vo
  * @since 06 - Aug - 2020
  */
 interface Pagable<T> {
-    val index: Long
-
-    val count: Long
+    val offset: Long
 
     val totalCount: Long
 
     val data: List<T>
+
+    companion object {
+        private data class Impl<T>(
+            override val offset: Long,
+            override val totalCount: Long,
+            override val data: List<T>
+        ) : Pagable<T>
+
+        fun <T> create(
+            offset: Long,
+            totalCount: Long,
+            data: List<T>
+        ): Pagable<T> = Impl(
+            offset = offset,
+            totalCount = totalCount,
+            data = data
+        )
+    }
 }
