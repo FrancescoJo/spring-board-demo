@@ -34,9 +34,4 @@ interface ReplyRepository : JpaRepository<Reply, Long>, ReplyRepositoryExtension
         """
     )
     fun getCountOf(post: Post): Long
-
-    companion object {
-        const val DEFAULT_REPLY_FETCH_SIZE = 20
-        const val MAXIMUM_REPLY_FETCH_SIZE = 50
-    }
 }

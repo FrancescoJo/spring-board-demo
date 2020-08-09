@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext
  * @since 08 - Aug - 2020
  */
 interface ReplyRepositoryExtension {
-    fun findLatestByPost(post: Post): List<Reply>
+    fun findLatestByPost(post: Post, fetchSize: Int): List<Reply>
 }
 
 @Repository
@@ -23,7 +23,7 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension {
     @PersistenceContext
     private lateinit var em: EntityManager
 
-    override fun findLatestByPost(post: Post): List<Reply> = em.createQuery(
+    override fun findLatestByPost(post: Post, fetchSize: Int): List<Reply> = em.createQuery(
         """
             SELECT r 
             FROM Reply r
@@ -33,6 +33,6 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension {
         """.trimIndent(),
         Reply::class.java
     ).setParameter("post", post)
-        .setMaxResults(ReplyRepository.DEFAULT_REPLY_FETCH_SIZE)
+        .setMaxResults(fetchSize)
         .resultList
 }

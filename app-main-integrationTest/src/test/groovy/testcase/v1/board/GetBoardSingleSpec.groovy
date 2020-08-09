@@ -133,7 +133,7 @@ class GetBoardSingleSpec extends BoardTestBase {
         response.access == access
 
         where:
-        access              | _
+        access                   | _
         BoardAccess.PUBLIC       | _
         BoardAccess.MEMBERS_ONLY | _
     }

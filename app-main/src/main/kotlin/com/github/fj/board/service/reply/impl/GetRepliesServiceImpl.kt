@@ -4,6 +4,7 @@
  */
 package com.github.fj.board.service.reply.impl
 
+import com.github.fj.board.endpoint.v1.reply.dto.RepliesFetchCriteria
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.persistence.repository.reply.ReplyRepository
@@ -26,13 +27,21 @@ class GetRepliesServiceImpl(
     override val replyRepo: ReplyRepository
 ) : GetRepliesService {
     @Transactional
-    override fun getLatestListOf(postId: UUID, clientInfo: ClientAuthInfo?): Pageable<ReplyInfo> {
+    override fun getListOf(
+        postId: UUID,
+        clientInfo: ClientAuthInfo?,
+        fetchCriteria: RepliesFetchCriteria
+    ): Pageable<ReplyInfo> {
         val post = postId.getPost().also {
             it.board.checkAccessibleFor(clientInfo)
         }
 
         val totalCount = replyRepo.getCountOf(post)
-        val data = replyRepo.findLatestByPost(post).map { ReplyInfo.from(it) }
+        val data = if (fetchCriteria.page < 0) {
+            replyRepo.findLatestByPost(post, fetchCriteria.fetchSize).map { ReplyInfo.from(it) }
+        } else {
+            TODO("Not implemented")
+        }
         val offset = totalCount - data.size
 
         return Pageable.create(offset, totalCount, data)

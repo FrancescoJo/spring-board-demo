@@ -7,8 +7,8 @@ package testcase.service.reply
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.PostNotFoundException
 import com.github.fj.board.persistence.model.board.BoardAccess
-import com.github.fj.board.persistence.repository.reply.ReplyRepository.Companion.DEFAULT_REPLY_FETCH_SIZE
 import com.github.fj.board.service.reply.GetRepliesService
+import com.github.fj.board.service.reply.GetRepliesService.Companion.DEFAULT_REPLY_FETCH_SIZE
 import com.github.fj.board.service.reply.impl.GetRepliesServiceImpl
 import com.github.fj.lib.collection.iterationsOf
 import org.hamcrest.MatcherAssert.assertThat
@@ -25,7 +25,7 @@ import java.util.*
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 06 - Aug - 2020
  */
-class GetRepliesServiceTest : AbstractReplyServiceTestTemplate() {
+class GetLatestRepliesServiceTest : AbstractReplyServiceTestTemplate() {
     private lateinit var sut: GetRepliesService
 
     @BeforeEach
@@ -71,9 +71,10 @@ class GetRepliesServiceTest : AbstractReplyServiceTestTemplate() {
         }
 
         // when:
+        val size = DEFAULT_REPLY_FETCH_SIZE
         `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
         `when`(replyRepo.getCountOf(post)).thenReturn(numReplies.toLong())
-        `when`(replyRepo.findLatestByPost(post)).thenReturn(replies.subList(numReplies - 1 - DEFAULT_REPLY_FETCH_SIZE, numReplies - 1))
+        `when`(replyRepo.findLatestByPost(post, size)).thenReturn(replies.subList(numReplies - 1 - size, numReplies - 1))
 
         // then:
         val actual = sut.getLatestListOf(post.accessId, null)
