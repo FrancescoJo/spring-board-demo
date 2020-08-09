@@ -9,6 +9,7 @@ import com.github.fj.board.endpoint.v1.board.request.CreateBoardRequest
 import com.github.fj.board.endpoint.v1.board.request.UpdateBoardRequest
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoResponse
+import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
@@ -82,6 +83,19 @@ class BoardTestBase extends UserTestBase {
             final board = repository.findByAccessId(accessId)
 
             board.status = status
+
+            repository.save(board)
+        }
+    }
+
+    protected final void updateBoardAccess(final UUID accessId, final BoardAccess access) {
+        // Fixing groovyc error: reference problem in closures
+        final repository = boardRepo
+
+        txTemplate.execute {
+            final board = repository.findByAccessId(accessId)
+
+            board.access = access
 
             repository.save(board)
         }

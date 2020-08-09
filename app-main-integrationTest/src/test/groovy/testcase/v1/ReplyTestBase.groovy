@@ -96,41 +96,43 @@ class ReplyTestBase extends PostTestBase {
     }
 
     protected static ResponseFieldsSnippet replyInfoResponseFieldsDoc() {
-        final List<FieldDescriptor> fields = [
-                fieldWithPath("body.postId")
+        return responseFields(basicFieldsDoc() + replyInfoResponseFields("body"))
+    }
+
+    protected static List<FieldDescriptor> replyInfoResponseFields(final String prefix) {
+        return [
+                fieldWithPath("${prefix}.postId")
                         .type(JsonFieldType.STRING)
                         .description(ReplyInfoResponse.DESC_POST_ID),
-                fieldWithPath("body.replyId")
+                fieldWithPath("${prefix}.replyId")
                         .type(JsonFieldType.STRING)
                         .description(ReplyInfoResponse.DESC_REPLY_ID),
-                fieldWithPath("body.writerNickname")
+                fieldWithPath("${prefix}.writerNickname")
                         .optional()
                         .type(JsonFieldType.STRING)
                         .description(ReplyInfoResponse.DESC_WRITER_NICKNAME),
-                fieldWithPath("body.writerLoginName")
+                fieldWithPath("${prefix}.writerLoginName")
                         .optional()
                         .type(JsonFieldType.STRING)
                         .description(ReplyInfoResponse.DESC_WRITER_LOGIN_NAME),
-                fieldWithPath("body.lastModifiedDate")
+                fieldWithPath("${prefix}.lastModifiedDate")
                         .type(JsonFieldType.STRING)
                         .description(ReplyInfoResponse.DESC_LAST_MODIFIED_DATE),
-                fieldWithPath("body.lastModifiedIp")
+                fieldWithPath("${prefix}.lastModifiedIp")
                         .type(JsonFieldType.STRING)
                         .description(ReplyInfoResponse.DESC_LAST_MODIFIED_IP),
-                fieldWithPath("body.lastModifiedPlatformType")
+                fieldWithPath("${prefix}.lastModifiedPlatformType")
                         .type(JsonFieldType.STRING)
                         .description(ReplyInfoResponse.DESC_LAST_MODIFIED_PLATFORM_TYPE),
-                fieldWithPath("body.edited")
+                fieldWithPath("${prefix}.edited")
                         .type(JsonFieldType.BOOLEAN)
                         .description(ReplyInfoResponse.DESC_EDITED),
-                fieldWithPath("body.number")
+                fieldWithPath("${prefix}.number")
                         .type(JsonFieldType.NUMBER)
                         .description(ReplyInfoResponse.DESC_NUMBER),
-                fieldWithPath("body.contents")
+                fieldWithPath("${prefix}.contents")
                         .type(JsonFieldType.STRING)
                         .description(ReplyInfoResponse.DESC_CONTENTS)
         ]
-
-        return responseFields(basicFieldsDoc() + fields)
     }
 }

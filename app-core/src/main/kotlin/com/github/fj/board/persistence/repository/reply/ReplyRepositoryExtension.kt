@@ -27,7 +27,7 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension {
         """
             SELECT r 
             FROM Reply r
-            WHERE r.post = post
+            WHERE r.post = :post
               AND r.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
             ORDER BY r.number DESC
         """.trimIndent(),

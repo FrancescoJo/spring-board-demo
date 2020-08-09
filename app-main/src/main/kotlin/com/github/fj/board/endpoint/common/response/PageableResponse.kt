@@ -6,12 +6,14 @@ package com.github.fj.board.endpoint.common.response
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
-import com.github.fj.board.vo.Pagable
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.github.fj.board.vo.Pageable
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 08 - Aug - 2020
  */
+@JsonSerialize
 data class PageableResponse<T>(
     @JsonProperty
     @JsonPropertyDescription(DESC_OFFSET)
@@ -37,7 +39,7 @@ data class PageableResponse<T>(
             data = data
         )
 
-        fun <T> from(src: Pagable<T>) = PageableResponse(
+        fun <T> from(src: Pageable<T>) = PageableResponse(
             offset = src.offset,
             totalCount = src.totalCount,
             data = src.data

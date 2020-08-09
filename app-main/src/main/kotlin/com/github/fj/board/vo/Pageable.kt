@@ -8,7 +8,7 @@ package com.github.fj.board.vo
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 06 - Aug - 2020
  */
-interface Pagable<T> {
+interface Pageable<T> {
     val offset: Long
 
     val totalCount: Long
@@ -20,13 +20,13 @@ interface Pagable<T> {
             override val offset: Long,
             override val totalCount: Long,
             override val data: List<T>
-        ) : Pagable<T>
+        ) : Pageable<T>
 
         fun <T> create(
             offset: Long,
             totalCount: Long,
             data: List<T>
-        ): Pagable<T> = Impl(
+        ): Pageable<T> = Impl(
             offset = offset,
             totalCount = totalCount,
             data = data

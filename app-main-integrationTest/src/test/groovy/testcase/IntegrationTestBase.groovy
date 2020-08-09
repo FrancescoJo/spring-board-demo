@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.fj.board.Application
 import com.github.fj.board.endpoint.AbstractResponseDto
 import com.github.fj.board.endpoint.ErrorResponseDto
+import com.github.fj.board.endpoint.common.response.PageableResponse
 import com.github.fj.board.persistence.model.auth.PlatformType
 import com.github.fj.board.vo.auth.UserAgent
 import de.skuzzle.semantic.Version
@@ -36,6 +37,7 @@ import test.com.github.fj.board.appconfig.TestConfigurations
 
 import javax.annotation.Nonnull
 import javax.annotation.Nullable
+import java.util.stream.Collectors
 
 import static io.restassured.RestAssured.given
 import static org.hamcrest.CoreMatchers.is
@@ -167,6 +169,32 @@ class IntegrationTestBase extends Specification {
         return klass.cast(body)
     }
 
+    final <T> PageableResponse<T> expectPageableResponse(
+            final @Nonnull Response response,
+            final @Nonnull HttpStatus status,
+            final @Nonnull Class<T> dataClass
+    ) {
+        final responseDto = parseResponse(response.then().assertThat().statusCode(is(status.value())))
+        final body = responseDto.body
+
+        final offset = body["offset"] as Long
+        final totalCount = body["totalCount"] as Long
+        final data = body["data"] as List<Map>
+
+        // Fixing groovyc error: reference problem in closures
+        final objMapper = defaultObjMapper
+
+        final List<T> parsedData = data.stream().map {
+            objMapper.convertValue(it, dataClass) as T
+        }.collect(Collectors.toUnmodifiableList())
+
+        return new PageableResponse<T>(
+                /* offset */     offset,
+                /* totalCount */ totalCount,
+                /* data */       parsedData
+        )
+    }
+
     final <T> T expectResponse(
             final @Nonnull Response response,
             final @Nonnull HttpStatus status,
@@ -255,5 +283,21 @@ class IntegrationTestBase extends Specification {
                         .type(JsonFieldType.BOOLEAN)
                         .description(AbstractResponseDto.DESC_BODY)
         )
+    }
+
+    protected static ResponseFieldsSnippet pageableResponseDoc(final List<FieldDescriptor> dataFieldsDoc) {
+        final List<FieldDescriptor> fields = [
+                fieldWithPath("body.offset")
+                        .type(JsonFieldType.NUMBER)
+                        .description(PageableResponse.DESC_OFFSET),
+                fieldWithPath("body.totalCount")
+                        .type(JsonFieldType.NUMBER)
+                        .description(PageableResponse.DESC_TOTAL_COUNT),
+                fieldWithPath("body.data[]")
+                        .type(JsonFieldType.ARRAY)
+                        .description(PageableResponse.DESC_DATA)
+        ]
+
+        return responseFields(basicFieldsDoc() + fields + dataFieldsDoc)
     }
 }
