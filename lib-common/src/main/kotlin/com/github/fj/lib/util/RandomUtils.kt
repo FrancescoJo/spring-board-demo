@@ -47,7 +47,6 @@ fun getRandomPositiveInt(lowerBound: Int = 0, upperBound: Int = Integer.MAX_VALU
     return lowerBound + ThreadLocalRandom.current().nextInt(upperBound - lowerBound)
 }
 
-
 fun getRandomPositiveLong(lowerBound: Long = 0L, upperBound: Long = Long.MAX_VALUE): Long {
     if (lowerBound < 0L) {
         throw IllegalArgumentException("lowerBound must be >= 0")

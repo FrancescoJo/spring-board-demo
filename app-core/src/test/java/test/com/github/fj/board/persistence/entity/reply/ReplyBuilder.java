@@ -4,6 +4,7 @@
  */
 package test.com.github.fj.board.persistence.entity.reply;
 
+import com.github.fj.board.persistence.entity.board.Board;
 import com.github.fj.board.persistence.entity.post.Post;
 import com.github.fj.board.persistence.entity.reply.Reply;
 import com.github.fj.board.persistence.entity.user.User;
@@ -12,6 +13,9 @@ import com.github.fj.board.persistence.model.post.ContentStatus;
 import com.github.fj.lib.net.InetAddressExtensions;
 import com.github.fj.lib.time.DateTimeUtilsKt;
 import com.github.fj.lib.util.UuidExtensions;
+import test.com.github.fj.board.persistence.entity.board.BoardBuilder;
+import test.com.github.fj.board.persistence.entity.post.PostBuilder;
+import test.com.github.fj.board.persistence.entity.user.UserBuilder;
 
 import javax.annotation.Nonnull;
 import java.net.InetAddress;
@@ -114,6 +118,13 @@ public final class ReplyBuilder {
         object.setContents(contents);
 
         return object;
+    }
+
+    public static Reply createRandom() throws UnknownHostException {
+        final Board board = BoardBuilder.createRandom();
+        final Post post = PostBuilder.createRandomOf(board, UserBuilder.createRandom());
+
+        return createRandomOf(post, UserBuilder.createRandom());
     }
 
     public static Reply createRandomOf(

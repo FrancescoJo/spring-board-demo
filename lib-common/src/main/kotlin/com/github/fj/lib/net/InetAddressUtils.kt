@@ -11,6 +11,7 @@ import java.net.Inet6Address
 import java.net.InetAddress
 
 private val EMPTY_INET_ADDRESS = InetAddress.getByName("0.0.0.0")
+private val LOCALHOST = InetAddress.getByName("localhost")
 
 /**
  * IPv4 to IPv6 rule is from
@@ -65,6 +66,8 @@ object InetAddressExtensions {
      * Read [Kotlin Youtrack issues](https://youtrack.jetbrains.com/issue/KT-11968) for more information.
      */
     val EMPTY_INET_ADDRESS: InetAddress = com.github.fj.lib.net.EMPTY_INET_ADDRESS
+
+    val LOCALHOST: InetAddress = com.github.fj.lib.net.LOCALHOST
 }
 
 fun InetAddress?.isNullOrEmpty(): Boolean = this == null || this == EMPTY_INET_ADDRESS
