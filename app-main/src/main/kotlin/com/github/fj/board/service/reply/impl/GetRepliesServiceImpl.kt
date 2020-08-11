@@ -12,6 +12,8 @@ import com.github.fj.board.service.reply.GetRepliesService
 import com.github.fj.board.vo.PagedData
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.reply.ReplyInfo
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -38,12 +40,15 @@ class GetRepliesServiceImpl(
 
         val totalCount = replyRepo.getCountOf(post)
         val data = if (fetchCriteria.page < 0) {
-            replyRepo.findLatestByPost(post, fetchCriteria.fetchSize).map { ReplyInfo.from(it) }
+            replyRepo.findLatestByPost(post, fetchCriteria.fetchSize)
         } else {
-            TODO("Not implemented")
+            replyRepo.findByPost(post, fetchCriteria.toPageable())
         }
         val offset = totalCount - data.size
 
-        return PagedData.create(offset, totalCount, data)
+        return PagedData.create(offset, totalCount, data.map { ReplyInfo.from(it) })
     }
+
+    private fun RepliesFetchCriteria.toPageable(): Pageable =
+        PageRequest.of(page, fetchSize, sortDirection, sortBy.toPropertyName())
 }

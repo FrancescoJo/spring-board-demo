@@ -13,7 +13,7 @@ import com.github.fj.board.endpoint.v1.reply.GetRepliesController.Companion.GET_
 import com.github.fj.board.endpoint.v1.reply.GetRepliesController.Companion.GET_LIST_PARAM_PAGE
 import com.github.fj.board.endpoint.v1.reply.GetRepliesController.Companion.GET_LIST_PARAM_SORT_BY
 import com.github.fj.board.endpoint.v1.reply.dto.RepliesFetchCriteria
-import com.github.fj.board.endpoint.v1.reply.dto.RepliesOrderBy
+import com.github.fj.board.endpoint.common.dto.SortDirectionRequest
 import com.github.fj.board.endpoint.v1.reply.dto.RepliesSortBy
 import com.github.fj.board.endpoint.v1.reply.response.ReplyInfoResponse
 import com.github.fj.board.service.reply.GetRepliesService
@@ -98,9 +98,9 @@ internal class GetRepliesControllerImpl(
         val sortBy = getFirst(GET_LIST_PARAM_SORT_BY)?.let {
             RepliesSortBy.fromString(it)
         } ?: RepliesSortBy.NUMBER
-        val orderBy = getFirst(GET_LIST_PARAM_ORDER_BY)?.let {
-            RepliesOrderBy.fromString(it)
-        } ?: RepliesOrderBy.ASCENDING
+        val sortDirection = (getFirst(GET_LIST_PARAM_ORDER_BY)?.let {
+            SortDirectionRequest.fromString(it)
+        } ?: SortDirectionRequest.ASCENDING).direction
         val page = getFirst(GET_LIST_PARAM_PAGE)?.toIntOrNull() ?: GetRepliesService.PAGE_LATEST
         val count = getFirst(GET_LIST_PARAM_COUNT)?.toIntOrNull()?.takeIf {
             it >= GetRepliesService.DEFAULT_REPLY_FETCH_SIZE
@@ -109,7 +109,7 @@ internal class GetRepliesControllerImpl(
 
         return RepliesFetchCriteria(
             sortBy = sortBy,
-            orderBy = orderBy,
+            sortDirection = sortDirection,
             page = page,
             fetchSize = fetchSize
         )

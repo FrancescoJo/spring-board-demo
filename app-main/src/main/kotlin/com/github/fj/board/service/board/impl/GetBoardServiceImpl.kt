@@ -5,8 +5,6 @@
 package com.github.fj.board.service.board.impl
 
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
-import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
-import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.persistence.model.board.BoardStatus
@@ -44,13 +42,13 @@ internal class GetBoardServiceImpl(
     @Transactional
     override fun getList(
         sortBy: BoardsSortBy,
-        orderBy: BoardsSortOrderBy,
+        sortDirection: Sort.Direction,
         clientInfo: ClientAuthInfo?
     ): List<BoardInfo> {
         val boards = if (clientInfo == null) {
-            boardRepo.findAllByAccess(BoardAccess.PUBLIC, sortBy.toPropertyName(), orderBy.toSortDirection())
+            boardRepo.findAllByAccess(BoardAccess.PUBLIC, sortBy.toPropertyName(), sortDirection)
         } else {
-            boardRepo.findAll(NormalBoardSearchSpec(), Sort.by(orderBy.toSortDirection(), sortBy.toPropertyName()))
+            boardRepo.findAll(NormalBoardSearchSpec(), Sort.by(sortDirection, sortBy.toPropertyName()))
         }
 
         return boards.map { BoardInfo.from(it, it.getPostsCount()) }

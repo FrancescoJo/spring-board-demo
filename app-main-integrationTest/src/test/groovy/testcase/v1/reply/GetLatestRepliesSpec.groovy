@@ -82,8 +82,10 @@ class GetLatestRepliesSpec extends ReplyTestBase {
 
         expect:
         response.totalCount == 21
-        response.offset == 1
+        response.offset == 1        // number [2], actual offset is 1, since 'offset' is 0-based
         response.data.size() == expected.size()
+        response.data.first().number == 21L
+        response.data.last().number == 2L
     }
 
     private String currentRequestUrl() {

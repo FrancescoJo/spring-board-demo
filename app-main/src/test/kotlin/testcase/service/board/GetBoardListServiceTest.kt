@@ -5,7 +5,6 @@
 package testcase.service.board
 
 import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
-import com.github.fj.board.endpoint.v1.board.dto.BoardsSortOrderBy
 import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.service.board.GetBoardService
 import com.github.fj.board.service.board.impl.GetBoardServiceImpl
@@ -40,10 +39,10 @@ class GetBoardListServiceTest : AbstractBoardServiceTestTemplate() {
         val boards = 5.iterationsOf { randomBoardWithAccess(BoardAccess.PUBLIC) } +
                 5.iterationsOf { randomBoardWithAccess(BoardAccess.MEMBERS_ONLY) }
         val sort = randomEnumConst(BoardsSortBy::class.java)
-        val sortOrder = randomEnumConst(BoardsSortOrderBy::class.java)
+        val sortOrder = randomEnumConst(Sort.Direction::class.java)
 
         // when:
-        `when`(boardRepo.findAllByAccess(BoardAccess.PUBLIC, sort.toPropertyName(), sortOrder.toSortDirection()))
+        `when`(boardRepo.findAllByAccess(BoardAccess.PUBLIC, sort.toPropertyName(), sortOrder))
             .thenReturn(boards)
 
         // then:
@@ -59,10 +58,10 @@ class GetBoardListServiceTest : AbstractBoardServiceTestTemplate() {
         val boards = 5.iterationsOf { randomBoardWithAccess(BoardAccess.PUBLIC) } +
                 5.iterationsOf { randomBoardWithAccess(BoardAccess.MEMBERS_ONLY) }
         val sort = randomEnumConst(BoardsSortBy::class.java)
-        val sortOrder = randomEnumConst(BoardsSortOrderBy::class.java)
+        val sortOrder = randomEnumConst(Sort.Direction::class.java)
 
         // when:
-        `when`(boardRepo.findAll(any(), eq(Sort.by(sortOrder.toSortDirection(), sort.toPropertyName()))))
+        `when`(boardRepo.findAll(any(), eq(Sort.by(sortOrder, sort.toPropertyName()))))
             .thenReturn(boards)
 
         // then:
