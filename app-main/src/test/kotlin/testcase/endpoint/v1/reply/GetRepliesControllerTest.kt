@@ -12,7 +12,6 @@ import com.github.fj.board.service.reply.GetRepliesService
 import com.github.fj.board.service.reply.GetRepliesService.Companion.DEFAULT_REPLY_FETCH_SIZE
 import com.github.fj.board.service.reply.GetRepliesService.Companion.MAXIMUM_REPLY_FETCH_SIZE
 import com.github.fj.board.vo.reply.ReplyInfo
-import com.github.fj.lib.util.getRandomAlphaNumericString
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -32,7 +31,7 @@ import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import org.springframework.util.LinkedMultiValueMap
 import test.com.github.fj.board.persistence.entity.reply.ReplyBuilder
-import test.com.github.fj.board.vo.MockPageable
+import test.com.github.fj.board.vo.MockPagedData
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
@@ -62,7 +61,7 @@ class GetRepliesControllerTest {
         val mockHttpServletReq = mock(HttpServletRequest::class.java)
         val expected = RepliesFetchCriteria.DEFAULT_LATEST
         val postId = UUID.randomUUID()
-        val svcResult = MockPageable<ReplyInfo>(
+        val svcResult = MockPagedData<ReplyInfo>(
             0L,
             1000L,
             listOf(ReplyInfo.from(ReplyBuilder.createRandom()))
@@ -86,7 +85,7 @@ class GetRepliesControllerTest {
         val postId = UUID.randomUUID()
         val expected = RepliesFetchCriteria.DEFAULT_LATEST
         val clientInfo = null
-        val svcResult = MockPageable<ReplyInfo>(
+        val svcResult = MockPagedData<ReplyInfo>(
             0L,
             1000L,
             listOf(ReplyInfo.from(ReplyBuilder.createRandom()))
@@ -127,7 +126,7 @@ class GetRepliesControllerTest {
     fun `count is defaulted as DEFAULT_REPLY_FETCH_SIZE to MAXIMUM_REPLY_FETCH_SIZE`(count: String) {
         // given:
         val mockHttpServletReq = mock(HttpServletRequest::class.java)
-        val svcResult = MockPageable<ReplyInfo>(
+        val svcResult = MockPagedData<ReplyInfo>(
             0L,
             1000L,
             listOf(ReplyInfo.from(ReplyBuilder.createRandom()))

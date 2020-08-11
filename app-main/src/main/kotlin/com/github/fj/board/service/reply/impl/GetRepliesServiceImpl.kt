@@ -9,7 +9,7 @@ import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.persistence.repository.reply.ReplyRepository
 import com.github.fj.board.service.reply.GetRepliesService
-import com.github.fj.board.vo.Pageable
+import com.github.fj.board.vo.PagedData
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.reply.ReplyInfo
 import org.springframework.stereotype.Service
@@ -31,7 +31,7 @@ class GetRepliesServiceImpl(
         postId: UUID,
         clientInfo: ClientAuthInfo?,
         fetchCriteria: RepliesFetchCriteria
-    ): Pageable<ReplyInfo> {
+    ): PagedData<ReplyInfo> {
         val post = postId.getPost().also {
             it.board.checkAccessibleFor(clientInfo)
         }
@@ -44,6 +44,6 @@ class GetRepliesServiceImpl(
         }
         val offset = totalCount - data.size
 
-        return Pageable.create(offset, totalCount, data)
+        return PagedData.create(offset, totalCount, data)
     }
 }

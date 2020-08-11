@@ -5,9 +5,7 @@
 package com.github.fj.board.service.reply
 
 import com.github.fj.board.endpoint.v1.reply.dto.RepliesFetchCriteria
-import com.github.fj.board.endpoint.v1.reply.dto.RepliesOrderBy
-import com.github.fj.board.endpoint.v1.reply.dto.RepliesSortBy
-import com.github.fj.board.vo.Pageable
+import com.github.fj.board.vo.PagedData
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.reply.ReplyInfo
 import java.util.*
@@ -17,14 +15,14 @@ import java.util.*
  * @since 06 - Aug - 2020
  */
 interface GetRepliesService : ReplyAccessMixin {
-    fun getLatestListOf(postId: UUID, clientInfo: ClientAuthInfo?): Pageable<ReplyInfo> =
+    fun getLatestListOf(postId: UUID, clientInfo: ClientAuthInfo?): PagedData<ReplyInfo> =
         getListOf(postId, clientInfo, RepliesFetchCriteria.DEFAULT_LATEST)
 
     fun getListOf(
         postId: UUID,
         clientInfo: ClientAuthInfo?,
         fetchCriteria: RepliesFetchCriteria
-    ): Pageable<ReplyInfo>
+    ): PagedData<ReplyInfo>
 
     companion object {
         const val PAGE_LATEST = Integer.MIN_VALUE
