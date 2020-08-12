@@ -44,6 +44,12 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension {
             ""
         }
 
+        val offset = try {
+            Math.multiplyExact(options.pageNumber, options.pageSize)
+        } catch (e: ArithmeticException) {
+            Integer.MAX_VALUE
+        }
+
         return em.createQuery(
             """
             SELECT r 
@@ -54,7 +60,7 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension {
         """.trimIndent(),
             Reply::class.java
         ).setParameter("post", post)
-            .setFirstResult(options.pageNumber * options.pageSize)
+            .setFirstResult(offset)
             .setMaxResults(options.pageSize)
             .resultList
     }

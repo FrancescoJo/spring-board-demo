@@ -285,6 +285,10 @@ class IntegrationTestBase extends Specification {
         )
     }
 
+    protected static ResponseFieldsSnippet pageableResponseDoc() {
+        return pageableResponseDoc(Collections.emptyList())
+    }
+
     protected static ResponseFieldsSnippet pageableResponseDoc(final List<FieldDescriptor> dataFieldsDoc) {
         final List<FieldDescriptor> fields = [
                 fieldWithPath("body.offset")

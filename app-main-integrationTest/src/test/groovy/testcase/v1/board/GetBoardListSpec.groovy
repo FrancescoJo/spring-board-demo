@@ -113,7 +113,7 @@ class GetBoardListSpec extends BoardTestBase {
                 self.accessToken,
                 boardInfoListResponseFieldsDoc()
         ).get("${ApiPaths.BOARDS}?${GetBoardController.GET_LIST_PARAM_SORT_BY}=${BoardsSortBy.KEY.value}&" +
-                "${GetBoardController.GET_LIST_PARAM_ORDER_BY}=${BoardsSortOrderBy.DESCENDING.value}")
+                "${GetBoardController.GET_LIST_PARAM_ORDER_BY}=new")
 
         then:
         final response2 = expectResponse(rawResponse2, HttpStatus.OK, BoardInfoListResponse.class)
