@@ -7,6 +7,7 @@ package com.github.fj.board.endpoint.v1.post.response
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.github.fj.board.vo.post.AttachmentInfo
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -40,5 +41,13 @@ data class AttachmentInfoResponse(
         const val DESC_URI = "URI of this attachment."
         const val DESC_MIME_TYPE = "MIME type of this attachment."
         const val DESC_NAME = "Name of this attachment to distinguish."
+
+        fun from(src: AttachmentInfo) = AttachmentInfoResponse(
+            postId = src.parentPostId.toString(),
+            replyId = src.accessId.toString(),
+            uri = src.uri,
+            mimeType = src.mimeType,
+            name = src.name
+        )
     }
 }

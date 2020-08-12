@@ -7,7 +7,10 @@ package com.github.fj.board.endpoint.v1.post.response
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.github.fj.board.endpoint.common.response.PageableResponse
+import com.github.fj.board.endpoint.v1.reply.response.ReplyInfoResponse
 import com.github.fj.board.persistence.model.auth.PlatformType
+import com.github.fj.board.vo.post.PostDetailedInfo
 import java.time.LocalDateTime
 
 /**
@@ -73,8 +76,8 @@ data class PostInfoDetailedResponse(
     val attachments: List<AttachmentInfoResponse>,
 
     @JsonProperty
-    @JsonPropertyDescription(DESC_REPLY_COUNT)
-    val replyCount: Long
+    @JsonPropertyDescription(DESC_REPLIES)
+    val replies: PageableResponse<ReplyInfoResponse>
 ) {
     companion object {
         const val DESC_BOARD_ID = "An UUID of board which contains this post."
@@ -93,6 +96,24 @@ data class PostInfoDetailedResponse(
         const val DESC_CONTENTS = "Content of this post."
         const val DESC_VIEW_COUNT = "View count of this post."
         const val DESC_ATTACHMENTS = "Attachments of this post."
-        const val DESC_REPLY_COUNT = "Total reply counts of this post."
+        const val DESC_REPLIES = "List of 'latest' replies of this post."
+
+        fun from(src: PostDetailedInfo, replies: PageableResponse<ReplyInfoResponse>) = PostInfoDetailedResponse(
+            boardId = src.boardId.toString(),
+            postId = src.accessId.toString(),
+            postNumber = src.number,
+            writerNickname = src.writerNickname,
+            writerLoginName = src.writerLoginName,
+            lastModifiedDate = src.lastModifiedDate,
+            lastModifiedIp = src.lastModifiedIp.hostAddress,
+            lastModifiedPlatformType = src.lastModifiedPlatformType,
+            isEdited = src.edited,
+            number = src.number,
+            title = src.title,
+            contents = src.contents,
+            viewCount = src.viewedCount,
+            attachments = src.attachments.map { AttachmentInfoResponse.from(it) },
+            replies = replies
+        )
     }
 }

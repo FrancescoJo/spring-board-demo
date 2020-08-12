@@ -24,15 +24,16 @@ object ApiPaths {
     const val USER_NICKNAME = "$USER/{nickname}"
 
     const val BOARD = "$LATEST_VERSION/board"
-    const val BOARD_ID = "$LATEST_VERSION/board/{boardId}"
     const val BOARDS = "$LATEST_VERSION/boards"
+    const val BOARD_ID = "$LATEST_VERSION/board/{boardId}"
+    const val BOARD_ID_POST = "$BOARD_ID/post"
 
     const val POST = "$LATEST_VERSION/post"
-    const val BOARD_ID_POST = "$BOARD_ID/post"
+    const val POSTS = "$LATEST_VERSION/posts"
     const val POST_ID = "$POST/{postId}"
-
-    const val REPLY = "$LATEST_VERSION/reply"
     const val POST_ID_REPLY = "$POST_ID/reply"
     const val POST_ID_REPLIES = "$POST_ID/replies"
+
+    const val REPLY = "$LATEST_VERSION/reply"
     const val REPLY_ID = "$REPLY/{replyId}"
 }
