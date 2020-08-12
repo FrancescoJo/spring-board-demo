@@ -306,6 +306,12 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
                         .status(BoardStatus.NORMAL)
                         .mode(BoardMode.READ_ONLY)
                         .build()
+                ),
+                Arguments.of(
+                    "Mode:WRITE_ONCE", CannotEditPostException::class, BoardBuilder(BoardBuilder.createRandom())
+                        .status(BoardStatus.NORMAL)
+                        .mode(BoardMode.WRITE_ONCE)
+                        .build()
                 )
             )
         }

@@ -167,6 +167,12 @@ class DeletePostServiceTest : AbstractPostServiceTestTemplate() {
                         .status(BoardStatus.NORMAL)
                         .mode(BoardMode.READ_ONLY)
                         .build()
+                ),
+                Arguments.of(
+                    "Mode:WRITE_ONCE", CannotDeletePostException::class, BoardBuilder(BoardBuilder.createRandom())
+                        .status(BoardStatus.NORMAL)
+                        .mode(BoardMode.WRITE_ONCE)
+                        .build()
                 )
             )
         }

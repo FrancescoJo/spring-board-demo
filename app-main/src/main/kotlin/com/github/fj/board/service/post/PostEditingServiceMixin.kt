@@ -7,6 +7,7 @@ package com.github.fj.board.service.post
 import com.github.fj.board.exception.GeneralHttpException
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.user.User
+import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.service.board.BoardAuthorisationMixin
 import com.github.fj.board.service.user.UserServiceMixin
 import com.github.fj.board.vo.auth.ClientAuthInfo
@@ -28,6 +29,10 @@ interface PostEditingServiceMixin : UserServiceMixin, BoardAuthorisationMixin, P
         with(post) {
             checkIsOwnedBy(self, onForbiddenException)
             board.checkIsWritableFor(self, onForbiddenException)
+
+            if (board.mode == BoardMode.WRITE_ONCE) {
+                throw onForbiddenException()
+            }
         }
 
         return self to post
