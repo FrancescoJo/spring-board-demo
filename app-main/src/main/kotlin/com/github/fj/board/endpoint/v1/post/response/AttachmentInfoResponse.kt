@@ -21,7 +21,7 @@ data class AttachmentInfoResponse(
 
     @JsonProperty
     @JsonPropertyDescription(DESC_ATTACHMENT_ID)
-    val replyId: String,
+    val accessId: String,
 
     @JsonProperty
     @JsonPropertyDescription(DESC_URI)
@@ -44,7 +44,7 @@ data class AttachmentInfoResponse(
 
         fun from(src: AttachmentInfo) = AttachmentInfoResponse(
             postId = src.parentPostId.toString(),
-            replyId = src.accessId.toString(),
+            accessId = src.accessId.toString(),
             uri = src.uri,
             mimeType = src.mimeType,
             name = src.name

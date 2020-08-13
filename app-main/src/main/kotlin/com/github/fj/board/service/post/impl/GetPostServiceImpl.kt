@@ -12,6 +12,7 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.post.PostDetailedInfo
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -23,7 +24,12 @@ internal class GetPostServiceImpl(
     override val boardRepo: BoardRepository,
     override val postRepo: PostRepository
 ) : GetPostService {
+    @Transactional
     override fun getOne(postId: UUID, clientInfo: ClientAuthInfo?): PostDetailedInfo {
-        TODO("Not yet implemented")
+        val post = postId.getPost().also {
+            it.board.checkAccessibleFor(clientInfo)
+        }
+
+        return PostDetailedInfo.from(post, post.attachments)
     }
 }

@@ -76,13 +76,6 @@ class GetRepliesSpec extends ReplyTestBase {
 
     private Response sendRequest(
             final String documentId,
-            final ResponseFieldsSnippet respDoc
-    ) {
-        return sendRequest(documentId, null, respDoc)
-    }
-
-    private Response sendRequest(
-            final String documentId,
             final @Nullable String query,
             final ResponseFieldsSnippet respDoc
     ) {
@@ -91,8 +84,7 @@ class GetRepliesSpec extends ReplyTestBase {
             basePath.append("?$query")
         }
 
-        // return authenticatedRequest(documentId, self.accessToken, respDoc)
-        return authenticatedRequest(self.accessToken)
+        return authenticatedRequest(documentId, self.accessToken, respDoc)
                 .get(basePath.toString())
     }
 }

@@ -189,9 +189,9 @@ class IntegrationTestBase extends Specification {
         }.collect(Collectors.toUnmodifiableList())
 
         return new PageableResponse<T>(
-                /* offset */     offset,
+                /* offset */ offset,
                 /* totalCount */ totalCount,
-                /* data */       parsedData
+                /* data */ parsedData
         )
     }
 
@@ -289,19 +289,21 @@ class IntegrationTestBase extends Specification {
         return pageableResponseDoc(Collections.emptyList())
     }
 
-    protected static ResponseFieldsSnippet pageableResponseDoc(final List<FieldDescriptor> dataFieldsDoc) {
-        final List<FieldDescriptor> fields = [
-                fieldWithPath("body.offset")
+    protected static ResponseFieldsSnippet pageableResponseDoc(final List<FieldDescriptor> dataFields) {
+        return responseFields(basicFieldsDoc() + pageableResponseFields("body", dataFields))
+    }
+
+    protected static List<FieldDescriptor> pageableResponseFields(final String prefix, final List<FieldDescriptor> dataFields) {
+        return [
+                fieldWithPath("${prefix}.offset")
                         .type(JsonFieldType.NUMBER)
                         .description(PageableResponse.DESC_OFFSET),
-                fieldWithPath("body.totalCount")
+                fieldWithPath("${prefix}.totalCount")
                         .type(JsonFieldType.NUMBER)
                         .description(PageableResponse.DESC_TOTAL_COUNT),
-                fieldWithPath("body.data[]")
+                fieldWithPath("${prefix}.data[]")
                         .type(JsonFieldType.ARRAY)
                         .description(PageableResponse.DESC_DATA)
-        ]
-
-        return responseFields(basicFieldsDoc() + fields + dataFieldsDoc)
+        ] + dataFields
     }
 }

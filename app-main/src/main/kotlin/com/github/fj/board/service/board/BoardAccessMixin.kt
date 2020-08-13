@@ -8,6 +8,7 @@ import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.model.board.BoardAccess
+import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import java.util.*
@@ -33,6 +34,11 @@ interface BoardAccessMixin {
 
     fun Board.checkAccessibleFor(auth: ClientAuthInfo?) {
         if (auth == null && access != BoardAccess.PUBLIC) {
+            // We want that such user cannot recognise whether it is even exist or not
+            throw BoardNotFoundException()
+        }
+
+        if (status == BoardStatus.CLOSED) {
             // We want that such user cannot recognise whether it is even exist or not
             throw BoardNotFoundException()
         }

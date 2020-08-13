@@ -27,9 +27,9 @@ object ApiPaths {
     const val BOARDS = "$LATEST_VERSION/boards"
     const val BOARD_ID = "$LATEST_VERSION/board/{boardId}"
     const val BOARD_ID_POST = "$BOARD_ID/post"
+    const val BOARD_ID_POSTS = "$BOARD_ID/posts"
 
     const val POST = "$LATEST_VERSION/post"
-    const val POSTS = "$LATEST_VERSION/posts"
     const val POST_ID = "$POST/{postId}"
     const val POST_ID_REPLY = "$POST_ID/reply"
     const val POST_ID_REPLIES = "$POST_ID/replies"

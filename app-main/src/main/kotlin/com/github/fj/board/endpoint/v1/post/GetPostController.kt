@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import javax.servlet.http.HttpServletRequest
+import javax.transaction.Transactional
 import javax.validation.constraints.Pattern
 
 /**
@@ -59,6 +60,7 @@ internal class GetPostControllerImpl(
     private val svc: GetPostService,
     private val replySvc: GetRepliesService
 ) : GetPostController, OptionalClientAuthInfoMixin {
+    @Transactional
     override fun getOne(postId: String, httpReq: HttpServletRequest): PostInfoDetailedResponse {
         val clientInfo = httpReq.maybeClientAuthInfo(LOG)
 

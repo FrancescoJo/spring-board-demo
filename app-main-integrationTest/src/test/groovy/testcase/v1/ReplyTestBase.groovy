@@ -16,8 +16,6 @@ import com.github.fj.board.vo.post.PostDetailedInfo
 import com.github.fj.board.vo.reply.ReplyInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.restdocs.payload.FieldDescriptor
-import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import org.springframework.transaction.support.TransactionTemplate
 import test.com.github.fj.board.endpoint.ApiPathsHelper
@@ -26,7 +24,6 @@ import testcase.common.CreatedUser
 
 import javax.annotation.Nonnull
 
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 
 /**
@@ -97,42 +94,5 @@ class ReplyTestBase extends PostTestBase {
 
     protected static ResponseFieldsSnippet replyInfoResponseFieldsDoc() {
         return responseFields(basicFieldsDoc() + replyInfoResponseFields("body"))
-    }
-
-    protected static List<FieldDescriptor> replyInfoResponseFields(final String prefix) {
-        return [
-                fieldWithPath("${prefix}.postId")
-                        .type(JsonFieldType.STRING)
-                        .description(ReplyInfoResponse.DESC_POST_ID),
-                fieldWithPath("${prefix}.replyId")
-                        .type(JsonFieldType.STRING)
-                        .description(ReplyInfoResponse.DESC_REPLY_ID),
-                fieldWithPath("${prefix}.writerNickname")
-                        .optional()
-                        .type(JsonFieldType.STRING)
-                        .description(ReplyInfoResponse.DESC_WRITER_NICKNAME),
-                fieldWithPath("${prefix}.writerLoginName")
-                        .optional()
-                        .type(JsonFieldType.STRING)
-                        .description(ReplyInfoResponse.DESC_WRITER_LOGIN_NAME),
-                fieldWithPath("${prefix}.lastModifiedDate")
-                        .type(JsonFieldType.STRING)
-                        .description(ReplyInfoResponse.DESC_LAST_MODIFIED_DATE),
-                fieldWithPath("${prefix}.lastModifiedIp")
-                        .type(JsonFieldType.STRING)
-                        .description(ReplyInfoResponse.DESC_LAST_MODIFIED_IP),
-                fieldWithPath("${prefix}.lastModifiedPlatformType")
-                        .type(JsonFieldType.STRING)
-                        .description(ReplyInfoResponse.DESC_LAST_MODIFIED_PLATFORM_TYPE),
-                fieldWithPath("${prefix}.edited")
-                        .type(JsonFieldType.BOOLEAN)
-                        .description(ReplyInfoResponse.DESC_EDITED),
-                fieldWithPath("${prefix}.number")
-                        .type(JsonFieldType.NUMBER)
-                        .description(ReplyInfoResponse.DESC_NUMBER),
-                fieldWithPath("${prefix}.contents")
-                        .type(JsonFieldType.STRING)
-                        .description(ReplyInfoResponse.DESC_CONTENTS)
-        ]
     }
 }

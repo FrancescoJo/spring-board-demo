@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.github.fj.board.endpoint.common.response.PageableResponse
 import com.github.fj.board.endpoint.v1.reply.response.ReplyInfoResponse
 import com.github.fj.board.persistence.model.auth.PlatformType
+import com.github.fj.board.persistence.model.post.PostMode
 import com.github.fj.board.vo.post.PostDetailedInfo
 import java.time.LocalDateTime
 
@@ -26,6 +27,10 @@ data class PostInfoDetailedResponse(
     @JsonProperty
     @JsonPropertyDescription(DESC_POST_ID)
     val postId: String,
+
+    @JsonProperty
+    @JsonPropertyDescription(DESC_POST_MODE)
+    val postMode: PostMode,
 
     @JsonProperty
     @JsonPropertyDescription(DESC_POST_NUMBER)
@@ -82,6 +87,7 @@ data class PostInfoDetailedResponse(
     companion object {
         const val DESC_BOARD_ID = "An UUID of board which contains this post."
         const val DESC_POST_ID = "An UUID of this post."
+        const val DESC_POST_MODE = "Mode of this post['frv': Free to reply, 'rr': Reply not allowed]."
         const val DESC_POST_NUMBER = "A sequence number of this post in board."
         const val DESC_WRITER_NICKNAME = "Writer's nickname of this post. Maybe null depends on board mode."
         const val DESC_WRITER_LOGIN_NAME = "Writer's login name of this post. Maybe null depends on board mode."
@@ -96,11 +102,12 @@ data class PostInfoDetailedResponse(
         const val DESC_CONTENTS = "Content of this post."
         const val DESC_VIEW_COUNT = "View count of this post."
         const val DESC_ATTACHMENTS = "Attachments of this post."
-        const val DESC_REPLIES = "List of 'latest' replies of this post."
+        const val DESC_REPLIES = "List of 'latest' replies of this post. Wrapped as `PageableResponse`."
 
         fun from(src: PostDetailedInfo, replies: PageableResponse<ReplyInfoResponse>) = PostInfoDetailedResponse(
             boardId = src.boardId.toString(),
             postId = src.accessId.toString(),
+            postMode = src.mode,
             postNumber = src.number,
             writerNickname = src.writerNickname,
             writerLoginName = src.writerLoginName,
