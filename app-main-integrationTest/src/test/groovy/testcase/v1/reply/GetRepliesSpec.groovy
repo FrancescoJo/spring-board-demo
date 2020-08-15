@@ -4,7 +4,7 @@
  */
 package testcase.v1.reply
 
-import com.github.fj.board.endpoint.v1.reply.GetRepliesController
+import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin
 import com.github.fj.board.endpoint.v1.reply.response.ReplyInfoResponse
 import com.github.fj.board.vo.reply.ReplyInfo
 import com.github.fj.lib.collection.CollectionUtilsKt
@@ -32,7 +32,7 @@ class GetRepliesSpec extends ReplyTestBase {
 
         when:
         final rawResponse = sendRequest("getReplies-pageTooLarge",
-                "${GetRepliesController.GET_LIST_PARAM_PAGE}=${Integer.MAX_VALUE}",
+                "${FetchCriteriaRequestMixin.GET_LIST_PARAM_PAGE}=${Integer.MAX_VALUE}",
                 pageableResponseDoc()
         )
 
@@ -51,7 +51,7 @@ class GetRepliesSpec extends ReplyTestBase {
 
         when:
         final rawResponse = sendRequest("getReplies-limitedFetchSize-#$docId",
-                "${GetRepliesController.GET_LIST_PARAM_COUNT}=$fetchSize",
+                "${FetchCriteriaRequestMixin.GET_LIST_PARAM_COUNT}=$fetchSize",
                 pageableResponseDoc(replyInfoResponseFields("body.data[]"))
         )
 

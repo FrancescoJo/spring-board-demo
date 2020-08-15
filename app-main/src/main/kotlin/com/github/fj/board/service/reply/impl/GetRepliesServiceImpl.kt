@@ -4,13 +4,14 @@
  */
 package com.github.fj.board.service.reply.impl
 
-import com.github.fj.board.vo.reply.RepliesFetchCriteria
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.persistence.repository.reply.ReplyRepository
 import com.github.fj.board.service.reply.GetRepliesService
+import com.github.fj.board.vo.ContentsFetchCriteria
 import com.github.fj.board.vo.PagedData
 import com.github.fj.board.vo.auth.ClientAuthInfo
+import com.github.fj.board.vo.reply.RepliesSortBy
 import com.github.fj.board.vo.reply.ReplyInfo
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -32,7 +33,7 @@ class GetRepliesServiceImpl(
     override fun getListOf(
         postId: UUID,
         clientInfo: ClientAuthInfo?,
-        fetchCriteria: RepliesFetchCriteria
+        fetchCriteria: ContentsFetchCriteria<RepliesSortBy>
     ): PagedData<ReplyInfo> {
         val post = postId.getPost().also {
             it.board.checkAccessibleFor(clientInfo)
@@ -49,6 +50,6 @@ class GetRepliesServiceImpl(
         return PagedData.create(offset, totalCount, data.map { ReplyInfo.from(it) })
     }
 
-    private fun RepliesFetchCriteria.toPageable(): Pageable =
+    private fun ContentsFetchCriteria<RepliesSortBy>.toPageable(): Pageable =
         PageRequest.of(page, fetchSize, sortDirection, sortBy.toPropertyName())
 }

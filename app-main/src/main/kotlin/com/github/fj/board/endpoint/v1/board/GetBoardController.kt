@@ -6,14 +6,14 @@ package com.github.fj.board.endpoint.v1.board
 
 import com.github.fj.board.component.auth.ControllerClientAuthInfoDetector
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.vo.SortDirection
+import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin.Companion.GET_LIST_PARAM_ORDER_BY
+import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin.Companion.GET_LIST_PARAM_SORT_BY
 import com.github.fj.board.endpoint.v1.OptionalClientAuthInfoMixin
-import com.github.fj.board.endpoint.v1.board.GetBoardController.Companion.GET_LIST_PARAM_SORT_BY
-import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoResponse
-import com.github.fj.board.endpoint.v1.reply.GetRepliesController
 import com.github.fj.board.service.board.GetBoardService
+import com.github.fj.board.vo.SortDirection
+import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.lib.text.REGEX_UUID
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
@@ -60,11 +60,6 @@ interface GetBoardController {
         @RequestParam params: MultiValueMap<String, String>,
         httpReq: HttpServletRequest
     ): BoardInfoListResponse
-
-    companion object {
-        const val GET_LIST_PARAM_SORT_BY = "sortBy"
-        const val GET_LIST_PARAM_ORDER_BY = "orderBy"
-    }
 }
 
 /**
@@ -93,7 +88,7 @@ internal class GetBoardControllerImpl(
         val sortBy = params.getFirst(GET_LIST_PARAM_SORT_BY)?.let {
             BoardsSortBy.fromString(it)
         } ?: BoardsSortBy.KEY
-        val sortDirection = (params.getFirst(GetRepliesController.GET_LIST_PARAM_ORDER_BY)?.let {
+        val sortDirection = (params.getFirst(GET_LIST_PARAM_ORDER_BY)?.let {
             SortDirection.fromString(it)
         } ?: SortDirection.ASCENDING).direction
 

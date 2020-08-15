@@ -5,12 +5,12 @@
 package testcase.v1.board
 
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.v1.board.GetBoardController
-import com.github.fj.board.vo.board.BoardsSortBy
+import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoListResponse
 import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.vo.board.BoardInfo
+import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.lib.collection.CollectionUtilsKt
 import io.restassured.response.Response
 import org.springframework.http.HttpStatus
@@ -112,8 +112,8 @@ class GetBoardListSpec extends BoardTestBase {
                 "getBoardList-sortedByCriteria",
                 self.accessToken,
                 boardInfoListResponseFieldsDoc()
-        ).get("${ApiPaths.BOARDS}?${GetBoardController.GET_LIST_PARAM_SORT_BY}=${BoardsSortBy.KEY.value}&" +
-                "${GetBoardController.GET_LIST_PARAM_ORDER_BY}=new")
+        ).get("${ApiPaths.BOARDS}?${FetchCriteriaRequestMixin.GET_LIST_PARAM_SORT_BY}=${BoardsSortBy.KEY.value}&" +
+                "${FetchCriteriaRequestMixin.GET_LIST_PARAM_ORDER_BY}=new")
 
         then:
         final response2 = expectResponse(rawResponse2, HttpStatus.OK, BoardInfoListResponse.class)
