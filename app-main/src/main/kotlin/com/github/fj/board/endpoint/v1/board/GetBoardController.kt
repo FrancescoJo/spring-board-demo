@@ -6,11 +6,10 @@ package com.github.fj.board.endpoint.v1.board
 
 import com.github.fj.board.component.auth.ControllerClientAuthInfoDetector
 import com.github.fj.board.endpoint.ApiPaths
-import com.github.fj.board.endpoint.common.dto.SortDirectionRequest
+import com.github.fj.board.vo.SortDirection
 import com.github.fj.board.endpoint.v1.OptionalClientAuthInfoMixin
-import com.github.fj.board.endpoint.v1.board.GetBoardController.Companion.GET_LIST_PARAM_ORDER_BY
 import com.github.fj.board.endpoint.v1.board.GetBoardController.Companion.GET_LIST_PARAM_SORT_BY
-import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
+import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoListResponse
 import com.github.fj.board.endpoint.v1.board.response.BoardInfoResponse
 import com.github.fj.board.endpoint.v1.reply.GetRepliesController
@@ -95,8 +94,8 @@ internal class GetBoardControllerImpl(
             BoardsSortBy.fromString(it)
         } ?: BoardsSortBy.KEY
         val sortDirection = (params.getFirst(GetRepliesController.GET_LIST_PARAM_ORDER_BY)?.let {
-            SortDirectionRequest.fromString(it)
-        } ?: SortDirectionRequest.ASCENDING).direction
+            SortDirection.fromString(it)
+        } ?: SortDirection.ASCENDING).direction
 
         val result = svc.getList(sortBy, sortDirection, clientInfo)
 

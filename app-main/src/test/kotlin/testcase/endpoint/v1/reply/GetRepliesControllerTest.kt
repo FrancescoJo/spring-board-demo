@@ -7,7 +7,7 @@ package testcase.endpoint.v1.reply
 import com.github.fj.board.component.auth.ControllerClientAuthInfoDetector
 import com.github.fj.board.endpoint.v1.reply.GetRepliesController
 import com.github.fj.board.endpoint.v1.reply.GetRepliesControllerImpl
-import com.github.fj.board.endpoint.v1.reply.dto.RepliesFetchCriteria
+import com.github.fj.board.vo.reply.RepliesFetchCriteria
 import com.github.fj.board.service.reply.GetRepliesService
 import com.github.fj.board.service.reply.GetRepliesService.Companion.DEFAULT_REPLY_FETCH_SIZE
 import com.github.fj.board.service.reply.GetRepliesService.Companion.MAXIMUM_REPLY_FETCH_SIZE

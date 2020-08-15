@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.reply
 
-import com.github.fj.board.endpoint.v1.reply.dto.RepliesSortBy
+import com.github.fj.board.vo.reply.RepliesSortBy
 import com.github.fj.board.exception.client.reply.ReplyNotFoundException
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.reply.Reply

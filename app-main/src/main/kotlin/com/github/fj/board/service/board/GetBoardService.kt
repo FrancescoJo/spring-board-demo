@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.board
 
-import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
+import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.board.BoardInfo
 import org.springframework.data.domain.Sort

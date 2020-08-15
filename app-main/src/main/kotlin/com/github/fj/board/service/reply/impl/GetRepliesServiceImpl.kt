@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.reply.impl
 
-import com.github.fj.board.endpoint.v1.reply.dto.RepliesFetchCriteria
+import com.github.fj.board.vo.reply.RepliesFetchCriteria
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.persistence.repository.reply.ReplyRepository

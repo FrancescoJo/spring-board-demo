@@ -4,7 +4,7 @@
  */
 package com.github.fj.board.service.reply
 
-import com.github.fj.board.endpoint.v1.reply.dto.RepliesFetchCriteria
+import com.github.fj.board.vo.reply.RepliesFetchCriteria
 import com.github.fj.board.vo.PagedData
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.reply.ReplyInfo

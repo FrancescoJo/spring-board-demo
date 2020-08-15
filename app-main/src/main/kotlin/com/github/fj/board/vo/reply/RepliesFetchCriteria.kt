@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.endpoint.v1.reply.dto
+package com.github.fj.board.vo.reply
 
 import com.github.fj.board.service.reply.GetRepliesService
 import org.springframework.data.domain.Sort

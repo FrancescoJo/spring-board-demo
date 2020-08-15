@@ -2,7 +2,7 @@
  * spring-message-board-demo
  * Refer to LICENCE.txt for licence details.
  */
-package com.github.fj.board.endpoint.v1.board.dto
+package com.github.fj.board.vo.board
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

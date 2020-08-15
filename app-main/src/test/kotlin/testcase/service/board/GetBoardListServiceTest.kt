@@ -4,7 +4,7 @@
  */
 package testcase.service.board
 
-import com.github.fj.board.endpoint.v1.board.dto.BoardsSortBy
+import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.service.board.GetBoardService
 import com.github.fj.board.service.board.impl.GetBoardServiceImpl
