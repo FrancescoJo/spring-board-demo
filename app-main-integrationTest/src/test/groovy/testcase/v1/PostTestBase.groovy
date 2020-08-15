@@ -71,7 +71,7 @@ class PostTestBase extends BoardTestBase {
             final post = postRepo.findByAccessId(UUID.fromString(response.postId))
             final attachments = attachmentRepo.findAllByPost(post)
 
-            return new PostDetailedInfo.Companion().from(post, attachments)
+            return new PostDetailedInfo.Companion().from(post, 0L, attachments)
         }
     }
 

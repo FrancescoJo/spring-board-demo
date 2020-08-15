@@ -19,13 +19,14 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.`when`
 import test.com.github.fj.board.persistence.entity.reply.ReplyBuilder
 import test.com.github.fj.board.persistence.entity.user.UserBuilder
+import testcase.service.post.AbstractPostServiceTestTemplate
 import java.util.*
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 06 - Aug - 2020
  */
-class GetLatestRepliesServiceTest : AbstractReplyServiceTestTemplate() {
+class GetLatestRepliesServiceTest : AbstractPostServiceTestTemplate() {
     private lateinit var sut: GetRepliesService
 
     @BeforeEach

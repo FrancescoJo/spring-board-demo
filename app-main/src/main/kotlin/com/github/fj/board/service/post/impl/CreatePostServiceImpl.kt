@@ -11,6 +11,7 @@ import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
+import com.github.fj.board.persistence.repository.reply.ReplyRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.post.CreatePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
@@ -28,6 +29,7 @@ import javax.transaction.Transactional
 internal class CreatePostServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository,
+    override val replyRepo: ReplyRepository,
     private val postRepo: PostRepository,
     private val attachmentRepo: AttachmentRepository
 ) : CreatePostService {
@@ -61,6 +63,6 @@ internal class CreatePostServiceImpl(
             attachmentRepo.saveAll(it)
         }
 
-        return PostBriefInfo.from(createdPost)
+        return PostBriefInfo.from(createdPost, 0L)
     }
 }

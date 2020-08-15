@@ -6,6 +6,7 @@ package com.github.fj.board.service.post.impl
 
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
+import com.github.fj.board.persistence.repository.reply.ReplyRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.post.GetPostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
@@ -22,16 +23,18 @@ import javax.transaction.Transactional
 internal class GetPostServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository,
-    override val postRepo: PostRepository
-) : GetPostService {
+    override val postRepo: PostRepository,
+    override val replyRepo: ReplyRepository
+    ) : GetPostService {
     @Transactional
     override fun getOne(postId: UUID, clientInfo: ClientAuthInfo?): PostDetailedInfo {
         val post = postId.getPost().also {
             it.board.checkAccessibleFor(clientInfo)
         }
         ++post.viewedCount
+        val replyCount = post.getRepliesCount()
 
-        return PostDetailedInfo.from(post, post.attachments).also {
+        return PostDetailedInfo.from(post, replyCount, post.attachments).also {
             postRepo.save(post)
         }
     }

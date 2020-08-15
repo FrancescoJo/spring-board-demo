@@ -67,7 +67,7 @@ class PostControllerTest {
         }
 
         // when:
-        `when`(svc.getOne(any(), anyOrNull())).thenReturn(PostDetailedInfo.from(post, attachments))
+        `when`(svc.getOne(any(), anyOrNull())).thenReturn(PostDetailedInfo.from(post, replyCount.toLong(), attachments))
         `when`(replySvc.getLatestListOf(any(), anyOrNull())).thenReturn(
             PagedData.create(offset = 0, totalCount = 100, data = replies.map { ReplyInfo.from(it) })
         )

@@ -9,6 +9,7 @@ import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
+import com.github.fj.board.persistence.repository.reply.ReplyRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.post.DeletePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
@@ -26,6 +27,7 @@ internal class DeletePostServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository,
     override val postRepo: PostRepository,
+    override val replyRepo: ReplyRepository,
     private val attachmentRepo: AttachmentRepository
 ) : DeletePostService {
     @Transactional

@@ -33,7 +33,7 @@ class GetPostSingleServiceTest : AbstractPostServiceTestTemplate() {
     override fun setup() {
         super.setup()
 
-        this.sut = GetPostServiceImpl(userRepo, boardRepo, postRepo)
+        this.sut = GetPostServiceImpl(userRepo, boardRepo, postRepo, replyRepo)
     }
 
     @Test

@@ -9,6 +9,7 @@ import com.github.fj.board.exception.GeneralHttpException
 import com.github.fj.board.persistence.entity.post.Attachment
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.user.User
+import com.github.fj.board.persistence.repository.reply.ReplyRepository
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import java.time.LocalDateTime
 import java.util.*
@@ -18,6 +19,8 @@ import java.util.*
  * @since 31 - Jul - 2020
  */
 interface PostServiceMixin {
+    val replyRepo: ReplyRepository
+
     fun Post.applyLastActivityWith(clientInfo: ClientAuthInfo, timestamp: LocalDateTime) {
         this.lastModifiedDate = timestamp
         this.lastModifiedIp = clientInfo.remoteAddr
@@ -31,6 +34,8 @@ interface PostServiceMixin {
             throw onNotOwnedException.invoke()
         }
     }
+
+    fun Post.getRepliesCount(): Long = replyRepo.getCountOf(this)
 
     fun CreateAttachmentRequest.toEntityOf(parentPost: Post) = Attachment().apply {
         val req = this@toEntityOf

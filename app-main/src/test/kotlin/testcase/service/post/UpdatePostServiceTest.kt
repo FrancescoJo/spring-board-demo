@@ -61,7 +61,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
     override fun setup() {
         super.setup()
 
-        this.sut = UpdatePostServiceImpl(userRepo, boardRepo, postRepo, attachmentRepo)
+        this.sut = UpdatePostServiceImpl(userRepo, boardRepo, postRepo, replyRepo, attachmentRepo)
     }
 
     @Test

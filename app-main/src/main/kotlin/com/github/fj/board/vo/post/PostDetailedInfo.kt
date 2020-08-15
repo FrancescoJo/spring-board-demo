@@ -18,17 +18,6 @@ import java.util.*
  * @since 27 - Jul - 2020
  */
 interface PostDetailedInfo : PostBriefInfo {
-    override val id: Long
-    override val accessId: UUID
-    override val status: ContentStatus
-    override val mode: PostMode
-    override val boardId: UUID
-    override val writerNickname: String
-    override val writerLoginName: String
-    override val lastModifiedDate: LocalDateTime
-    override val number: Long
-    override val title: String
-    override val viewedCount: Long
     val lastModifiedIp: InetAddress
     val lastModifiedPlatformType: PlatformType
     val edited: Boolean
@@ -48,6 +37,7 @@ interface PostDetailedInfo : PostBriefInfo {
             override val number: Long,
             override val title: String,
             override val viewedCount: Long,
+            override val replyCount: Long,
             override val lastModifiedIp: InetAddress,
             override val lastModifiedPlatformType: PlatformType,
             override val edited: Boolean,
@@ -55,7 +45,7 @@ interface PostDetailedInfo : PostBriefInfo {
             override val attachments: List<AttachmentInfo>
         ) : PostDetailedInfo
 
-        fun from(src: Post, attachments: List<Attachment>): PostDetailedInfo = Impl(
+        fun from(src: Post, replyCount: Long, attachments: List<Attachment>): PostDetailedInfo = Impl(
             id = src.id,
             accessId = src.accessId,
             status = src.status,
@@ -67,6 +57,7 @@ interface PostDetailedInfo : PostBriefInfo {
             number = src.number,
             title = src.title,
             viewedCount = src.viewedCount,
+            replyCount = replyCount,
             lastModifiedIp = src.lastModifiedIp,
             lastModifiedPlatformType = src.lastModifiedPlatformType,
             edited = src.edited,

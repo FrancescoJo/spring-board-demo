@@ -17,6 +17,7 @@ import com.github.fj.board.persistence.model.post.ContentStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
+import com.github.fj.board.persistence.repository.reply.ReplyRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.post.UpdatePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
@@ -36,6 +37,7 @@ internal class UpdatePostServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository,
     override val postRepo: PostRepository,
+    override val replyRepo: ReplyRepository,
     private val attachmentRepo: AttachmentRepository
 ) : UpdatePostService {
     @Transactional
@@ -53,7 +55,9 @@ internal class UpdatePostServiceImpl(
             applyLastActivityWith(clientInfo, utcNow())
         }
 
-        return PostBriefInfo.from(postRepo.save(updatedPost))
+        val replyCount = updatedPost.getRepliesCount()
+
+        return PostBriefInfo.from(postRepo.save(updatedPost), replyCount)
     }
 
     private fun updateAttachmentsOf(post: Post, req: UpdatePostRequest): List<Attachment> {

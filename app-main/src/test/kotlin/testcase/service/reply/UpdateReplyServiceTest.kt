@@ -30,6 +30,7 @@ import test.com.github.fj.board.persistence.entity.post.PostBuilder
 import test.com.github.fj.board.persistence.entity.reply.ReplyBuilder
 import test.com.github.fj.board.persistence.entity.user.UserBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
+import testcase.service.post.AbstractPostServiceTestTemplate
 import java.util.*
 import java.util.stream.Stream
 import kotlin.reflect.KClass
@@ -38,7 +39,7 @@ import kotlin.reflect.KClass
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 06 - Aug - 2020
  */
-class UpdateReplyServiceTest : AbstractReplyServiceTestTemplate() {
+class UpdateReplyServiceTest : AbstractPostServiceTestTemplate() {
     private lateinit var sut: UpdateReplyService
 
     @BeforeEach

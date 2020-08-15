@@ -50,7 +50,7 @@ class DeletePostServiceTest : AbstractPostServiceTestTemplate() {
     override fun setup() {
         super.setup()
 
-        this.sut = DeletePostServiceImpl(userRepo, boardRepo, postRepo, attachmentRepo)
+        this.sut = DeletePostServiceImpl(userRepo, boardRepo, postRepo, replyRepo, attachmentRepo)
     }
 
     @Test

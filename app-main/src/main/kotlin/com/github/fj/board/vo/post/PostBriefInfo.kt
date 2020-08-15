@@ -26,6 +26,7 @@ interface PostBriefInfo {
     val number: Long
     val title: String
     val viewedCount: Long
+    val replyCount: Long
 
     companion object {
         private data class Impl(
@@ -39,10 +40,11 @@ interface PostBriefInfo {
             override val lastModifiedDate: LocalDateTime,
             override val number: Long,
             override val title: String,
-            override val viewedCount: Long
+            override val viewedCount: Long,
+            override val replyCount: Long
         ) : PostBriefInfo
 
-        fun from(src: Post): PostBriefInfo = Impl(
+        fun from(src: Post, replyCount: Long): PostBriefInfo = Impl(
             id = src.id,
             accessId = src.accessId,
             status = src.status,
@@ -53,7 +55,8 @@ interface PostBriefInfo {
             lastModifiedDate = src.lastModifiedDate,
             number = src.number,
             title = src.title,
-            viewedCount = src.viewedCount
+            viewedCount = src.viewedCount,
+            replyCount = replyCount
         )
     }
 }
