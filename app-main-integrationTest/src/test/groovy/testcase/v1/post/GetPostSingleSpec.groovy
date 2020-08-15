@@ -116,10 +116,7 @@ class GetPostSingleSpec extends ReplyTestBase {
         response.contents == currentPost.contents
         response.attachments.size() == currentPost.attachments.size()
         response.replies.data.size() == replies.size()
-    }
-
-    def "viewCount is increased if different viewers access post"() {
-
+        response.viewCount == currentPost.viewedCount + 1
     }
 
     private String currentRequestUrl() {

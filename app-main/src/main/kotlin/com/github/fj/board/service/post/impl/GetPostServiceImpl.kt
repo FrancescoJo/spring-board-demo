@@ -29,7 +29,10 @@ internal class GetPostServiceImpl(
         val post = postId.getPost().also {
             it.board.checkAccessibleFor(clientInfo)
         }
+        ++post.viewedCount
 
-        return PostDetailedInfo.from(post, post.attachments)
+        return PostDetailedInfo.from(post, post.attachments).also {
+            postRepo.save(post)
+        }
     }
 }
