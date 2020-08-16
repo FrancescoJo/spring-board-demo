@@ -6,6 +6,7 @@ package com.github.fj.board.persistence.repository.reply
 
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.reply.Reply
+import com.github.fj.board.persistence.repository.PageableQuery
 import com.github.fj.board.persistence.repository.PageableQueryHelperMixin
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -21,7 +22,7 @@ import javax.persistence.PersistenceContext
 interface ReplyRepositoryExtension {
     fun findLatestByPost(post: Post, fetchSize: Int): List<Reply>
 
-    fun findByPost(post: Post, options: Pageable): List<Reply>
+    fun findByPost(post: Post, options: PageableQuery): List<Reply>
 
     // Map<postId: Long, count: Long>
     fun getCountsOf(posts: List<Post>): Map<Long, Long>
@@ -32,13 +33,12 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension, Pageable
     @PersistenceContext
     private lateinit var em: EntityManager
 
+    // FIXME: #47 Subject to delete
     override fun findLatestByPost(post: Post, fetchSize: Int): List<Reply> {
-        val options = PageRequest.of(0, fetchSize, Sort.Direction.DESC, "number")
-
-        return findByPost(post, options)
+        TODO("Not implemented")
     }
 
-    override fun findByPost(post: Post, options: Pageable): List<Reply> = em.createQuery(
+    override fun findByPost(post: Post, options: PageableQuery): List<Reply> = em.createQuery(
         """
             SELECT r 
             FROM Reply r
@@ -47,8 +47,8 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension, Pageable
             ${options.toOrderByClause("r")}
         """.trimIndent(), Reply::class.java
     ).setParameter("post", post)
-        .setFirstResult(options.toFirstResultOffset())
-        .setMaxResults(options.pageSize)
+        .setFirstResult(options.offset)
+        .setMaxResults(options.fetchSize)
         .resultList
 
     override fun getCountsOf(posts: List<Post>): Map<Long, Long> {

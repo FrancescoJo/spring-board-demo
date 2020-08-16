@@ -15,8 +15,6 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.post.PostBriefInfo
 import com.github.fj.board.vo.post.PostDetailedInfo
 import com.github.fj.board.vo.post.PostsSortBy
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -56,7 +54,7 @@ internal class GetPostServiceImpl(
         }
 
         val totalCount = postRepo.getCountOf(board)
-        val data = postRepo.findAllByBoard(board, fetchCriteria.toPageable(totalCount))
+        val data = postRepo.findAllByBoard(board, fetchCriteria.toPageableQuery(totalCount) { it.toPropertyName() })
         val repliesCount = replyRepo.getCountsOf(data)
         val size = fetchCriteria.fetchSize
         val page = if (fetchCriteria.page > 0) {
@@ -71,14 +69,5 @@ internal class GetPostServiceImpl(
             totalCount = totalCount,
             data = data.map { PostBriefInfo.from(it, repliesCount[it.id] ?: 0L) }
         )
-    }
-
-    private fun ContentsFetchCriteria<PostsSortBy>.toPageable(totalCount: Long): Pageable =
-        PageRequest.of(derivePageBy(totalCount), fetchSize, sortDirection, sortBy.toPropertyName())
-
-    private fun ContentsFetchCriteria<PostsSortBy>.derivePageBy(totalCount: Long) = if (page > 0) {
-        page
-    } else {
-        (Math.floorDiv(totalCount, fetchSize) + 1).toInt()
     }
 }

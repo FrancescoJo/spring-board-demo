@@ -35,27 +35,6 @@ class PageableQueryHelperMixinTest : PageableQueryHelperMixin {
         assertThat(actual, `is`(expected))
     }
 
-    @ParameterizedTest
-    @MethodSource("testToFirstResultOffset")
-    fun `offset is calculated by multiplication of pageNumber and pageSize, overflow is guarded`(
-        pageNumber: Int,
-        pageSize: Int,
-        expected: Int
-    ) {
-        // given:
-        val pageable = mock(Pageable::class.java)
-
-        // when:
-        `when`(pageable.pageNumber).thenReturn(pageNumber)
-        `when`(pageable.pageSize).thenReturn(pageSize)
-
-        // then:
-        val actual = pageable.toFirstResultOffset()
-
-        // expect:
-        assertThat(actual, `is`(expected))
-    }
-
     companion object {
         @JvmStatic
         @Suppress("unused")
@@ -75,15 +54,6 @@ class PageableQueryHelperMixinTest : PageableQueryHelperMixin {
                 ),
                 "ORDER BY en.p1 ASC, en.p2 DESC"
             )
-        )
-
-        @JvmStatic
-        @Suppress("unused")
-        fun testToFirstResultOffset(): Stream<Arguments> = Stream.of(
-            // page, size, expected
-            Arguments.of(1, 10, 10),
-            Arguments.of(0, 10, 0),
-            Arguments.of(Integer.MAX_VALUE, 10, Integer.MAX_VALUE)
         )
     }
 }
