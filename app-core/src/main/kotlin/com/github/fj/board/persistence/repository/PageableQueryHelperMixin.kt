@@ -11,6 +11,21 @@ import org.springframework.data.domain.Pageable
  * @since 16 - Aug - 2020
  */
 interface PageableQueryHelperMixin {
+    fun PageableQuery.toOrderByClause(entityAlias: String = ""): String {
+        val propertyPrefix = if (entityAlias.isEmpty()) {
+            ""
+        } else {
+            "$entityAlias."
+        }
+
+        return if (sortOrder.isEmpty()) {
+            ""
+        } else {
+            "ORDER BY " + sortOrder.joinToString { "$propertyPrefix${it.property} ${it.direction}" }
+        }
+    }
+
+    // FIXME: #27 - SUBJECT TO DELETE
     fun Pageable.toOrderByClause(entityAlias: String = ""): String = sort.iterator().let { sorts ->
         val propertyPrefix = if (entityAlias.isEmpty()) {
             ""
@@ -27,6 +42,7 @@ interface PageableQueryHelperMixin {
         }
     }
 
+    // FIXME: #27 - SUBJECT TO DELETE
     /*
      * AbstractPageRequest#getOffset does same work but type is different, and no overflow guard
      */

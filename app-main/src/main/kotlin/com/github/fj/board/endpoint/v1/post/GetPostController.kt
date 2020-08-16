@@ -13,10 +13,10 @@ import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
 import com.github.fj.board.endpoint.v1.post.response.PostInfoDetailedResponse
 import com.github.fj.board.endpoint.v1.reply.response.ReplyInfoResponse
 import com.github.fj.board.service.post.GetPostService
-import com.github.fj.board.service.post.GetPostService.Companion.PAGE_LATEST
 import com.github.fj.board.service.post.GetPostService.Companion.DEFAULT_POST_FETCH_SIZE
 import com.github.fj.board.service.post.GetPostService.Companion.MAXIMUM_POST_FETCH_SIZE
 import com.github.fj.board.service.reply.GetRepliesService
+import com.github.fj.board.vo.ContentsFetchCriteria
 import com.github.fj.board.vo.SortDirection
 import com.github.fj.board.vo.post.PostsSortBy
 import com.github.fj.lib.text.REGEX_UUID
@@ -117,7 +117,7 @@ internal class GetPostControllerImpl(
             requestParams = params,
             sortByProvider = { PostsSortBy.fromString(it) ?: PostsSortBy.NUMBER },
             defaultSortDirection = SortDirection.DESCENDING,
-            defaultPage = PAGE_LATEST,
+            defaultPage = ContentsFetchCriteria.PAGE_LATEST,
             defaultFetchSizeRange = DEFAULT_POST_FETCH_SIZE..MAXIMUM_POST_FETCH_SIZE
         )
 

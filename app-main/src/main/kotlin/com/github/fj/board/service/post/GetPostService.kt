@@ -33,15 +33,14 @@ interface GetPostService : UserServiceMixin, BoardAuthorisationMixin, PostAccess
     ): PagedData<PostBriefInfo>
 
     companion object {
-        const val PAGE_LATEST = Integer.MIN_VALUE
         const val DEFAULT_POST_FETCH_SIZE = 20
         const val MAXIMUM_POST_FETCH_SIZE = 30
 
         private val DEFAULT_LATEST = ContentsFetchCriteria.create(
             sortBy = PostsSortBy.NUMBER,
             sortDirection = Sort.Direction.DESC,
-            page = GetRepliesService.PAGE_LATEST,
-            fetchSize = GetRepliesService.DEFAULT_REPLY_FETCH_SIZE
+            page = ContentsFetchCriteria.PAGE_LATEST,
+            fetchSize = DEFAULT_POST_FETCH_SIZE
         )
     }
 }

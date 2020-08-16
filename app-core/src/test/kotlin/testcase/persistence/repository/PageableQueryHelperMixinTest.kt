@@ -4,6 +4,7 @@
  */
 package testcase.persistence.repository
 
+import com.github.fj.board.persistence.repository.PageableQuery
 import com.github.fj.board.persistence.repository.PageableQueryHelperMixin
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
@@ -25,13 +26,10 @@ class PageableQueryHelperMixinTest : PageableQueryHelperMixin {
     @MethodSource("testToOrderByClause")
     fun `orderBy clause is created by specified sort condition(s)`(prefix: String, sort: Sort, expected: String) {
         // given:
-        val pageable = mock(Pageable::class.java)
+        val query = PageableQuery.create(sort.iterator().asSequence().toList(), 0, 0)
 
         // when:
-        `when`(pageable.sort).thenReturn(sort)
-
-        // then:
-        val actual = pageable.toOrderByClause(prefix)
+        val actual = query.toOrderByClause(prefix)
 
         // expect:
         assertThat(actual, `is`(expected))
