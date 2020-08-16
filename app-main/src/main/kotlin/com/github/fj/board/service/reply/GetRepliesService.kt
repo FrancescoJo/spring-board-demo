@@ -33,7 +33,7 @@ interface GetRepliesService : ReplyAccessMixin {
 
         private val DEFAULT_LATEST = ContentsFetchCriteria.create(
             sortBy = RepliesSortBy.NUMBER,
-            sortDirection = Sort.Direction.ASC,
+            sortDirection = Sort.Direction.DESC,
             page = PAGE_LATEST,
             fetchSize = DEFAULT_REPLY_FETCH_SIZE
         )

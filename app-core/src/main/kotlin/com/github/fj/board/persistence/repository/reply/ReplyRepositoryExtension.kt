@@ -6,6 +6,7 @@ package com.github.fj.board.persistence.repository.reply
 
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.reply.Reply
+import com.github.fj.board.persistence.repository.PageableQueryHelperMixin
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -24,7 +25,7 @@ interface ReplyRepositoryExtension {
 }
 
 @Repository
-internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension {
+internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension, PageableQueryHelperMixin {
     @PersistenceContext
     private lateinit var em: EntityManager
 
@@ -34,34 +35,16 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension {
         return findByPost(post, options)
     }
 
-    override fun findByPost(post: Post, options: Pageable): List<Reply> {
-        val iteration = options.sort.iterator()
-        val orderByClause = if (iteration.hasNext()) {
-            "ORDER BY " + iteration.asSequence().joinToString {
-                "r.${it.property} ${it.direction}"
-            }
-        } else {
-            ""
-        }
-
-        val offset = try {
-            Math.multiplyExact(options.pageNumber, options.pageSize)
-        } catch (e: ArithmeticException) {
-            Integer.MAX_VALUE
-        }
-
-        return em.createQuery(
-            """
+    override fun findByPost(post: Post, options: Pageable): List<Reply> = em.createQuery(
+        """
             SELECT r 
             FROM Reply r
             WHERE r.post = :post
               AND r.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
-            $orderByClause
-        """.trimIndent(),
-            Reply::class.java
-        ).setParameter("post", post)
-            .setFirstResult(offset)
-            .setMaxResults(options.pageSize)
-            .resultList
-    }
+            ${options.toOrderByClause("r")}
+        """.trimIndent(), Reply::class.java
+    ).setParameter("post", post)
+        .setFirstResult(options.toFirstResultOffset())
+        .setMaxResults(options.pageSize)
+        .resultList
 }

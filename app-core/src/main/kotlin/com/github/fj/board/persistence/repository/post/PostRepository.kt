@@ -13,7 +13,7 @@ import java.util.*
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 26 - Jul - 2020
  */
-interface PostRepository : JpaRepository<Post, Long> {
+interface PostRepository : JpaRepository<Post, Long>, PostRepositoryExtension {
     @Query(
         """
         SELECT p
