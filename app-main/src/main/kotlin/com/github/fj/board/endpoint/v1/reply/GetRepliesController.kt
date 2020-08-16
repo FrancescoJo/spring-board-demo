@@ -84,7 +84,8 @@ internal class GetRepliesControllerImpl(
 
         return result.run {
             PageableResponse.create(
-                offset = offset,
+                page = page,
+                size = size,
                 totalCount = totalCount,
                 data = data.map { ReplyInfoResponse.from(it) }
             )

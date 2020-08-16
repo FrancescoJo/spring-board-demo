@@ -14,19 +14,26 @@ import java.util.List;
  * @since 10 - Aug - 2020
  */
 public class MockPagedData<T> implements PagedData<T> {
-    public final long offset;
+    public final int page;
+    public final int size;
     public final long totalCount;
     public final List<T> data;
 
-    public MockPagedData(final long offset, final long totalCount, final @Nonnull List<T> data) {
-        this.offset = offset;
+    public MockPagedData(final int page, final int size, final long totalCount, final @Nonnull List<T> data) {
+        this.page = page;
+        this.size = size;
         this.totalCount = totalCount;
         this.data = data;
     }
 
     @Override
-    public long getOffset() {
-        return offset;
+    public int getPage() {
+        return page;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
     }
 
     @Override
@@ -43,7 +50,8 @@ public class MockPagedData<T> implements PagedData<T> {
     @Override
     public String toString() {
         return "MockPageable{" +
-                "offset=" + offset +
+                "page=" + page +
+                ", size= " + size +
                 ", totalCount=" + totalCount +
                 ", data=" + data +
                 "}";

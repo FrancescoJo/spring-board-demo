@@ -9,6 +9,7 @@ import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.PostNotFoundException
 import com.github.fj.board.persistence.model.board.BoardAccess
+import com.github.fj.board.service.reply.GetRepliesService
 import com.github.fj.lib.collection.CollectionUtilsKt
 import io.restassured.response.Response
 import org.springframework.http.HttpStatus
@@ -82,7 +83,8 @@ class GetLatestRepliesSpec extends ReplyTestBase {
 
         expect:
         response.totalCount == 21
-        response.offset == 1        // number [2], actual offset is 1, since 'offset' is 0-based
+        response.page == GetRepliesService.PAGE_LATEST
+        response.size == GetRepliesService.DEFAULT_REPLY_FETCH_SIZE
         response.data.size() == expected.size()
         response.data.first().number == 21L
         response.data.last().number == 2L

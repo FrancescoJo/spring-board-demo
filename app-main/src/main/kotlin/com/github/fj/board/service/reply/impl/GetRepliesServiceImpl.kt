@@ -45,9 +45,10 @@ class GetRepliesServiceImpl(
         } else {
             replyRepo.findByPost(post, fetchCriteria.toPageable())
         }
-        val offset = totalCount - data.size
 
-        return PagedData.create(offset, totalCount, data.map { ReplyInfo.from(it) })
+        return fetchCriteria.run {
+            PagedData.create(page, fetchSize, totalCount, data.map { ReplyInfo.from(it) })
+        }
     }
 
     private fun ContentsFetchCriteria<RepliesSortBy>.toPageable(): Pageable =

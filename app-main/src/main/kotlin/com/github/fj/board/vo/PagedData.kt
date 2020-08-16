@@ -9,7 +9,9 @@ package com.github.fj.board.vo
  * @since 06 - Aug - 2020
  */
 interface PagedData<T> {
-    val offset: Long
+    val page: Int
+
+    val size: Int
 
     val totalCount: Long
 
@@ -17,17 +19,15 @@ interface PagedData<T> {
 
     companion object {
         private data class Impl<T>(
-            override val offset: Long,
+            override val page: Int,
+            override val size: Int,
             override val totalCount: Long,
             override val data: List<T>
         ) : PagedData<T>
 
-        fun <T> create(
-            offset: Long,
-            totalCount: Long,
-            data: List<T>
-        ): PagedData<T> = Impl(
-            offset = offset,
+        fun <T> create(page: Int, size: Int, totalCount: Long, data: List<T>): PagedData<T> = Impl(
+            page = page,
+            size = size,
             totalCount = totalCount,
             data = data
         )

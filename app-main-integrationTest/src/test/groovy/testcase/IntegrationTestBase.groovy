@@ -177,7 +177,8 @@ class IntegrationTestBase extends Specification {
         final responseDto = parseResponse(response.then().assertThat().statusCode(is(status.value())))
         final body = responseDto.body
 
-        final offset = body["offset"] as Long
+        final page = body["page"] as Integer
+        final size = body["size"] as Integer
         final totalCount = body["totalCount"] as Long
         final data = body["data"] as List<Map>
 
@@ -189,9 +190,10 @@ class IntegrationTestBase extends Specification {
         }.collect(Collectors.toUnmodifiableList())
 
         return new PageableResponse<T>(
-                /* offset */ offset,
+                /* page */       page,
+                /* size */       size,
                 /* totalCount */ totalCount,
-                /* data */ parsedData
+                /* data */       parsedData
         )
     }
 
@@ -295,9 +297,12 @@ class IntegrationTestBase extends Specification {
 
     protected static List<FieldDescriptor> pageableResponseFields(final String prefix, final List<FieldDescriptor> dataFields) {
         return [
-                fieldWithPath("${prefix}.offset")
+                fieldWithPath("${prefix}.page")
                         .type(JsonFieldType.NUMBER)
-                        .description(PageableResponse.DESC_OFFSET),
+                        .description(PageableResponse.DESC_PAGE),
+                fieldWithPath("${prefix}.size")
+                        .type(JsonFieldType.NUMBER)
+                        .description(PageableResponse.DESC_SIZE),
                 fieldWithPath("${prefix}.totalCount")
                         .type(JsonFieldType.NUMBER)
                         .description(PageableResponse.DESC_TOTAL_COUNT),

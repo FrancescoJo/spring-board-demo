@@ -16,8 +16,12 @@ import com.github.fj.board.vo.PagedData
 @JsonSerialize
 data class PageableResponse<T>(
     @JsonProperty
-    @JsonPropertyDescription(DESC_OFFSET)
-    val offset: Long,
+    @JsonPropertyDescription(DESC_PAGE)
+    val page: Int,
+
+    @JsonProperty
+    @JsonPropertyDescription(DESC_SIZE)
+    val size: Int,
 
     @JsonProperty
     @JsonPropertyDescription(DESC_TOTAL_COUNT)
@@ -28,19 +32,22 @@ data class PageableResponse<T>(
     val data: List<T>
 ) {
     companion object {
-        const val DESC_OFFSET = "Current offset of data list. You can fetch more data while " +
-                "`offset` + `(size of data)` < `totalCount`."
+        const val DESC_PAGE = "Requested page of data list."
+        const val DESC_SIZE = "Requested size of data list. Note that this value may differ to size of `data` if " +
+                "there are fewer data than requested size."
         const val DESC_TOTAL_COUNT = "Total count of available data."
         const val DESC_DATA = "Actual data of windowed request."
 
-        fun <T> create(offset: Long, totalCount: Long, data: List<T>) = PageableResponse(
-            offset = offset,
+        fun <T> create(page: Int, size: Int, totalCount: Long, data: List<T>) = PageableResponse(
+            page = page,
+            size = size,
             totalCount = totalCount,
             data = data
         )
 
         fun <T> from(src: PagedData<T>) = PageableResponse(
-            offset = src.offset,
+            page = src.page,
+            size = src.size,
             totalCount = src.totalCount,
             data = src.data
         )
