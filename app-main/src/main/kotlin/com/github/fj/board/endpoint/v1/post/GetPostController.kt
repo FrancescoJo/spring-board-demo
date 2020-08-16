@@ -6,19 +6,28 @@ package com.github.fj.board.endpoint.v1.post
 
 import com.github.fj.board.component.auth.ControllerClientAuthInfoDetector
 import com.github.fj.board.endpoint.ApiPaths
+import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin
 import com.github.fj.board.endpoint.common.response.PageableResponse
 import com.github.fj.board.endpoint.v1.OptionalClientAuthInfoMixin
+import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
 import com.github.fj.board.endpoint.v1.post.response.PostInfoDetailedResponse
 import com.github.fj.board.endpoint.v1.reply.response.ReplyInfoResponse
 import com.github.fj.board.service.post.GetPostService
+import com.github.fj.board.service.post.GetPostService.Companion.PAGE_LATEST
+import com.github.fj.board.service.post.GetPostService.Companion.DEFAULT_POST_FETCH_SIZE
+import com.github.fj.board.service.post.GetPostService.Companion.MAXIMUM_POST_FETCH_SIZE
 import com.github.fj.board.service.reply.GetRepliesService
+import com.github.fj.board.vo.SortDirection
+import com.github.fj.board.vo.post.PostsSortBy
 import com.github.fj.lib.text.REGEX_UUID
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
+import org.springframework.util.MultiValueMap
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -46,8 +55,26 @@ interface GetPostController {
         )
         @PathVariable
         postId: String,
+
         httpReq: HttpServletRequest
     ): PostInfoDetailedResponse
+
+    @RequestMapping(
+        path = [ApiPaths.BOARD_ID_POSTS],
+        method = [RequestMethod.GET]
+    )
+    fun getList(
+        @Pattern(
+            regexp = REGEX_UUID,
+            message = "`boardId` must be in a UUID format."
+        )
+        @PathVariable
+        @Suppress("MVCPathVariableInspection") boardId: String,
+
+        @RequestParam params: MultiValueMap<String, String>,
+
+        httpReq: HttpServletRequest
+    ): PageableResponse<PostInfoBriefResponse>
 }
 
 /**
@@ -59,7 +86,7 @@ internal class GetPostControllerImpl(
     override val authDetector: ControllerClientAuthInfoDetector,
     private val svc: GetPostService,
     private val replySvc: GetRepliesService
-) : GetPostController, OptionalClientAuthInfoMixin {
+) : GetPostController, OptionalClientAuthInfoMixin, FetchCriteriaRequestMixin {
     @Transactional
     override fun getOne(postId: String, httpReq: HttpServletRequest): PostInfoDetailedResponse {
         val clientInfo = httpReq.maybeClientAuthInfo(LOG)
@@ -78,6 +105,23 @@ internal class GetPostControllerImpl(
         }
 
         return PostInfoDetailedResponse.from(postDetail, replyResponse)
+    }
+
+    override fun getList(
+        boardId: String,
+        params: MultiValueMap<String, String>,
+        httpReq: HttpServletRequest
+    ): PageableResponse<PostInfoBriefResponse> {
+        val clientInfo = httpReq.maybeClientAuthInfo(LOG)
+        val fetchCriteria = extractFetchCriteria(
+            requestParams = params,
+            sortByProvider = { PostsSortBy.fromString(it) ?: PostsSortBy.NUMBER },
+            defaultSortDirection = SortDirection.DESCENDING,
+            defaultPage = PAGE_LATEST,
+            defaultFetchSizeRange = DEFAULT_POST_FETCH_SIZE..MAXIMUM_POST_FETCH_SIZE
+        )
+
+        TODO("Not yet implemented")
     }
 
     companion object {

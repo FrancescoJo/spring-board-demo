@@ -22,6 +22,9 @@ interface ReplyRepositoryExtension {
     fun findLatestByPost(post: Post, fetchSize: Int): List<Reply>
 
     fun findByPost(post: Post, options: Pageable): List<Reply>
+
+    // Map<postId: Long, count: Long>
+    fun getCountsOf(posts: List<Post>): Map<Long, Long>
 }
 
 @Repository
@@ -47,4 +50,23 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension, Pageable
         .setFirstResult(options.toFirstResultOffset())
         .setMaxResults(options.pageSize)
         .resultList
+
+    override fun getCountsOf(posts: List<Post>): Map<Long, Long> {
+        val dtoClassName =
+            "com.github.fj.board.persistence.repository.reply.ReplyRepositoryExtensionImpl\$GetCountsOfData"
+
+        val countList = em.createQuery(
+            """
+            SELECT new $dtoClassName(r.post.id, COUNT(r.id))
+            FROM Reply r
+            WHERE r.post IN :posts
+              AND r.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
+        """.trimIndent(), GetCountsOfData::class.java
+        ).setParameter("posts", posts)
+            .resultList
+
+        return countList.associateBy(keySelector = { it.postId }, valueTransform = { it.count })
+    }
+
+    internal data class GetCountsOfData(val postId: Long, val count: Long)
 }

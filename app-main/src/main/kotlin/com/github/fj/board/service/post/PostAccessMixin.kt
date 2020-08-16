@@ -8,6 +8,7 @@ import com.github.fj.board.exception.client.post.PostNotFoundException
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.service.board.BoardAccessMixin
+import com.github.fj.board.vo.post.PostsSortBy
 import java.util.*
 
 /**
@@ -28,4 +29,9 @@ interface PostAccessMixin : BoardAccessMixin {
      */
     @Throws(PostNotFoundException::class)
     fun UUID.getPost() = findPost() ?: throw PostNotFoundException()
+
+    fun PostsSortBy.toPropertyName(): String = when (this) {
+        PostsSortBy.NUMBER        -> "number"
+        PostsSortBy.VIEWED_COUNT  -> "viewedCount"
+    }
 }

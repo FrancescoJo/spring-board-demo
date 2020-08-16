@@ -4,6 +4,7 @@
  */
 package com.github.fj.board.persistence.repository.post
 
+import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.post.Post
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -23,4 +24,14 @@ interface PostRepository : JpaRepository<Post, Long>, PostRepositoryExtension {
     """
     )
     fun findByAccessId(accessId: UUID): Post?
+
+    @Query(
+        """
+            SELECT COUNT(p.id)
+            FROM Post p
+            WHERE p.board = ?1
+              AND p.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
+        """
+    )
+    fun getCountOf(board: Board): Long
 }
