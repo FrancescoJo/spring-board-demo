@@ -119,7 +119,10 @@ class PostTestBase extends BoardTestBase {
                         .description(PostInfoBriefResponse.DESC_TITLE),
                 fieldWithPath("${prefix}.viewCount")
                         .type(JsonFieldType.NUMBER)
-                        .description(PostInfoBriefResponse.DESC_VIEW_COUNT)
+                        .description(PostInfoBriefResponse.DESC_VIEW_COUNT),
+                fieldWithPath("${prefix}.replyCount")
+                        .type(JsonFieldType.NUMBER)
+                        .description(PostInfoBriefResponse.DESC_REPLY_COUNT)
         ]
     }
 

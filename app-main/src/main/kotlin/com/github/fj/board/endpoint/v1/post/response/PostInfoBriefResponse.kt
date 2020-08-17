@@ -51,7 +51,11 @@ data class PostInfoBriefResponse(
 
     @JsonProperty
     @JsonPropertyDescription(DESC_VIEW_COUNT)
-    val viewCount: Long
+    val viewCount: Long,
+
+    @JsonProperty
+    @JsonPropertyDescription(DESC_REPLY_COUNT)
+    val replyCount: Long
 ) {
     companion object {
         const val DESC_BOARD_ID = "An UUID of board which contains this post."
@@ -63,6 +67,7 @@ data class PostInfoBriefResponse(
         const val DESC_LAST_MODIFIED_DATE = "The very last date when this post's writer finished their edits."
         const val DESC_TITLE = "Title of this post."
         const val DESC_VIEW_COUNT = "View count of this post."
+        const val DESC_REPLY_COUNT = "Total reply count of this post."
 
         fun from(src: PostBriefInfo) = PostInfoBriefResponse(
             boardId = src.boardId.toString(),
@@ -73,7 +78,8 @@ data class PostInfoBriefResponse(
             writerLoginName = src.writerLoginName,
             lastModifiedDate = src.lastModifiedDate,
             title = src.title,
-            viewCount = src.viewedCount
+            viewCount = src.viewedCount,
+            replyCount = src.replyCount
         )
     }
 }
