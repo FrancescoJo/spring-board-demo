@@ -9,6 +9,7 @@ import com.github.fj.board.endpoint.v1.post.request.CreateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.DeleteAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
+import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.AttachmentNotFoundException
 import com.github.fj.board.exception.client.post.CannotEditPostException
@@ -23,6 +24,7 @@ import com.github.fj.board.service.post.UpdatePostService
 import com.github.fj.board.service.post.impl.UpdatePostServiceImpl
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.post.PostBriefInfo
+import com.github.fj.lib.collection.iterationsOf
 import com.nhaarman.mockitokotlin2.any
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
@@ -43,6 +45,7 @@ import test.com.github.fj.board.endpoint.v1.post.dto.UpdateAttachmentRequestBuil
 import test.com.github.fj.board.endpoint.v1.post.dto.UpdateAttachmentRequestBuilder.createRandomBulk
 import test.com.github.fj.board.endpoint.v1.post.dto.UpdatePostRequestBuilder
 import test.com.github.fj.board.persistence.entity.board.BoardBuilder
+import test.com.github.fj.board.persistence.entity.post.AttachmentBuilder
 import test.com.github.fj.board.persistence.entity.post.PostBuilder
 import test.com.github.fj.board.persistence.entity.user.UserBuilder
 import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
@@ -144,6 +147,33 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // then:
         assertThrows<AttachmentNotFoundException> {
+            sut.update(post.accessId, req, clientInfo)
+        }
+    }
+
+    @Test
+    fun `fail if total count of attachments exceeds 10`() {
+        // given:
+        val (clientInfo, _, post) = postPreconditions()
+        val board = post.board
+        val attachmentsSize = 9
+        val iterations = attachmentsSize - post.attachments.size
+        post.attachments.addAll(iterations.iterationsOf { AttachmentBuilder.createRandomOf(post) })
+        val attachmentRequest =
+            2.iterationsOf { UpdateAttachmentRequestBuilder.createRandom(AttachmentModeRequest.CREATE) }
+
+        // and
+        val req = UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
+            .attachments(attachmentRequest) // Expected attachments size after edit: 11
+            .build()
+
+        // when:
+        `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
+        `when`(boardRepo.findByAccessId(board.accessId)).thenReturn(board)
+        `when`(attachmentRepo.getCountOf(post)).thenReturn(attachmentsSize.toLong())
+
+        // then:
+        assertThrows<IllegalRequestException> {
             sut.update(post.accessId, req, clientInfo)
         }
     }

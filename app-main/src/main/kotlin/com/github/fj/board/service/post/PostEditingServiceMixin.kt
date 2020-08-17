@@ -37,4 +37,8 @@ interface PostEditingServiceMixin : UserServiceMixin, BoardAuthorisationMixin, P
 
         return self to post
     }
+
+    companion object {
+        const val MAXIMUM_ATTACHMENTS_PER_POST = 10
+    }
 }

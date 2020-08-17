@@ -121,7 +121,7 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // expect: "Post"
         assertThat(savedPost.title, `is`(req.title))
-        assertThat(savedPost.contents, `is`(req.content))
+        assertThat(savedPost.contents, `is`(req.contents))
         assertThat(savedPost.mode, `is`(req.mode))
 
         // and:

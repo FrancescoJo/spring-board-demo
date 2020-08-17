@@ -49,7 +49,7 @@ internal class CreatePostServiceImpl(
             this.edited = false
             this.number = board.getPostsCount() + 1
             this.title = req.title
-            this.contents = req.content
+            this.contents = req.contents
             this.viewedCount = 0
 
             applyLastActivityWith(clientInfo, utcNow())

@@ -9,6 +9,7 @@ import com.github.fj.board.endpoint.v1.post.request.CreateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.DeleteAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
+import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.post.AttachmentNotFoundException
 import com.github.fj.board.exception.client.post.CannotEditPostException
 import com.github.fj.board.persistence.entity.post.Attachment
@@ -19,6 +20,7 @@ import com.github.fj.board.persistence.repository.post.AttachmentRepository
 import com.github.fj.board.persistence.repository.post.PostRepository
 import com.github.fj.board.persistence.repository.reply.ReplyRepository
 import com.github.fj.board.persistence.repository.user.UserRepository
+import com.github.fj.board.service.post.PostEditingServiceMixin
 import com.github.fj.board.service.post.UpdatePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.post.PostBriefInfo
@@ -44,7 +46,16 @@ internal class UpdatePostServiceImpl(
     override fun update(postId: UUID, req: UpdatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
         val (_, post) = checkEditable(postId, clientInfo, onForbiddenException = { CannotEditPostException() })
 
-        attachmentRepo.saveAll(updateAttachmentsOf(post, req))
+        val newAttachments = updateAttachmentsOf(post, req)
+
+        val attachmentsSize = attachmentRepo.getCountOf(post)
+        val newCreatedSize = req.attachments.filter { it.mode == AttachmentModeRequest.CREATE }.size
+
+        if (attachmentsSize + newCreatedSize >= PostEditingServiceMixin.MAXIMUM_ATTACHMENTS_PER_POST) {
+            throw IllegalRequestException()
+        }
+
+        attachmentRepo.saveAll(newAttachments)
 
         val updatedPost = post.apply {
             this.mode = req.mode
@@ -61,7 +72,7 @@ internal class UpdatePostServiceImpl(
     }
 
     private fun updateAttachmentsOf(post: Post, req: UpdatePostRequest): List<Attachment> {
-        val attachmentReqGroup = req.attachments?.groupBy { it.mode } ?: emptyMap()
+        val attachmentReqGroup = req.attachments.groupBy { it.mode }
 
         @Suppress("UNCHECKED_CAST")
         val additions = (attachmentReqGroup.getMode(AttachmentModeRequest.CREATE) as List<CreateAttachmentRequest>)

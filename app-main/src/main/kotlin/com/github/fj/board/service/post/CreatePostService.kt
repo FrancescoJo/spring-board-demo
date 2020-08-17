@@ -17,8 +17,4 @@ import java.util.*
  */
 interface CreatePostService : UserServiceMixin, BoardAuthorisationMixin, PostServiceMixin {
     fun create(boardId: UUID, req: CreatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo
-
-    companion object {
-        const val MAXIMUM_ATTACHMENTS_PER_POST = 10
-    }
 }

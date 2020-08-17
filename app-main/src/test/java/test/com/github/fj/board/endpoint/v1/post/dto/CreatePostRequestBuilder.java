@@ -30,7 +30,7 @@ public final class CreatePostRequestBuilder {
 
     public CreatePostRequestBuilder(final CreatePostRequest src) {
         this.title = src.getTitle();
-        this.content = src.getContent();
+        this.content = src.getContents();
         this.attachments = src.getAttachments();
     }
 

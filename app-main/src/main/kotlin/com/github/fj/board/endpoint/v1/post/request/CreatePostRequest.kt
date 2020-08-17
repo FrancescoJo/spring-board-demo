@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.fj.board.persistence.model.post.PostMode
-import com.github.fj.board.service.post.CreatePostService.Companion.MAXIMUM_ATTACHMENTS_PER_POST
+import com.github.fj.board.service.post.PostEditingServiceMixin.Companion.MAXIMUM_ATTACHMENTS_PER_POST
 import com.github.fj.board.validation.UnicodeCharsLength
 import javax.validation.constraints.Size
 
@@ -37,13 +37,13 @@ data class CreatePostRequest(
         message = "`content` must not be empty."
     )
     @JsonProperty
-    @JsonPropertyDescription(DESC_CONTENT)
-    val content: String,
+    @JsonPropertyDescription(DESC_CONTENTS)
+    val contents: String,
 
+    @get:Size(max = MAXIMUM_ATTACHMENTS_PER_POST)
     @JsonProperty
     @JsonPropertyDescription(DESC_ATTACHMENTS)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @get:Size(max = MAXIMUM_ATTACHMENTS_PER_POST)
     val attachments: List<CreateAttachmentRequest>
 ) {
     companion object {
@@ -51,7 +51,7 @@ data class CreatePostRequest(
 
         const val DESC_MODE = "Mode of this post. ['frv': Free to reply, 'rr': Reply not allowed]."
         const val DESC_TITLE = "Title of this post."
-        const val DESC_CONTENT = "Content of this post."
+        const val DESC_CONTENTS = "Content of this post."
         const val DESC_ATTACHMENTS = "Attachments of this post. Maybe null or empty."
     }
 }

@@ -223,13 +223,13 @@ class CreatePostSpec extends PostTestBase {
                 fieldWithPath("title")
                         .type(JsonFieldType.STRING)
                         .description(CreatePostRequest.DESC_TITLE),
-                fieldWithPath("content")
+                fieldWithPath("contents")
                         .type(JsonFieldType.STRING)
-                        .description(CreatePostRequest.DESC_CONTENT),
+                        .description(CreatePostRequest.DESC_CONTENTS),
                 fieldWithPath("attachments[]")
                         .optional()
                         .type(JsonFieldType.ARRAY)
-                        .description(CreatePostRequest.DESC_CONTENT),
+                        .description(CreatePostRequest.DESC_ATTACHMENTS),
                 fieldWithPath("attachments[].uri")
                         .type(JsonFieldType.STRING)
                         .description(CreateAttachmentRequest.DESC_URI),

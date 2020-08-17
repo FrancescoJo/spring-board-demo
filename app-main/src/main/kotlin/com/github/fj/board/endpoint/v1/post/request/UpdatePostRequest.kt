@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.fj.board.persistence.model.post.PostMode
 import com.github.fj.board.validation.UnicodeCharsLength
+import javax.validation.constraints.Size
+import com.github.fj.board.service.post.PostEditingServiceMixin.Companion.MAXIMUM_ATTACHMENTS_PER_POST
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -38,10 +40,11 @@ data class UpdatePostRequest(
     @JsonPropertyDescription(DESC_CONTENTS)
     val contents: String,
 
+    @get:Size(max = MAXIMUM_ATTACHMENTS_PER_POST)
     @JsonProperty
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonPropertyDescription(DESC_ATTACHMENTS)
-    val attachments: List<UpdateAttachmentRequest>?
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val attachments: List<UpdateAttachmentRequest>
 ) {
     companion object {
         const val TITLE_SIZE_MAX = 40

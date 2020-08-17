@@ -34,4 +34,14 @@ interface AttachmentRepository : JpaRepository<Attachment, Long> {
     """
     )
     fun findAllByPost(post: Post): List<Attachment>
+
+    @Query(
+        """
+            SELECT COUNT(a.id)
+            FROM Attachment a
+            WHERE a.post = ?1
+              AND a.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
+        """
+    )
+    fun getCountOf(post: Post): Long
 }
