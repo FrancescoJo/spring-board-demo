@@ -46,27 +46,12 @@ interface ContentsFetchCriteria<SORT> {
         }
 
         val sortOrder = listOf(Sort.Order(sortDirection, toPropertyFunc(sortBy)))
-        val offset = sortOrder.firstOrNull()?.let {
-            return@let when (it.direction) {
-                Sort.Direction.DESC -> {
-                    val rawOffset = if (totalCount < 0) {
-                        0
-                    } else {
-                        totalCount - (nonZeroPage * nonSubZeroFetchSize)
-                    }
-
-                    // in case of zero offset (overflow is also guarded)
-                    /* return when */ max(0, rawOffset.toInt())
-                }
-                // AbstractPageRequest#getOffset does same work it does no overflow guard
-                Sort.Direction.ASC -> try {
-                    max(0, Math.multiplyExact(nonZeroPage - 1, nonSubZeroFetchSize) - 1)
-                } catch (e: ArithmeticException) {
-                    Integer.MAX_VALUE
-                }
-                else -> 0
-            }
-        } ?: 0
+        // Same as AbstractPageRequest#getOffset: enhanced by overflow guard
+        val offset = try {
+            max(0, Math.multiplyExact(nonZeroPage - 1, nonSubZeroFetchSize) - 1)
+        } catch (e: ArithmeticException) {
+            Integer.MAX_VALUE
+        }
 
         return PageableQuery.create(sortOrder, offset, nonSubZeroFetchSize)
     }

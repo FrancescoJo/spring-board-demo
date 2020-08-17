@@ -27,14 +27,13 @@ interface GetRepliesService : ReplyAccessMixin {
     ): PagedData<ReplyInfo>
 
     companion object {
-        const val PAGE_LATEST = Integer.MIN_VALUE
         const val DEFAULT_REPLY_FETCH_SIZE = 20
         const val MAXIMUM_REPLY_FETCH_SIZE = 50
 
         private val DEFAULT_LATEST = ContentsFetchCriteria.create(
             sortBy = RepliesSortBy.NUMBER,
             sortDirection = Sort.Direction.DESC,
-            page = PAGE_LATEST,
+            page = ContentsFetchCriteria.PAGE_LATEST,
             fetchSize = DEFAULT_REPLY_FETCH_SIZE
         )
     }

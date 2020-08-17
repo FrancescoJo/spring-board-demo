@@ -6,10 +6,8 @@ package com.github.fj.board.persistence.repository.post
 
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.entity.post.Post
-import com.github.fj.board.persistence.entity.reply.Reply
 import com.github.fj.board.persistence.repository.PageableQuery
 import com.github.fj.board.persistence.repository.PageableQueryHelperMixin
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext

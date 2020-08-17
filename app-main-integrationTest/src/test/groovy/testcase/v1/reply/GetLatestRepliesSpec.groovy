@@ -10,6 +10,7 @@ import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.PostNotFoundException
 import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.service.reply.GetRepliesService
+import com.github.fj.board.vo.ContentsFetchCriteria
 import com.github.fj.lib.collection.CollectionUtilsKt
 import io.restassured.response.Response
 import org.springframework.http.HttpStatus
@@ -68,9 +69,10 @@ class GetLatestRepliesSpec extends ReplyTestBase {
 
     def "only latest 20 replies are returned by default"() {
         given:
+        final int replyCount = 21L
         final self = this.self
         final parentPost = this.currentPost
-        final replies = CollectionUtilsKt.iterationsOf(21) {
+        final replies = CollectionUtilsKt.iterationsOf(replyCount) {
             createRandomReplyOf(self, parentPost)
         }
         final expected = replies.subList(1, replies.size())
@@ -82,8 +84,8 @@ class GetLatestRepliesSpec extends ReplyTestBase {
         final response = expectPageableResponse(rawResponse, HttpStatus.OK, ReplyInfoResponse.class)
 
         expect:
-        response.totalCount == 21
-        response.page == GetRepliesService.PAGE_LATEST
+        response.totalCount == replyCount
+        response.page == ContentsFetchCriteria.PAGE_LATEST
         response.size == GetRepliesService.DEFAULT_REPLY_FETCH_SIZE
         response.data.size() == expected.size()
         response.data.first().number == 21L

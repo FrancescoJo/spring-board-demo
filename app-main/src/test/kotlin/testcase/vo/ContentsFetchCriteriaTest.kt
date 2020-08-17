@@ -117,9 +117,9 @@ class ContentsFetchCriteriaTest {
         @Suppress("unused")
         fun testOffsetForDesc(): Stream<Arguments> = Stream.of(
             // page, fetchSize, totalCount, expectedOffset
-            Arguments.of(PAGE_LATEST, 20, 31L, 11),
-            Arguments.of(1, 20, 31L, 11),
-            Arguments.of(2, 20, 31L, 0),
+            Arguments.of(PAGE_LATEST, 20, 31L, 0),
+            Arguments.of(1, 20, 31L, 0),
+            Arguments.of(2, 20, 31L, 19),
             Arguments.of(1, 20, 20L, 0)
         )
 

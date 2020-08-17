@@ -11,9 +11,9 @@ import com.github.fj.board.endpoint.common.response.PageableResponse
 import com.github.fj.board.endpoint.v1.OptionalClientAuthInfoMixin
 import com.github.fj.board.endpoint.v1.reply.response.ReplyInfoResponse
 import com.github.fj.board.service.reply.GetRepliesService
-import com.github.fj.board.service.reply.GetRepliesService.Companion.PAGE_LATEST
 import com.github.fj.board.service.reply.GetRepliesService.Companion.DEFAULT_REPLY_FETCH_SIZE
 import com.github.fj.board.service.reply.GetRepliesService.Companion.MAXIMUM_REPLY_FETCH_SIZE
+import com.github.fj.board.vo.ContentsFetchCriteria
 import com.github.fj.board.vo.SortDirection
 import com.github.fj.board.vo.reply.RepliesSortBy
 import com.github.fj.lib.text.REGEX_UUID
@@ -76,8 +76,8 @@ internal class GetRepliesControllerImpl(
         val fetchCriteria = extractFetchCriteria(
             requestParams = params,
             sortByProvider = { RepliesSortBy.fromString(it) ?: RepliesSortBy.NUMBER },
-            defaultSortDirection = SortDirection.ASCENDING,
-            defaultPage = PAGE_LATEST,
+            defaultSortDirection = SortDirection.DESCENDING,
+            defaultPage = ContentsFetchCriteria.PAGE_LATEST,
             defaultFetchSizeRange = DEFAULT_REPLY_FETCH_SIZE..MAXIMUM_REPLY_FETCH_SIZE
         )
         val result = svc.getListOf(UUID.fromString(postId), clientInfo, fetchCriteria)

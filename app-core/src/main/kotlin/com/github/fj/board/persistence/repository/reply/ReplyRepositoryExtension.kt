@@ -8,9 +8,6 @@ import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.reply.Reply
 import com.github.fj.board.persistence.repository.PageableQuery
 import com.github.fj.board.persistence.repository.PageableQueryHelperMixin
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
@@ -20,8 +17,6 @@ import javax.persistence.PersistenceContext
  * @since 08 - Aug - 2020
  */
 interface ReplyRepositoryExtension {
-    fun findLatestByPost(post: Post, fetchSize: Int): List<Reply>
-
     fun findByPost(post: Post, options: PageableQuery): List<Reply>
 
     // Map<postId: Long, count: Long>
@@ -32,11 +27,6 @@ interface ReplyRepositoryExtension {
 internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension, PageableQueryHelperMixin {
     @PersistenceContext
     private lateinit var em: EntityManager
-
-    // FIXME: #47 Subject to delete
-    override fun findLatestByPost(post: Post, fetchSize: Int): List<Reply> {
-        TODO("Not implemented")
-    }
 
     override fun findByPost(post: Post, options: PageableQuery): List<Reply> = em.createQuery(
         """

@@ -10,7 +10,10 @@ import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.service.reply.GetRepliesService
 import com.github.fj.board.service.reply.GetRepliesService.Companion.DEFAULT_REPLY_FETCH_SIZE
 import com.github.fj.board.service.reply.impl.GetRepliesServiceImpl
+import com.github.fj.board.vo.ContentsFetchCriteria
 import com.github.fj.lib.collection.iterationsOf
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.BeforeEach
@@ -75,13 +78,13 @@ class GetLatestRepliesServiceTest : AbstractPostServiceTestTemplate() {
         val size = DEFAULT_REPLY_FETCH_SIZE
         `when`(postRepo.findByAccessId(post.accessId)).thenReturn(post)
         `when`(replyRepo.getCountOf(post)).thenReturn(numReplies.toLong())
-        `when`(replyRepo.findLatestByPost(post, size)).thenReturn(replies.subList(numReplies - 1 - size, numReplies - 1))
+        `when`(replyRepo.findByPost(eq(post), any())).thenReturn(replies.subList(numReplies - 1 - size, numReplies - 1))
 
         // then:
         val actual = sut.getLatestListOf(post.accessId, null)
 
         // expect:
-        assertThat(actual.page, `is`(GetRepliesService.PAGE_LATEST))
+        assertThat(actual.page, `is`(ContentsFetchCriteria.PAGE_LATEST))
         assertThat(actual.size, `is`(size))
         assertThat(actual.totalCount.toInt(), `is`(replies.size))
     }
