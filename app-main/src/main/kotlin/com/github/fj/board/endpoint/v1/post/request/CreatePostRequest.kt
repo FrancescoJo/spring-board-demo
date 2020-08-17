@@ -4,11 +4,14 @@
  */
 package com.github.fj.board.endpoint.v1.post.request
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.fj.board.persistence.model.post.PostMode
+import com.github.fj.board.service.post.CreatePostService.Companion.MAXIMUM_ATTACHMENTS_PER_POST
 import com.github.fj.board.validation.UnicodeCharsLength
+import javax.validation.constraints.Size
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -39,7 +42,9 @@ data class CreatePostRequest(
 
     @JsonProperty
     @JsonPropertyDescription(DESC_ATTACHMENTS)
-    val attachments: List<CreateAttachmentRequest>?
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @get:Size(max = MAXIMUM_ATTACHMENTS_PER_POST)
+    val attachments: List<CreateAttachmentRequest>
 ) {
     companion object {
         const val TITLE_SIZE_MAX = 40

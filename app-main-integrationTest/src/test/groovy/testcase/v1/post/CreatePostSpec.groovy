@@ -8,11 +8,13 @@ import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.v1.post.request.CreateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.CreatePostRequest
 import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
+import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.CannotCreatePostException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
+import com.github.fj.lib.collection.CollectionUtilsKt
 import io.restassured.response.Response
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
@@ -21,6 +23,7 @@ import org.springframework.restdocs.payload.ResponseFieldsSnippet
 import spock.lang.Unroll
 import test.com.github.fj.board.endpoint.ApiPathsHelper
 import test.com.github.fj.board.endpoint.v1.board.dto.CreateBoardRequestBuilder
+import test.com.github.fj.board.endpoint.v1.post.dto.CreateAttachmentRequestBuilder
 import test.com.github.fj.board.endpoint.v1.post.dto.CreatePostRequestBuilder
 import testcase.v1.PostTestBase
 
@@ -127,6 +130,32 @@ class CreatePostSpec extends PostTestBase {
 
         expect:
         errorBody.cause == CannotCreatePostException.class.simpleName
+    }
+
+    def "more than 10 attachments are prohibited"() {
+        given:
+        final self = createRandomUser()
+        final attachmentsSize = 11
+        final createdBoard = createBoardOf(self, CreateBoardRequestBuilder.createRandom())
+        final attachments = CollectionUtilsKt.iterationsOf(attachmentsSize) { CreateAttachmentRequestBuilder.createRandom() }
+        final request = new CreatePostRequestBuilder(CreatePostRequestBuilder.createRandom())
+            .attachments(attachments)
+            .build()
+
+        when:
+        final response = sendRequest(
+                "createPost-error-tooManyAttachments",
+                self.accessToken,
+                createdBoard.accessId.toString(),
+                request,
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
+
+        expect:
+        errorBody.cause == IllegalRequestException.class.simpleName
     }
 
     def "success if request is valid"() {
