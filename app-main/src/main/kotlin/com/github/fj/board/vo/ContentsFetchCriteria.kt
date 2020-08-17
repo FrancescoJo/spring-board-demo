@@ -57,7 +57,7 @@ interface ContentsFetchCriteria<SORT> {
     }
 
     companion object {
-        const val PAGE_LATEST = Integer.MIN_VALUE
+        const val PAGE_DEFAULT = 1
         const val TOTAL_SIZE_UNDEFINED = -1L
         const val FETCH_SIZE_SENTINEL = 100
 

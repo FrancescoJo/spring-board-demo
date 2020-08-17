@@ -86,39 +86,41 @@ class PostTestBase extends BoardTestBase {
     }
 
     protected static ResponseFieldsSnippet postInfoBriefResponseFieldsDoc() {
-        final List<FieldDescriptor> fields = [
-                fieldWithPath("body.boardId")
+        return responseFields(basicFieldsDoc() + postInfoBriefResponseFields("body"))
+    }
+
+    protected static List<FieldDescriptor> postInfoBriefResponseFields(final String prefix) {
+        return [
+                fieldWithPath("${prefix}.boardId")
                         .type(JsonFieldType.STRING)
                         .description(PostInfoBriefResponse.DESC_BOARD_ID),
-                fieldWithPath("body.postId")
+                fieldWithPath("${prefix}.postId")
                         .type(JsonFieldType.STRING)
                         .description(PostInfoBriefResponse.DESC_POST_ID),
-                fieldWithPath("body.postMode")
+                fieldWithPath("${prefix}.postMode")
                         .type(JsonFieldType.STRING)
                         .description(PostInfoBriefResponse.DESC_POST_MODE),
-                fieldWithPath("body.postNumber")
+                fieldWithPath("${prefix}.postNumber")
                         .type(JsonFieldType.NUMBER)
                         .description(PostInfoBriefResponse.DESC_POST_NUMBER),
-                fieldWithPath("body.writerNickname")
+                fieldWithPath("${prefix}.writerNickname")
                         .optional()
                         .type(JsonFieldType.STRING)
                         .description(PostInfoBriefResponse.DESC_WRITER_NICKNAME),
-                fieldWithPath("body.writerLoginName")
+                fieldWithPath("${prefix}.writerLoginName")
                         .optional()
                         .type(JsonFieldType.STRING)
                         .description(PostInfoBriefResponse.DESC_WRITER_LOGIN_NAME),
-                fieldWithPath("body.lastModifiedDate")
+                fieldWithPath("${prefix}.lastModifiedDate")
                         .type(JsonFieldType.STRING)
                         .description(PostInfoBriefResponse.DESC_LAST_MODIFIED_DATE),
-                fieldWithPath("body.title")
+                fieldWithPath("${prefix}.title")
                         .type(JsonFieldType.STRING)
                         .description(PostInfoBriefResponse.DESC_TITLE),
-                fieldWithPath("body.viewCount")
+                fieldWithPath("${prefix}.viewCount")
                         .type(JsonFieldType.NUMBER)
                         .description(PostInfoBriefResponse.DESC_VIEW_COUNT)
         ]
-
-        return responseFields(basicFieldsDoc() + fields)
     }
 
     protected static ResponseFieldsSnippet postInfoDetailedResponseFieldsDoc() {

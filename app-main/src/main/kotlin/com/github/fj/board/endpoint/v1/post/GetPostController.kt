@@ -117,11 +117,20 @@ internal class GetPostControllerImpl(
             requestParams = params,
             sortByProvider = { PostsSortBy.fromString(it) ?: PostsSortBy.NUMBER },
             defaultSortDirection = SortDirection.DESCENDING,
-            defaultPage = ContentsFetchCriteria.PAGE_LATEST,
+            defaultPage = ContentsFetchCriteria.PAGE_DEFAULT,
             defaultFetchSizeRange = DEFAULT_POST_FETCH_SIZE..MAXIMUM_POST_FETCH_SIZE
         )
 
-        TODO("Not yet implemented")
+        val result = svc.getListIn(UUID.fromString(boardId), clientInfo, fetchCriteria)
+
+        return result.run {
+            PageableResponse.create(
+                page = page,
+                size = size,
+                totalCount = totalCount,
+                data = data.map { PostInfoBriefResponse.from(it) }
+            )
+        }
     }
 
     companion object {

@@ -32,7 +32,7 @@ data class PageableResponse<T>(
     val data: List<T>
 ) {
     companion object {
-        const val DESC_PAGE = "Requested page of data list."
+        const val DESC_PAGE = "Requested page of data list. Defaulted to '1' if unspecified."
         const val DESC_SIZE = "Requested size of data list. Note that this value may differ to size of `data` if " +
                 "there are fewer data than requested size."
         const val DESC_TOTAL_COUNT = "Total count of available data."

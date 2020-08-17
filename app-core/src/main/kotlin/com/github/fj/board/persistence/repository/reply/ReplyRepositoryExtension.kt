@@ -51,6 +51,7 @@ internal class ReplyRepositoryExtensionImpl : ReplyRepositoryExtension, Pageable
             FROM Reply r
             WHERE r.post IN :posts
               AND r.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
+            GROUP BY r.post
         """.trimIndent(), GetCountsOfData::class.java
         ).setParameter("posts", posts)
             .resultList

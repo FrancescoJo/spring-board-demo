@@ -85,7 +85,7 @@ class GetLatestRepliesSpec extends ReplyTestBase {
 
         expect:
         response.totalCount == replyCount
-        response.page == ContentsFetchCriteria.PAGE_LATEST
+        response.page == ContentsFetchCriteria.PAGE_DEFAULT
         response.size == GetRepliesService.DEFAULT_REPLY_FETCH_SIZE
         response.data.size() == expected.size()
         response.data.first().number == 21L

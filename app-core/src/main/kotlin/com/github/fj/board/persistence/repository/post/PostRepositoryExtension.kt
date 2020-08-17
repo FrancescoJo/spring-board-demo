@@ -31,7 +31,7 @@ internal class PostRepositoryExtensionImpl : PostRepositoryExtension, PageableQu
             FROM Post p
             WHERE p.board = :board
               AND p.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
-            ${options.toOrderByClause("r")}
+            ${options.toOrderByClause("p")}
         """.trimIndent(), Post::class.java
     ).setParameter("board", board)
         .setFirstResult(options.offset)

@@ -5,7 +5,7 @@
 package testcase.vo
 
 import com.github.fj.board.vo.ContentsFetchCriteria
-import com.github.fj.board.vo.ContentsFetchCriteria.Companion.PAGE_LATEST
+import com.github.fj.board.vo.ContentsFetchCriteria.Companion.PAGE_DEFAULT
 import com.github.fj.lib.util.getRandomAlphaNumericString
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
@@ -117,7 +117,7 @@ class ContentsFetchCriteriaTest {
         @Suppress("unused")
         fun testOffsetForDesc(): Stream<Arguments> = Stream.of(
             // page, fetchSize, totalCount, expectedOffset
-            Arguments.of(PAGE_LATEST, 20, 31L, 0),
+            Arguments.of(PAGE_DEFAULT, 20, 31L, 0),
             Arguments.of(1, 20, 31L, 0),
             Arguments.of(2, 20, 31L, 19),
             Arguments.of(1, 20, 20L, 0)
@@ -127,7 +127,7 @@ class ContentsFetchCriteriaTest {
         @Suppress("unused")
         fun testOffsetForAsc(): Stream<Arguments> = Stream.of(
             // page, fetchSize, totalCount, expectedOffset
-            Arguments.of(PAGE_LATEST, 20, 31L, 0),
+            Arguments.of(PAGE_DEFAULT, 20, 31L, 0),
             Arguments.of(1, 20, 31L, 0),
             Arguments.of(2, 20, 31L, 19),
             Arguments.of(3, 20, 31L, 39)

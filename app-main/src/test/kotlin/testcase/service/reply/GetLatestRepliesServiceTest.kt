@@ -84,7 +84,7 @@ class GetLatestRepliesServiceTest : AbstractPostServiceTestTemplate() {
         val actual = sut.getLatestListOf(post.accessId, null)
 
         // expect:
-        assertThat(actual.page, `is`(ContentsFetchCriteria.PAGE_LATEST))
+        assertThat(actual.page, `is`(ContentsFetchCriteria.PAGE_DEFAULT))
         assertThat(actual.size, `is`(size))
         assertThat(actual.totalCount.toInt(), `is`(replies.size))
     }

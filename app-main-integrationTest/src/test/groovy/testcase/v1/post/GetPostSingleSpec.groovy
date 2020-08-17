@@ -26,7 +26,7 @@ class GetPostSingleSpec extends ReplyTestBase {
     def "fail if postId is not in a UUID format"() {
         when:
         final response = unauthenticatedRequest(
-                "getPost-error-illegalAccessId",
+                "getPostSingle-error-illegalAccessId",
                 requestUrl("__not-a-uuid-format__"),
                 errorResponseFieldsDoc()
         )
@@ -41,7 +41,7 @@ class GetPostSingleSpec extends ReplyTestBase {
     def "fail if target post is not found"() {
         when:
         final response = unauthenticatedRequest(
-                "getPost-error-noPostFound",
+                "getPostSingle-error-noPostFound",
                 requestUrl(UUID.randomUUID()),
                 errorResponseFieldsDoc()
         )
@@ -54,13 +54,14 @@ class GetPostSingleSpec extends ReplyTestBase {
     }
 
     @Unroll
-    def "fail if post is in closed board"() {
+    def "fail if target target board is inaccessible(#status, #access) for unauthenticated user"() {
         given:
-        updateBoardStatus(currentBoard.accessId, BoardStatus.CLOSED)
+        updateBoardAccess(currentBoard.accessId, access)
+        updateBoardStatus(currentBoard.accessId, status)
 
         when:
         final response = unauthenticatedRequest(
-                "getPost-error-boardIsClosed",
+                "getPostSingle-error-inaccessibleBoard-#$docId",
                 currentRequestUrl(),
                 errorResponseFieldsDoc()
         )
@@ -70,24 +71,11 @@ class GetPostSingleSpec extends ReplyTestBase {
 
         expect:
         errorBody.cause == BoardNotFoundException.simpleName
-    }
 
-    def "fail if user is unauthenticated and post is in non-public board"() {
-        given:
-        updateBoardAccess(currentBoard.accessId, BoardAccess.MEMBERS_ONLY)
-
-        when:
-        final response = unauthenticatedRequest(
-                "getPost-error-boardIsMembersOnly",
-                currentRequestUrl(),
-                errorResponseFieldsDoc()
-        )
-
-        then:
-        final errorBody = expectError(response, BoardNotFoundException.STATUS)
-
-        expect:
-        errorBody.cause == BoardNotFoundException.simpleName
+        where:
+        status             | access                   | docId
+        BoardStatus.CLOSED | BoardAccess.PUBLIC       | 1
+        BoardStatus.NORMAL | BoardAccess.MEMBERS_ONLY | 2
     }
 
     def "post detail and latest replies are returned"() {
@@ -98,7 +86,7 @@ class GetPostSingleSpec extends ReplyTestBase {
 
         when:
         final rawResponse = sendRequest(
-                "getPost",
+                "getPostSingle",
                 currentRequestUrl(),
                 postInfoDetailedResponseFieldsDoc()
         )

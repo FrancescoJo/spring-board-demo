@@ -77,7 +77,7 @@ internal class GetRepliesControllerImpl(
             requestParams = params,
             sortByProvider = { RepliesSortBy.fromString(it) ?: RepliesSortBy.NUMBER },
             defaultSortDirection = SortDirection.DESCENDING,
-            defaultPage = ContentsFetchCriteria.PAGE_LATEST,
+            defaultPage = ContentsFetchCriteria.PAGE_DEFAULT,
             defaultFetchSizeRange = DEFAULT_REPLY_FETCH_SIZE..MAXIMUM_REPLY_FETCH_SIZE
         )
         val result = svc.getListOf(UUID.fromString(postId), clientInfo, fetchCriteria)

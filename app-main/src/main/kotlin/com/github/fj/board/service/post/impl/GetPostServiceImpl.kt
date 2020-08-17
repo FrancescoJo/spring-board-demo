@@ -15,6 +15,7 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.post.PostBriefInfo
 import com.github.fj.board.vo.post.PostDetailedInfo
 import com.github.fj.board.vo.post.PostsSortBy
+import com.github.fj.board.vo.reply.ReplyInfo
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -56,18 +57,9 @@ internal class GetPostServiceImpl(
         val totalCount = postRepo.getCountOf(board)
         val data = postRepo.findAllByBoard(board, fetchCriteria.toPageableQuery(totalCount) { it.toPropertyName() })
         val repliesCount = replyRepo.getCountsOf(data)
-        val size = fetchCriteria.fetchSize
-        val page = if (fetchCriteria.page > 0) {
-            fetchCriteria.page
-        } else {
-            (Math.floorDiv(totalCount, size) + 1).toInt()
-        }
 
-        return PagedData.create(
-            page = page,
-            size = size,
-            totalCount = totalCount,
-            data = data.map { PostBriefInfo.from(it, repliesCount[it.id] ?: 0L) }
-        )
+        return fetchCriteria.run {
+            PagedData.create(page, fetchSize, totalCount, data.map { PostBriefInfo.from(it, repliesCount[it.id] ?: 0L) })
+        }
     }
 }

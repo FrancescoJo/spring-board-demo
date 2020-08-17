@@ -5,7 +5,6 @@
 package com.github.fj.board.service.post
 
 import com.github.fj.board.service.board.BoardAuthorisationMixin
-import com.github.fj.board.service.reply.GetRepliesService
 import com.github.fj.board.service.user.UserServiceMixin
 import com.github.fj.board.vo.ContentsFetchCriteria
 import com.github.fj.board.vo.PagedData
@@ -39,7 +38,7 @@ interface GetPostService : UserServiceMixin, BoardAuthorisationMixin, PostAccess
         private val DEFAULT_LATEST = ContentsFetchCriteria.create(
             sortBy = PostsSortBy.NUMBER,
             sortDirection = Sort.Direction.DESC,
-            page = ContentsFetchCriteria.PAGE_LATEST,
+            page = ContentsFetchCriteria.PAGE_DEFAULT,
             fetchSize = DEFAULT_POST_FETCH_SIZE
         )
     }
