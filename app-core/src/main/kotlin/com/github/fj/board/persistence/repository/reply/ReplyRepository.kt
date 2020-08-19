@@ -41,9 +41,9 @@ interface ReplyRepository : JpaRepository<Reply, Long>, ReplyRepositoryExtension
     @Transactional
     @Query(
         """
-            DELETE FROM Reply r
+            UPDATE Reply r
+            SET r.status = com.github.fj.board.persistence.model.post.ContentStatus.DELETED
             WHERE r.post = ?1
-              AND r.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
         """
     )
     fun deleteAllByPost(post: Post): Int

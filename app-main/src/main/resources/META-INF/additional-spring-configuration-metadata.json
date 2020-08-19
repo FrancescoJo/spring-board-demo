@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "app.delete-reply-executor-pool-size",
+      "type": "java.lang.String",
+      "description": "Delete reply thread executor pool size. Putting a small number will cause delayed deletion of replies. Putting a large number will impact system performance on burst deletion requests and deleting a large numbers of replies."
+    },
+    {
+      "name": "app.authentication.rsa-key-alive-hours",
+      "type": "java.lang.Integer",
+      "description": "RSA key alive hours where used for issuing access tokens. Putting a small number increases security but burdens CPU. Putting a large number decreases security but let CPU works less."
+    },
+    {
+      "name": "app.authentication.auth-token-alive-secs",
+      "type": "java.lang.Integer",
+      "description": "Lifespan in seconds of access token. Similar to RSA key alive hours, this value has tradeoffs between security and performance."
+    },
+    {
+      "name": "app.authentication.refresh-token-alive-days",
+      "type": "java.lang.String",
+      "description": "Lifespan in days of refresh token. If a user not using service longer than this days, their login status is cleared and they must reauthenticate."
+    },
+    {
+      "name": "app.authentication.token-issuer",
+      "type": "java.lang.String",
+      "description": "Name of token issuer of issued JWTs for validation."
+    }
+  ]
+}
