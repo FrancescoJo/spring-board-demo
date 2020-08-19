@@ -51,7 +51,7 @@ internal class UpdatePostServiceImpl(
         val attachmentsSize = attachmentRepo.getCountOf(post)
         val newCreatedSize = req.attachments.filter { it.mode == AttachmentModeRequest.CREATE }.size
 
-        if (attachmentsSize + newCreatedSize >= PostEditingServiceMixin.MAXIMUM_ATTACHMENTS_PER_POST) {
+        if (attachmentsSize + newCreatedSize > PostEditingServiceMixin.MAXIMUM_ATTACHMENTS_PER_POST) {
             throw IllegalRequestException()
         }
 

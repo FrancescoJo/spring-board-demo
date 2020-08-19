@@ -9,6 +9,7 @@ import com.github.fj.board.endpoint.v1.post.request.DeleteAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdateAttachmentRequest
 import com.github.fj.board.endpoint.v1.post.request.UpdatePostRequest
 import com.github.fj.board.endpoint.v1.post.response.PostInfoBriefResponse
+import com.github.fj.board.exception.client.IllegalRequestException
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.exception.client.post.AttachmentNotFoundException
 import com.github.fj.board.exception.client.post.CannotEditPostException
@@ -16,8 +17,10 @@ import com.github.fj.board.exception.client.post.PostNotFoundException
 import com.github.fj.board.exception.generic.UnauthenticatedException
 import com.github.fj.board.persistence.model.board.BoardMode
 import com.github.fj.board.persistence.model.board.BoardStatus
+import com.github.fj.board.service.post.PostEditingServiceMixin
 import com.github.fj.board.vo.board.BoardInfo
 import com.github.fj.board.vo.post.PostDetailedInfo
+import com.github.fj.lib.collection.CollectionUtilsKt
 import io.restassured.response.Response
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.payload.JsonFieldType
@@ -175,6 +178,31 @@ class UpdatePostSpec extends PostTestBase {
 
         expect:
         errorBody.cause == AttachmentNotFoundException.class.simpleName
+    }
+
+    def "fail if total count of attachments exceeds 10"() {
+        given:
+        final additionalAttachments = CollectionUtilsKt.iterationsOf(PostEditingServiceMixin.MAXIMUM_ATTACHMENTS_PER_POST) {
+            UpdateAttachmentRequestBuilder.createRandom(AttachmentModeRequest.CREATE)
+        }
+        final request = new UpdatePostRequestBuilder(UpdatePostRequestBuilder.createRandom())
+                .attachments(additionalAttachments)
+                .build()
+
+        when:
+        final response = sendRequest(
+                "updatePost-error-tooManyAttachments",
+                currentRequestUrl(),
+                request,
+                genericRequestFieldsDoc(),
+                errorResponseFieldsDoc()
+        )
+
+        then:
+        final errorBody = expectError(response, IllegalRequestException.STATUS)
+
+        expect:
+        errorBody.cause == IllegalRequestException.class.simpleName
     }
 
     def "post is updated if request is valid"() {
