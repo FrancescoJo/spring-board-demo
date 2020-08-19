@@ -13,8 +13,11 @@ import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.reply.DeleteReplyService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow
+import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
 import java.util.*
+import java.util.concurrent.Future
 import javax.transaction.Transactional
 
 /**
@@ -41,5 +44,19 @@ class DeleteReplyServiceImpl(
         }
 
         return true
+    }
+
+    override fun deleteAllIn(postId: UUID): Future<Boolean> {
+        val post = postId.findPost() ?: run {
+            LOG.warn("Unable to delete all posts of '{}'", postId)
+            return AsyncResult(false)
+        }
+
+        replyRepo.deleteAllByPost(post)
+        return AsyncResult(true)
+    }
+
+    companion object {
+        private val LOG = LoggerFactory.getLogger(DeleteReplyService::class.java)
     }
 }

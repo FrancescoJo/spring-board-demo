@@ -7,8 +7,10 @@ package com.github.fj.board.persistence.repository.reply
 import com.github.fj.board.persistence.entity.post.Post
 import com.github.fj.board.persistence.entity.reply.Reply
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import java.util.*
+import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -34,4 +36,15 @@ interface ReplyRepository : JpaRepository<Reply, Long>, ReplyRepositoryExtension
         """
     )
     fun getCountOf(post: Post): Long
+
+    @Modifying
+    @Transactional
+    @Query(
+        """
+            DELETE FROM Reply r
+            WHERE r.post = ?1
+              AND r.status <> com.github.fj.board.persistence.model.post.ContentStatus.DELETED
+        """
+    )
+    fun deleteAllByPost(post: Post): Int
 }

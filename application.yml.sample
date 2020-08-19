@@ -60,6 +60,7 @@ logging:
     com.github.fj: DEBUG
 
 app:
+  delete-reply-executor-pool-size: 10
   authentication:
     # 1 day
     rsa-key-alive-hours: 24

@@ -7,6 +7,7 @@ package com.github.fj.board.endpoint.v1.post
 import com.github.fj.board.endpoint.ApiPaths
 import com.github.fj.board.endpoint.OkResponseDto
 import com.github.fj.board.service.post.DeletePostService
+import com.github.fj.board.service.reply.DeleteReplyService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.text.REGEX_UUID
 import org.slf4j.LoggerFactory
@@ -47,12 +48,16 @@ interface DeletePostController {
 
 @RestController
 internal class DeletePostControllerImpl(
-    private val svc: DeletePostService
+    private val postSvc: DeletePostService,
+    private val replySvc: DeleteReplyService
 ) : DeletePostController {
     override fun delete(postId: String, clientInfo: ClientAuthInfo): OkResponseDto<Boolean> {
         LOG.debug("{}", clientInfo.requestLine)
 
-        val result = svc.delete(UUID.fromString(postId), clientInfo)
+        val postAccessId = UUID.fromString(postId)
+        // Delete replies first asynchronously
+        replySvc.deleteAllIn(postAccessId)
+        val result = postSvc.delete(postAccessId, clientInfo)
 
         return OkResponseDto(result)
     }
