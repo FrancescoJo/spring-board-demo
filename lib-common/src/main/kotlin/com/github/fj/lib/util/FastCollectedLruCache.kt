@@ -72,7 +72,7 @@ internal class FastCollectedLruCacheImpl<K, V>(maxCapacity: Int) : FastCollected
 
     override fun get(key: K): V? {
         synchronized(hardCache) {
-            hardCache[key]?.takeIf { it != null }?.let { v ->
+            hardCache[key]?.let { v ->
                 // Move element to first position of hard cache
                 hardCache.remove(key)
                 hardCache[key] = v

@@ -57,9 +57,9 @@ internal class CreatePostServiceImpl(
             postRepo.save(it)
         }
 
-        req.attachments?.map {
+        req.attachments.map {
             it.toEntityOf(createdPost)
-        }?.also {
+        }.also {
             attachmentRepo.saveAll(it)
         }
 

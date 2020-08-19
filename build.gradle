@@ -4,20 +4,22 @@ buildscript {
     ext {
         // lang
         version_jvm = 1.8
-        version_kotlin = "1.3.72"
+        version_kotlin = "1.4.0"
 
         // lang ext
         version_javax_validation = "2.0.1.Final"
 
         // Spring + infrastructure
-        version_springBoot = "2.3.1.RELEASE"
+        version_springBoot = "2.3.3.RELEASE"
         version_springWeb_servlet = "4.0.3" // This version must be correspondent to spring version
 
         // 3rdparty
         version_semVer = "2.1.0"
         version_base62 = "0.1.3"
         version_bouncycastle = "1.66"
-        version_nimbus_jose = "8.19"
+        version_nimbus_jose = "8.20"
+        version_jackson_kotlin = "2.11.2"
+        version_h2db = "1.4.200"
 
         // Testing & Code quality
         version_junit5 = "5.6.2"

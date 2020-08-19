@@ -24,7 +24,7 @@ dependencies {
     testImplementation "org.spockframework:spock-spring:$spockVersion"
 
     // in-memory database
-    testImplementation "com.h2database:h2"
+    testImplementation "com.h2database:h2:$version_h2db"
 
     // spock mock support
     testRuntimeOnly "cglib:cglib-nodep:3.2.4"

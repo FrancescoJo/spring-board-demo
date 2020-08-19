@@ -48,7 +48,7 @@ dependencies {
     implementation "com.zaxxer:HikariCP"
 
     // Jackson Kotlin support
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$version_jackson_kotlin"
 
     // Access token generation
     api "io.seruco.encoding:base62:$version_base62"

@@ -53,7 +53,7 @@ fun String?.isNullOrUnicodeBlank(): Boolean {
         return true
     }
 
-    this!!.forEach {
+    this.forEach {
         if (!UNICODE_BLANK_CHARS.contains(it)) {
             return false
         }
