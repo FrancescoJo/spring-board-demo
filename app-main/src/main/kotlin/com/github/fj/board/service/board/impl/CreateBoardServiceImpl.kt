@@ -29,7 +29,7 @@ class CreateBoardServiceImpl(
 ) : CreateBoardService {
     @Transactional
     override fun create(req: CreateBoardRequest, clientInfo: ClientAuthInfo): BoardInfo {
-        val self = clientInfo.getCurrentUser()
+        val self = clientInfo.getCurrentAccessibleUser()
 
         boardRepo.findByKey(req.key)?.let {
             throw DuplicatedBoardKeyException()

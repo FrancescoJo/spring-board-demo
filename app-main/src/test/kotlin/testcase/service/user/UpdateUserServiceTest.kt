@@ -7,7 +7,6 @@ package testcase.service.user
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.exception.generic.UnauthorisedException
 import com.github.fj.board.persistence.entity.user.User
-import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.user.UpdateUserService
 import com.github.fj.board.service.user.impl.UpdateUserServiceImpl
 import com.github.fj.lib.time.utcNow
@@ -21,7 +20,6 @@ import org.hamcrest.Matchers.greaterThanOrEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -34,14 +32,11 @@ import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 20 - Jul - 2020
  */
-class UpdateUserServiceTest {
-    @Mock
-    private lateinit var userRepo: UserRepository
-
+class UpdateUserServiceTest : AbstractUserServiceTestTemplate() {
     private lateinit var sut: UpdateUserService
 
     @BeforeEach
-    fun setup() {
+    override fun setup() {
         MockitoAnnotations.initMocks(this)
 
         this.sut = UpdateUserServiceImpl(userRepo)
@@ -73,9 +68,11 @@ class UpdateUserServiceTest {
         val targetUser = UserBuilder(UserBuilder.createRandom())
             .nickname(targetNickname)
             .build()
+            .forceAccessible()
         val self = UserBuilder(UserBuilder.createRandom())
             .nickname("$targetNickname.")
             .build()
+            .forceAccessible()
 
         // when:
         `when`(userRepo.findByNickname(targetNickname)).thenReturn(targetUser)
@@ -96,6 +93,7 @@ class UpdateUserServiceTest {
             .nickname(request.nickname)
             .email(request.email ?: "")
             .build()
+            .forceAccessible()
 
         // when:
         `when`(userRepo.findByNickname(self.nickname)).thenReturn(self)
@@ -105,7 +103,7 @@ class UpdateUserServiceTest {
         val result = sut.update(self.nickname, request, clientInfo)
 
         // expect:
-        verify(userRepo, times(0)).save(any<User>())
+        verify(userRepo, times(0)).save(any())
 
         // and:
         assertThat(result.nickname, `is`(self.nickname))
@@ -120,10 +118,8 @@ class UpdateUserServiceTest {
         // given:
         val request = UpdateUserRequestBuilder.createRandom()
         val clientInfo = ClientAuthInfoBuilder.createRandom()
-        val self = UserBuilder.createRandom()
+        val self = UserBuilder.createRandom().forceAccessible()
         val now = utcNow()
-
-        // and:
 
         // when:
         `when`(userRepo.findByNickname(self.nickname)).thenReturn(self)

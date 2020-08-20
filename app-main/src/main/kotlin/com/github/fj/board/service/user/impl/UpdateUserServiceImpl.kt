@@ -27,7 +27,7 @@ class UpdateUserServiceImpl(
     @Transactional
     override fun update(nickname: String, req: UpdateUserRequest, clientInfo: ClientAuthInfo): UserInfo {
         val targetUser = userRepo.findByNickname(nickname) ?: throw UserNotFoundException()
-        val self = clientInfo.findCurrentUser()
+        val self = clientInfo.findCurrentAccessibleUser()
 
         if (targetUser != self) {
             throw UnauthorisedException()

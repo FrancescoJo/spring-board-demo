@@ -11,11 +11,11 @@ import com.fasterxml.jackson.annotation.JsonValue
  * @author Francesco Jo(nimbusob@gmail.com)
  * @since 29 - Jun - 2020
  */
-enum class UserStatus(val key: String) {
-    UNVERIFIED("u"),
-    VERIFIED("v"),
-    SUSPENDED("s"),
-    WITHDRAWN("w");
+enum class UserStatus(val key: String, val isAccessible: Boolean) {
+    UNVERIFIED("u", true),
+    VERIFIED("v", true),
+    SUSPENDED("s", false),
+    WITHDRAWN("w", false);
 
     @JsonValue
     @Suppress("unused") // Used by Jackson upon serialising @JsonSerialize annotated classes

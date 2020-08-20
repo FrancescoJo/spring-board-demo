@@ -26,7 +26,7 @@ internal class CloseBoardServiceImpl(
 ) : CloseBoardService {
     @Transactional
     override fun close(accessId: UUID, clientInfo: ClientAuthInfo): Boolean {
-        val self = clientInfo.getCurrentUser()
+        val self = clientInfo.getCurrentAccessibleUser()
         val board = accessId.getBoard().takeIf {
             it.status != BoardStatus.CLOSED
         } ?: throw BoardNotFoundException()

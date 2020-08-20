@@ -35,7 +35,7 @@ internal class CreatePostServiceImpl(
 ) : CreatePostService {
     @Transactional
     override fun create(boardId: UUID, req: CreatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
-        val self = clientInfo.getCurrentUser()
+        val self = clientInfo.getCurrentAccessibleUser()
         val board = boardId.getBoard().also {
             it.checkIsWritableFor(self, onForbiddenException = { CannotCreatePostException() })
         }

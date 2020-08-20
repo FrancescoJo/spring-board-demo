@@ -26,7 +26,7 @@ class UpdateBoardServiceImpl(
 ) : UpdateBoardService {
     @Transactional
     override fun update(accessId: UUID, req: UpdateBoardRequest, clientInfo: ClientAuthInfo): BoardInfo {
-        val self = clientInfo.getCurrentUser()
+        val self = clientInfo.getCurrentAccessibleUser()
         val board = accessId.getBoard()
         self.assertAuthorityOf(board)
 

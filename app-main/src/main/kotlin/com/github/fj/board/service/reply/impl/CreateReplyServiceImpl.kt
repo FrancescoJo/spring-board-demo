@@ -34,7 +34,7 @@ internal class CreateReplyServiceImpl(
 ) : CreateReplyService {
     @Transactional
     override fun create(postId: UUID, req: CreateReplyRequest, clientInfo: ClientAuthInfo): ReplyInfo {
-        val self = clientInfo.getCurrentUser()
+        val self = clientInfo.getCurrentAccessibleUser()
         val post = postId.getPost()
         with (post) {
             board.checkIsWritableFor(self, onForbiddenException = { CannotCreateReplyException() })

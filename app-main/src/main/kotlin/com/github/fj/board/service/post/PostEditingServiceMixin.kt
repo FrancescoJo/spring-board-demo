@@ -23,7 +23,7 @@ interface PostEditingServiceMixin : UserServiceMixin, BoardAuthorisationMixin, P
         clientInfo: ClientAuthInfo,
         onForbiddenException: () -> GeneralHttpException
     ): Pair<User, Post> {
-        val self = clientInfo.getCurrentUser()
+        val self = clientInfo.getCurrentAccessibleUser()
         val post = postId.getPost()
 
         with(post) {

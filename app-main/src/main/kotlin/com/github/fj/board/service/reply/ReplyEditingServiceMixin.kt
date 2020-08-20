@@ -22,7 +22,7 @@ interface ReplyEditingServiceMixin : UserServiceMixin, ReplyAccessMixin, ReplySe
         clientInfo: ClientAuthInfo,
         onForbiddenException: () -> GeneralHttpException
     ): Pair<User, Reply> {
-        val self = clientInfo.getCurrentUser()
+        val self = clientInfo.getCurrentAccessibleUser()
         val reply = replyId.getReply()
         with(reply) {
             checkIsOwnedBy(self, onForbiddenException)
