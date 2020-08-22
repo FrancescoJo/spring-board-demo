@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional
  * @since 18 - Jul - 2020
  */
 @Service
-class CreateUserServiceImpl(
+internal class CreateUserServiceImpl(
     override val userRepo: UserRepository,
     private val authRepo: AuthenticationRepository
 ) : CreateUserService {

@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
  * @since 19 - Jul - 2020
  */
 @Service
-class GetUserServiceImpl(
+internal class GetUserServiceImpl(
     private val userRepo: UserRepository
 ) : GetUserService {
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)

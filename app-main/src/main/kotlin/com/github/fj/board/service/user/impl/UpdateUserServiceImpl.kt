@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional
  * @since 20 - Jul - 2020
  */
 @Service
-class UpdateUserServiceImpl(
+internal class UpdateUserServiceImpl(
     override val userRepo: UserRepository
 ) : UpdateUserService {
     @Transactional(isolation = Isolation.READ_COMMITTED)

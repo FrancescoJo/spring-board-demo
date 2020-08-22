@@ -24,7 +24,7 @@ import java.util.*
  * @since 06 - Aug - 2020
  */
 @Service
-class UpdateReplyServiceImpl(
+internal class UpdateReplyServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository,
     override val postRepo: PostRepository,

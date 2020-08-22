@@ -26,7 +26,7 @@ import java.util.concurrent.Future
  * @since 07 - Aug - 2020
  */
 @Service
-class DeleteReplyServiceImpl(
+internal class DeleteReplyServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository,
     override val postRepo: PostRepository,

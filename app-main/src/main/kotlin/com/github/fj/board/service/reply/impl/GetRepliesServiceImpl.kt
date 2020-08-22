@@ -23,7 +23,7 @@ import java.util.*
  * @since 06 - Aug - 2020
  */
 @Service
-class GetRepliesServiceImpl(
+internal class GetRepliesServiceImpl(
     override val boardRepo: BoardRepository,
     override val postRepo: PostRepository,
     override val replyRepo: ReplyRepository

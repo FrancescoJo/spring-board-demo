@@ -24,7 +24,7 @@ import java.util.*
  * @since 20 - Jul - 2020
  */
 @Service
-class CreateBoardServiceImpl(
+internal class CreateBoardServiceImpl(
     override val userRepo: UserRepository,
     private val boardRepo: BoardRepository
 ) : CreateBoardService {

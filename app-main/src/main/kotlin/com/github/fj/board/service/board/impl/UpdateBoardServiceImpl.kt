@@ -21,7 +21,7 @@ import java.util.*
  * @since 21 - Jul - 2020
  */
 @Service
-class UpdateBoardServiceImpl(
+internal class UpdateBoardServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository
 ) : UpdateBoardService {
