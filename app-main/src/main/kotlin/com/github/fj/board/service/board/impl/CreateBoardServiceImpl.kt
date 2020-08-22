@@ -15,8 +15,9 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.board.BoardInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -27,7 +28,7 @@ class CreateBoardServiceImpl(
     override val userRepo: UserRepository,
     private val boardRepo: BoardRepository
 ) : CreateBoardService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun create(req: CreateBoardRequest, clientInfo: ClientAuthInfo): BoardInfo {
         val self = clientInfo.getCurrentAccessibleUser()
 

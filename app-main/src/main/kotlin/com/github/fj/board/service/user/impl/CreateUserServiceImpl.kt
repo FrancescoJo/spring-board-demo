@@ -16,7 +16,8 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.user.UserInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -27,7 +28,7 @@ class CreateUserServiceImpl(
     override val userRepo: UserRepository,
     private val authRepo: AuthenticationRepository
 ) : CreateUserService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun create(req: CreateUserRequest, clientInfo: ClientAuthInfo): UserInfo {
         val auth = authRepo.findByLoginName(clientInfo.loginName) ?: run {
             throw LoginNameNotFoundException()

@@ -15,8 +15,9 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.reply.ReplyInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -29,7 +30,7 @@ class UpdateReplyServiceImpl(
     override val postRepo: PostRepository,
     override val replyRepo: ReplyRepository
 ) : UpdateReplyService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun update(replyId: UUID, req: UpdateReplyRequest, clientInfo: ClientAuthInfo): ReplyInfo {
         val (_, reply) = checkEditable(replyId, clientInfo, onForbiddenException = { CannotEditReplyException() })
 

@@ -15,10 +15,10 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.post.PostBriefInfo
 import com.github.fj.board.vo.post.PostDetailedInfo
 import com.github.fj.board.vo.post.PostsSortBy
-import com.github.fj.board.vo.reply.ReplyInfo
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -31,7 +31,7 @@ internal class GetPostServiceImpl(
     override val postRepo: PostRepository,
     override val replyRepo: ReplyRepository
 ) : GetPostService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun getOne(postId: UUID, clientInfo: ClientAuthInfo?): PostDetailedInfo {
         val post = postId.getPost().also {
             it.board.checkAccessibleFor(clientInfo)
@@ -44,7 +44,7 @@ internal class GetPostServiceImpl(
         }
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun getListIn(
         boardId: UUID,
         clientInfo: ClientAuthInfo?,

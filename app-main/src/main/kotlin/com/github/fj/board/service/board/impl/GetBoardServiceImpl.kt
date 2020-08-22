@@ -15,12 +15,13 @@ import com.github.fj.board.vo.board.BoardInfo
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -30,7 +31,7 @@ import javax.transaction.Transactional
 internal class GetBoardServiceImpl(
     override val boardRepo: BoardRepository
 ) : GetBoardService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     override fun getOne(accessId: UUID, clientInfo: ClientAuthInfo?): BoardInfo {
         val board = accessId.getBoard().also {
             it.checkAccessibleFor(clientInfo)
@@ -39,7 +40,7 @@ internal class GetBoardServiceImpl(
         return BoardInfo.from(board, board.getPostsCount())
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     override fun getList(
         sortBy: BoardsSortBy,
         sortDirection: Sort.Direction,

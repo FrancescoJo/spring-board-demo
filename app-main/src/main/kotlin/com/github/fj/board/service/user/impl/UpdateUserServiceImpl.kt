@@ -14,7 +14,8 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.user.UserInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -24,7 +25,7 @@ import javax.transaction.Transactional
 class UpdateUserServiceImpl(
     override val userRepo: UserRepository
 ) : UpdateUserService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun update(nickname: String, req: UpdateUserRequest, clientInfo: ClientAuthInfo): UserInfo {
         val targetUser = userRepo.findByNickname(nickname) ?: throw UserNotFoundException()
         val self = clientInfo.findCurrentAccessibleUser()

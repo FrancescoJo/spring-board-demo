@@ -16,9 +16,10 @@ import com.github.fj.lib.time.utcNow
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import java.util.concurrent.Future
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -31,7 +32,7 @@ class DeleteReplyServiceImpl(
     override val postRepo: PostRepository,
     override val replyRepo: ReplyRepository
 ) : DeleteReplyService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun delete(replyId: UUID, clientInfo: ClientAuthInfo): Boolean {
         val (_, reply) = checkEditable(replyId, clientInfo, onForbiddenException = { CannotDeleteReplyException() })
 

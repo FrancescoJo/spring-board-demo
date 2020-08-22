@@ -15,8 +15,9 @@ import com.github.fj.board.service.post.DeletePostService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -30,7 +31,7 @@ internal class DeletePostServiceImpl(
     override val replyRepo: ReplyRepository,
     private val attachmentRepo: AttachmentRepository
 ) : DeletePostService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun delete(postId: UUID, clientInfo: ClientAuthInfo): Boolean {
         val (_, post) = checkEditable(postId, clientInfo, onForbiddenException = { CannotDeletePostException() })
 

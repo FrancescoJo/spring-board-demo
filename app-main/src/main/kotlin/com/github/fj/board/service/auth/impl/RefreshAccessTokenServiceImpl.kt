@@ -15,8 +15,9 @@ import com.github.fj.board.vo.auth.AuthenticationResult
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import io.seruco.encoding.base62.Base62
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -29,7 +30,7 @@ internal class RefreshAccessTokenServiceImpl(
     override val authProps: AppAuthProperties,
     private val authRepo: AuthenticationRepository
 ) : RefreshAccessTokenService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun refreshAuthToken(
         req: RefreshTokenRequest,
         clientInfo: ClientAuthInfo,

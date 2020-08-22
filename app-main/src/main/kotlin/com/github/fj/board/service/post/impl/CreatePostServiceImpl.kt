@@ -18,8 +18,9 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.post.PostBriefInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -33,7 +34,7 @@ internal class CreatePostServiceImpl(
     private val postRepo: PostRepository,
     private val attachmentRepo: AttachmentRepository
 ) : CreatePostService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun create(boardId: UUID, req: CreatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
         val self = clientInfo.getCurrentAccessibleUser()
         val board = boardId.getBoard().also {

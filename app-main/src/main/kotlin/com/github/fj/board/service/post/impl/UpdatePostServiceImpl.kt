@@ -27,8 +27,9 @@ import com.github.fj.board.vo.post.PostBriefInfo
 import com.github.fj.lib.annotation.VisibleForTesting
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -42,7 +43,7 @@ internal class UpdatePostServiceImpl(
     override val replyRepo: ReplyRepository,
     private val attachmentRepo: AttachmentRepository
 ) : UpdatePostService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun update(postId: UUID, req: UpdatePostRequest, clientInfo: ClientAuthInfo): PostBriefInfo {
         val (_, post) = checkEditable(postId, clientInfo, onForbiddenException = { CannotEditPostException() })
 

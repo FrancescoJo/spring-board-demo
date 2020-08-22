@@ -12,8 +12,9 @@ import com.github.fj.board.service.board.CloseBoardService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.lib.time.utcNow
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -24,7 +25,7 @@ internal class CloseBoardServiceImpl(
     override val userRepo: UserRepository,
     override val boardRepo: BoardRepository
 ) : CloseBoardService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun close(accessId: UUID, clientInfo: ClientAuthInfo): Boolean {
         val self = clientInfo.getCurrentAccessibleUser()
         val board = accessId.getBoard().takeIf {

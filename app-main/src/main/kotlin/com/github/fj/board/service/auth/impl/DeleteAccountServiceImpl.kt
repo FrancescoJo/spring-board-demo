@@ -12,7 +12,8 @@ import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.auth.DeleteAccountService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -23,7 +24,7 @@ internal class DeleteAccountServiceImpl(
     private val authRepo: AuthenticationRepository,
     private val userRepo: UserRepository
 ) : DeleteAccountService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     override fun delete(clientInfo: ClientAuthInfo): Boolean {
         val auth = authRepo.findByLoginName(clientInfo.loginName) ?: throw CannotWithdrawException()
 

@@ -14,8 +14,9 @@ import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.reply.RepliesSortBy
 import com.github.fj.board.vo.reply.ReplyInfo
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import javax.transaction.Transactional
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -27,7 +28,7 @@ class GetRepliesServiceImpl(
     override val postRepo: PostRepository,
     override val replyRepo: ReplyRepository
 ) : GetRepliesService {
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     override fun getListOf(
         postId: UUID,
         clientInfo: ClientAuthInfo?,
