@@ -4,12 +4,18 @@
  */
 package testcase.service.auth
 
+import com.github.fj.board.exception.client.auth.CannotWithdrawException
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.service.auth.DeleteAccountService
 import com.github.fj.board.service.auth.impl.DeleteAccountServiceImpl
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import test.com.github.fj.board.persistence.entity.auth.AuthenticationBuilder
+import test.com.github.fj.board.vo.auth.ClientAuthInfoBuilder
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)
@@ -30,22 +36,27 @@ class DeleteAccountServiceTest : AbstractAuthenticationTestTemplate() {
 
     @Test
     fun `fail if there is no auth found for loginName`() {
+        // given:
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
 
+        // when:
+        assertThrows<CannotWithdrawException> {
+            sut.delete(clientInfo)
+        }
     }
 
     @Test
-    fun `user status is may changed to withdrawn after withdraw`() {
+    fun `withdraw is successful even if user is not found`() {
+        // given:
+        val clientInfo = ClientAuthInfoBuilder.createRandom()
 
-    }
+        // when
+        `when`(authRepo.findByLoginName(clientInfo.loginName)).thenReturn(AuthenticationBuilder.createRandom())
 
-    /*
-     * A kind of 'loginName invalidation' method, and strange way to sweeping information.
-     * However an user story that reads
-     * `deleting account causes every data related to authentication are swept as well`
-     * for heavy users would be a massive work, thus it could be a premium feature and doing more simpler way.
-     */
-    @Test
-    fun `auth loginName and user nickname is replaced to reserved pattern after withdraw`() {
+        // then:
+        val actual = sut.delete(clientInfo)
 
+        // expect
+        assertTrue(actual)
     }
 }

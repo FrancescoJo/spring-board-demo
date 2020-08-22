@@ -36,7 +36,7 @@ class Authentication : AbstractIncrementalLockableEntity() {
 
     @Convert(converter = AuthenticationStatusConverter::class)
     @Column(length = 4, nullable = false, columnDefinition = "VARCHAR(4)")
-    var status : AuthenticationStatus = AuthenticationStatus.NORMAL
+    var status: AuthenticationStatus = AuthenticationStatus.NORMAL
 
     @Column(name = "login_name", length = 32, nullable = false, columnDefinition = "VARCHAR(32)")
     @Size(min = LOGIN_NAME_SIZE_MIN, max = LOGIN_NAME_SIZE_MAX)
@@ -56,7 +56,7 @@ class Authentication : AbstractIncrementalLockableEntity() {
 
     @OneToOne(cascade = [CascadeType.ALL], optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
-    lateinit var user: User
+    var user: User? = null
 
     override fun toString(): String = "Authentication(id=$id, " +
             "status=$status, " +
@@ -66,11 +66,7 @@ class Authentication : AbstractIncrementalLockableEntity() {
             "refreshTokenIssuedAt=$refreshTokenIssuedAt, " +
             "refreshTokenExpireAt=$refreshTokenExpireAt, " +
             "version=$version, " +
-            "user=${if (::user.isInitialized) {
-                user.id.toString()
-            } else {
-                "<uninitialised>"
-            }})"
+            "user=${user?.id?.toString() ?: "<uninitialised>"})"
 
     companion object {
         /** 256 bits */

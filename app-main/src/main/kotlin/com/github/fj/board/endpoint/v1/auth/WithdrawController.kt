@@ -39,7 +39,11 @@ internal class WithdrawControllerImpl(
     private val svc: DeleteAccountService
 ) : WithdrawController {
     override fun delete(clientInfo: ClientAuthInfo): OkResponseDto<Boolean> {
-        TODO("Not yet implemented")
+        LOG.debug("{}: {}", clientInfo.requestLine)
+
+        val result = svc.delete(clientInfo)
+
+        return OkResponseDto(result)
     }
 
     companion object {
