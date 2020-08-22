@@ -1,6 +1,8 @@
 /*
- * spring-message-board-demo
- * Refer to LICENCE.txt for licence details.
+ * FJ's utilities
+ *
+ * Distributed under no licences and no warranty.
+ * Use this software at your own risk.
  */
 package testcase.util
 

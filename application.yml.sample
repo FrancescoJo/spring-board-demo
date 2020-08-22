@@ -15,7 +15,7 @@ server:
 
 spring:
   application:
-    name: springboot-multimodule-kotlin
+    name: spring-board-demo
   profiles:
     # Empty if 'default'.
     active:

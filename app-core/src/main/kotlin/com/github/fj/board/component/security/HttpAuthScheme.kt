@@ -1,6 +1,6 @@
 /*
- * springboot-multimodule-kotlin skeleton.
- * Under no licences and warranty.
+ * spring-message-board-demo
+ * Refer to LICENCE.txt for licence details.
  */
 package com.github.fj.board.component.security
 

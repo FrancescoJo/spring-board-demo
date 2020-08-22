@@ -1,3 +1,7 @@
+/*
+ * spring-message-board-demo
+ * Refer to LICENCE.txt for licence details.
+ */
 package com.github.fj.board.appconfig.security.web
 
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler

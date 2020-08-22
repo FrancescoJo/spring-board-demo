@@ -3,7 +3,7 @@
     <!-- LOG_PATH will be set as the value of logging.path of application.properties if not defined at here -->
     <!--<property name="LOG_PATH" value="/var/temp/log/" />-->
     <!-- LOG_FILE will be set as the value of logging.file of application.properties if not defined at here -->
-    <!--<property name="LOG_FILE" value="springboot-multimodule-kotlin"/>-->
+    <!--<property name="LOG_FILE" value="spring-board-demo"/>-->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
