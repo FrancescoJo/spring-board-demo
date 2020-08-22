@@ -4,13 +4,13 @@
  */
 package com.github.fj.board.service.board
 
-import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.board.exception.client.board.BoardNotFoundException
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.persistence.model.board.BoardStatus
 import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.vo.auth.ClientAuthInfo
+import com.github.fj.board.vo.board.BoardsSortBy
 import java.util.*
 
 /**

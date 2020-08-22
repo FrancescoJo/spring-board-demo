@@ -6,7 +6,6 @@ package com.github.fj.board.service.user
 
 import com.github.fj.board.exception.client.user.UserNotFoundException
 import com.github.fj.board.persistence.entity.user.User
-import com.github.fj.board.persistence.model.user.UserStatus
 import com.github.fj.board.persistence.repository.user.UserRepository
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import java.time.LocalDateTime

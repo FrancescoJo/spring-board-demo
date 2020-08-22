@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.github.fj.board.persistence.model.post.PostMode
+import com.github.fj.board.service.post.PostEditingServiceMixin.Companion.MAXIMUM_ATTACHMENTS_PER_POST
 import com.github.fj.board.validation.UnicodeCharsLength
 import javax.validation.constraints.Size
-import com.github.fj.board.service.post.PostEditingServiceMixin.Companion.MAXIMUM_ATTACHMENTS_PER_POST
 
 /**
  * @author Francesco Jo(nimbusob@gmail.com)

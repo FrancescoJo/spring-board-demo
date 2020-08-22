@@ -5,10 +5,10 @@
 package testcase.endpoint
 
 import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin
+import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin.Companion.GET_LIST_PARAM_COUNT
 import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin.Companion.GET_LIST_PARAM_ORDER_BY
 import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin.Companion.GET_LIST_PARAM_PAGE
 import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin.Companion.GET_LIST_PARAM_SORT_BY
-import com.github.fj.board.endpoint.common.FetchCriteriaRequestMixin.Companion.GET_LIST_PARAM_COUNT
 import com.github.fj.board.vo.SortDirection
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`

@@ -4,10 +4,10 @@
  */
 package testcase.service.board
 
-import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.service.board.GetBoardService
 import com.github.fj.board.service.board.impl.GetBoardServiceImpl
+import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.lib.collection.iterationsOf
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq

@@ -4,7 +4,6 @@
  */
 package com.github.fj.board.service.board.impl
 
-import com.github.fj.board.vo.board.BoardsSortBy
 import com.github.fj.board.persistence.entity.board.Board
 import com.github.fj.board.persistence.model.board.BoardAccess
 import com.github.fj.board.persistence.model.board.BoardStatus
@@ -12,6 +11,7 @@ import com.github.fj.board.persistence.repository.board.BoardRepository
 import com.github.fj.board.service.board.GetBoardService
 import com.github.fj.board.vo.auth.ClientAuthInfo
 import com.github.fj.board.vo.board.BoardInfo
+import com.github.fj.board.vo.board.BoardsSortBy
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
