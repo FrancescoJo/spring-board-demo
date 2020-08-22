@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController
 interface WithdrawController {
     @RequestMapping(
         path = [ApiPaths.ACCOUNT],
-        method = [RequestMethod.POST]
+        method = [RequestMethod.DELETE]
     )
     fun delete(clientInfo: ClientAuthInfo): OkResponseDto<Boolean>
 }

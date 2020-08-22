@@ -20,6 +20,7 @@ interface AuthenticationRepository : JpaRepository<Authentication, Long> {
         SELECT a
         FROM Authentication a
         WHERE a.loginName = ?1
+          AND a.status = com.github.fj.board.persistence.model.auth.AuthenticationStatus.NORMAL
     """
     )
     fun findByLoginName(loginName: String): Authentication?
