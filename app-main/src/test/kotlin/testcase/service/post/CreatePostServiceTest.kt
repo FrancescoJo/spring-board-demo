@@ -130,8 +130,8 @@ class CreatePostServiceTest : AbstractPostServiceTestTemplate() {
         val savedAttachments = attachmentCaptor.firstValue
 
         // expect: "Attachments"
-        assertThat(savedAttachments.size, `is`(req.attachments?.size ?: 0))
-        req.attachments?.forEachIndexed { i, r ->
+        assertThat(savedAttachments.size, `is`(req.attachments.size))
+        req.attachments.forEachIndexed { i, r ->
             assertThat("#$i attachment name is different", savedAttachments[i].name, `is`(r.name))
             assertThat("#$i attachment mimeType is different", savedAttachments[i].mimeType, `is`(r.mimeType))
             assertThat("#$i attachment uri is different", savedAttachments[i].uri, `is`(r.uri))

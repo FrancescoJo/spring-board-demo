@@ -100,7 +100,7 @@ class SignUpServiceTest {
         val result = sut.signUp(request, clientInfo)
 
         // expect:
-        verify(authRepo, times(1)).save(any<Authentication>())
+        verify(authRepo, times(1)).save(any())
 
         assertThat(result.loginName, `is`(request.loginName))
         assertThat(result.accessToken, `is`(mockAccessToken))

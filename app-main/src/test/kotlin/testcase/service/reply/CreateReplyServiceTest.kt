@@ -136,7 +136,7 @@ class CreateReplyServiceTest : AbstractPostServiceTestTemplate() {
         val actual = sut.create(post.accessId, req, clientInfo)
 
         // and:
-        verify(replyRepo, times(1)).save(any<Reply>())
+        verify(replyRepo, times(1)).save(any())
 
         // expect:
         assertThat(actual.postId, `is`(post.accessId))

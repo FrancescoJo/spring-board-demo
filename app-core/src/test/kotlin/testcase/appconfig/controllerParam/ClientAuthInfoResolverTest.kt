@@ -152,6 +152,6 @@ class ClientAuthInfoResolverTest {
     private fun testResolveArgument(webReq: NativeWebRequest): ClientAuthInfo? {
         val param = mock(MethodParameter::class.java)
 
-        return sut.resolveArgument(param, null, webReq, null) as? ClientAuthInfo
+        return sut.resolveArgument(param, null, webReq, null)
     }
 }

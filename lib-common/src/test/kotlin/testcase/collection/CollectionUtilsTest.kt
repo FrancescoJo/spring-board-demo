@@ -22,7 +22,7 @@ class CollectionUtilsTest {
     fun `resize yields correct result upon given data set`() {
         assertEquals(listOf(0)         , listOf(0, 1, 2).resize(1))
         assertEquals(listOf(0, 1)      , listOf(0, 1).resize(2))
-        assertEquals(listOf(0, 1, 9, 9), listOf(0, 1).resize(4) { _ -> 9 })
+        assertEquals(listOf(0, 1, 9, 9), listOf(0, 1).resize(4) { 9 })
 
         assertThrows<IllegalArgumentException> { listOf(0, 1).resize(4, null) }
     }

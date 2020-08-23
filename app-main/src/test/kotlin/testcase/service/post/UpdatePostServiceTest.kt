@@ -192,7 +192,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         val (result, actual) = runSuccessfulUpdate(clientInfo, post, req)
 
         // then: "Ensure save is called only once to prove mocking save operation reflects actual result"
-        verify(postRepo, times(1)).save(any<Post>())
+        verify(postRepo, times(1)).save(any())
 
         // expect:
         assertThat(result.accessId, `is`(post.accessId))
@@ -222,7 +222,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         val (_, actual) = runSuccessfulUpdate(clientInfo, post, req)
 
         // expect: "Ensure save is called only once to prove mocking save operation reflects actual result"
-        verify(postRepo, times(1)).save(any<Post>())
+        verify(postRepo, times(1)).save(any())
 
         // when:
         val expectedUris = creationRequest.map { it.uri }
@@ -255,7 +255,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
         val (_, actual) = runSuccessfulUpdate(clientInfo, post, req)
 
         // expect: "Ensure save is called only once to prove mocking save operation reflects actual result"
-        verify(postRepo, times(1)).save(any<Post>())
+        verify(postRepo, times(1)).save(any())
 
         // and:
         assertTrue(actual.attachments.isEmpty())
@@ -271,7 +271,7 @@ class UpdatePostServiceTest : AbstractPostServiceTestTemplate() {
 
         // when:
         `when`(postRepo.findByAccessId(targetPost.accessId)).thenReturn(targetPost)
-        `when`(postRepo.save(any<Post>())).thenReturn(expected)
+        `when`(postRepo.save(any())).thenReturn(expected)
 
         // then:
         val actual = sut.update(targetPost.accessId, request, clientInfo)

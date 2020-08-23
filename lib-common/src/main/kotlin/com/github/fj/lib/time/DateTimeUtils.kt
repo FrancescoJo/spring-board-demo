@@ -69,7 +69,7 @@ private fun parseZoneOffset(zoneOffset: ZoneOffset): IntArray {
 
     return with(zoneOffset.toString().split(":")) {
         if (isEmpty()) {
-            return@with IntArray(diffSizes) { _ -> 0 }
+            return@with IntArray(diffSizes) { 0 }
         }
 
         val sign = if (get(0).startsWith("-")) {

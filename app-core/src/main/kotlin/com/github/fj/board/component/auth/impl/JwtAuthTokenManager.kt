@@ -118,7 +118,7 @@ internal class JwtAuthTokenManager @Inject constructor(
         val jsonStr = this.toString()
         val mapTypeRef = object : TypeReference<Map<String, Any>>() {}
 
-        return jsonMapper.readValue<Map<String, Any>>(jsonStr, mapTypeRef).run {
+        return jsonMapper.readValue(jsonStr, mapTypeRef).run {
             JwtObject(
                 id = UUID.fromString(get(JWT_ID) as String),
                 issuer = get(ISSUER) as String,
