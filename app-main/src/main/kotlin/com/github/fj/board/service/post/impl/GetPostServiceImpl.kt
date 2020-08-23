@@ -59,7 +59,11 @@ internal class GetPostServiceImpl(
         val repliesCount = replyRepo.getCountsOf(data)
 
         return fetchCriteria.run {
-            PagedData.create(page, fetchSize, totalCount, data.map { PostBriefInfo.from(it, repliesCount[it.id] ?: 0L) })
+            PagedData.create(
+                page,
+                fetchSize,
+                totalCount,
+                data.map { PostBriefInfo.from(it, repliesCount[it.id] ?: 0L) })
         }
     }
 }

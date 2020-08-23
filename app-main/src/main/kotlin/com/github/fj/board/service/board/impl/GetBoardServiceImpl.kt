@@ -62,5 +62,9 @@ private class NormalBoardSearchSpec : Specification<Board> {
             add(criteriaBuilder.`in`(root.get<BoardStatus>("status")).apply { value(BoardStatus.NORMAL) })
         }.mergeBy(criteriaBuilder)
 
-    private fun List<Predicate>.mergeBy(cb: CriteriaBuilder): Predicate? = cb.and(*this.toTypedArray())
+    private fun List<Predicate>.mergeBy(cb: CriteriaBuilder): Predicate? {
+        var p: Predicate? = null
+        forEach { p = cb.and(it) }
+        return p
+    }
 }

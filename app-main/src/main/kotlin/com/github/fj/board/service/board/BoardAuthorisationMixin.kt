@@ -27,6 +27,8 @@ interface BoardAuthorisationMixin : BoardAccessMixin {
         }
     }
 
+    // This method is only for multiple pre-check purposes.
+    @Suppress("ThrowsCount")
     fun Board.checkIsWritableFor(user: User, onForbiddenException: () -> GeneralHttpException) {
         when {
             status == BoardStatus.CLOSED   -> throw BoardNotFoundException()
