@@ -7,32 +7,72 @@ apply from: "$project.rootDir/gradle/scripts/kotlin.gradle"
 def groovyVersion = "2.5.3"
 def spockVersion = "1.3-groovy-2.5"
 
+sourceSets {
+    integrationTest {
+        final srcBase = "src/integrationTest"
+        java {
+            srcDirs srcDirs = [srcDirs, "$srcBase/groovy", "$srcBase/java"]
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+
+        resources {
+            srcDirs srcDirs = [srcDirs, "$srcBase/resources"]
+        }
+    }
+}
+
+idea {
+    module {
+        testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
+        testResourceDirs += project.sourceSets.integrationTest.resources.srcDirs
+        scopes.TEST.plus += [configurations.integrationTestCompile]
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+task integrationTest(type: Test) {
+    description "Runs the integration tests."
+    group "verification"
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    mustRunAfter test
+}
+
+check.dependsOn integrationTest
+
 dependencies {
-    testImplementation project (":app-main")
+    integrationTestImplementation project(":app-main")
 
     // lang
-    testImplementation "org.codehaus.groovy:groovy-all:$groovyVersion"
+    integrationTestImplementation "org.codehaus.groovy:groovy-all:$groovyVersion"
 
     // Spring boot test libs
-    testImplementation "org.springframework.boot:spring-boot-starter-test:$version_springBoot"
-    testImplementation "org.springframework.restdocs:spring-restdocs-core:$version_restDocs"
-    testImplementation "org.springframework.restdocs:spring-restdocs-restassured:$version_restDocs"
-    testImplementation "org.springframework.restdocs:spring-restdocs-asciidoctor:$version_restDocs"
+    integrationTestImplementation "org.springframework.boot:spring-boot-starter-test:$version_springBoot"
+    integrationTestImplementation "org.springframework.restdocs:spring-restdocs-core:$version_restDocs"
+    integrationTestImplementation "org.springframework.restdocs:spring-restdocs-restassured:$version_restDocs"
+    integrationTestImplementation "org.springframework.restdocs:spring-restdocs-asciidoctor:$version_restDocs"
 
     // spock framework
-    testImplementation "org.spockframework:spock-core:$spockVersion"
-    testImplementation "org.spockframework:spock-spring:$spockVersion"
+    integrationTestImplementation "org.spockframework:spock-core:$spockVersion"
+    integrationTestImplementation "org.spockframework:spock-spring:$spockVersion"
 
     // in-memory database
-    testImplementation "com.h2database:h2:$version_h2db"
+    integrationTestImplementation "com.h2database:h2:$version_h2db"
 
     // spock mock support
-    testRuntimeOnly "cglib:cglib-nodep:3.2.4"
-    testRuntimeOnly "net.bytebuddy:byte-buddy:1.6.5"
-    testRuntimeOnly "org.objenesis:objenesis:2.5.1"
+    integrationTestRuntimeOnly "cglib:cglib-nodep:3.2.4"
+    integrationTestRuntimeOnly "net.bytebuddy:byte-buddy:1.6.5"
+    integrationTestRuntimeOnly "org.objenesis:objenesis:2.5.1"
 
-    testImplementation project(path: ":lib-common", configuration: "testArtifacts")
-    testImplementation project(path: ":app-main", configuration: "testArtifacts")
+    integrationTestImplementation project(path: ":lib-common", configuration: "testArtifacts")
+    integrationTestImplementation project(path: ":app-main", configuration: "testArtifacts")
 }
 
 asciidoctor {
