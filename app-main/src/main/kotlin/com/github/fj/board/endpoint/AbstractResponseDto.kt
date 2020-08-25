@@ -27,7 +27,7 @@ abstract class AbstractResponseDto<T>(
     companion object {
         const val DESC_TYPE = "Type of enclosing response. Either be 'OK' or 'ERROR'."
         const val DESC_TIMESTAMP = "UNIX epoch timestamp of request negotiation."
-        const val DESC_BODY = "Actual payload of this response object."
+        const val DESC_BODY = "An actual payload of this response object."
 
         fun <T> ok(payload: T) = OkResponseDto(payload)
 

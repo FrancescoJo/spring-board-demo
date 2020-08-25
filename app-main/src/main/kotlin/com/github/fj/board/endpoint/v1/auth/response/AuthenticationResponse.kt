@@ -40,14 +40,14 @@ data class AuthenticationResponse(
     val refreshTokenExpiresAfter: LocalDateTime
 ) {
     companion object {
-        const val DESC_LOGIN_NAME = "An 'user id' that specified by user."
+        const val DESC_LOGIN_NAME = "A 'user id' that specified by user."
         const val DESC_ACCESS_TOKEN = "An access token object for authentication. " +
                 "Users should keep this information carefully and do not expose it to public."
-        const val DESC_ACCESS_TOKEN_EXPIRES_AFTER = "An UNIX timestamp for access token expiration. "
-        const val DESC_REFRESH_TOKEN = "A refresh access token object for authentication. " +
+        const val DESC_ACCESS_TOKEN_EXPIRES_AFTER = "A UNIX timestamp for access token expiration. "
+        const val DESC_REFRESH_TOKEN = "A value to refresh old access token object for authentication. " +
                 "Users should keep this information carefully and do not expose it to public. " +
                 "Both `accessToken` and `refreshToken` are used for extending login status."
-        const val DESC_REFRESH_TOKEN_EXPIRES_AFTER = "An UNIX timestamp for refresh token expiration."
+        const val DESC_REFRESH_TOKEN_EXPIRES_AFTER = "A UNIX timestamp represents refresh token expiration."
 
         fun from(vo: AuthenticationResult) = with(vo) {
             AuthenticationResponse(

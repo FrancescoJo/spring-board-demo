@@ -28,7 +28,7 @@ data class AuthenticationRequest(
     @JsonPropertyDescription(DESC_LOGIN_NAME)
     @get:Pattern(
         regexp = "^[A-Za-z0-9]{$LOGIN_NAME_SIZE_MIN,$LOGIN_NAME_SIZE_MAX}\$",
-        message = "`loginName` must between $LOGIN_NAME_SIZE_MIN to $LOGIN_NAME_SIZE_MAX alphanumeric characters."
+        message = "`loginName` must between $LOGIN_NAME_SIZE_MIN and $LOGIN_NAME_SIZE_MAX alphanumeric characters."
     )
     val loginName: String,
 
