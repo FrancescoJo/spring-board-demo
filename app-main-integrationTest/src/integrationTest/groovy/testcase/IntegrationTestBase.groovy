@@ -187,7 +187,7 @@ class IntegrationTestBase extends Specification {
 
         final List<T> parsedData = data.stream().map {
             objMapper.convertValue(it, dataClass) as T
-        }.collect(Collectors.toUnmodifiableList())
+        }.collect(Collectors.toList())
 
         return new PageableResponse<T>(
                 /* page */       page,
