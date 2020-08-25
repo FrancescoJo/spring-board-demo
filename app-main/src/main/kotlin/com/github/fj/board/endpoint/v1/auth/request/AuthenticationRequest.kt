@@ -64,7 +64,8 @@ data class AuthenticationRequest(
                 "Must between $LOGIN_NAME_SIZE_MIN to $LOGIN_NAME_SIZE_MAX alphanumeric characters."
         const val DESC_PASSWORD = "A sha-1 encoded password to get access to service. Must be hex encoded, " +
                 "40 characters long. Do not send any plaintext for this field."
-        const val DESC_PLATFORM_TYPE = "Client platform type. Values are: [\"a\": ANDROID, \"i\": IOS, \"w\": WEB]"
+        const val DESC_PLATFORM_TYPE = "Client platform type. Read link:#common-types-platformType[`PlatformType`] " +
+                "for more details."
         const val DESC_PLATFORM_VERSION = "Version string of client system."
         const val DESC_APP_VERSION = "Semantic versioning format encoded client app version. "
     }

@@ -77,6 +77,16 @@ dependencies {
 
 asciidoctor {
     inputs.dir "${project.buildDir}/generated-snippets"
+    /*
+     * In cases of this option is ineffective under Windows environment, you should set global environment variables
+     * via "Control Panel" > "[Advanced]" > "Environment variables..." and put values as following:
+     *
+     * set JAVA_OPTS=-Dfile.encoding=UTF-8
+     * set GRADLE_OPTS=-Dfile.encoding=UTF-8
+     *
+     * and reboot system to apply values.
+     */
+    options.encoding = "UTF-8"
     dependsOn test
 }
 
