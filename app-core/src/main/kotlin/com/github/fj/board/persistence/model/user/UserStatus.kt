@@ -15,7 +15,7 @@ enum class UserStatus(val key: String, val isAccessible: Boolean) {
     UNVERIFIED("u", true),
     VERIFIED("v", true),
     SUSPENDED("s", false),
-    WITHDRAWN("w", false);
+    WITHDRAWN("_", false);
 
     @JsonValue
     @Suppress("unused") // Used by Jackson upon serialising @JsonSerialize annotated classes

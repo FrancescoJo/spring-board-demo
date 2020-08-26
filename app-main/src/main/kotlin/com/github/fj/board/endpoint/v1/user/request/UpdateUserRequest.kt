@@ -21,7 +21,7 @@ data class UpdateUserRequest(
     @get:UnicodeCharsLength(
         min = NICKNAME_SIZE_MIN,
         max = NICKNAME_SIZE_MAX,
-        message = "`nickname` must between $NICKNAME_SIZE_MIN to $NICKNAME_SIZE_MAX characters."
+        message = "`nickname` must between $NICKNAME_SIZE_MIN and $NICKNAME_SIZE_MAX characters."
     )
     @JsonProperty
     @JsonPropertyDescription(DESC_NICKNAME)
@@ -30,7 +30,7 @@ data class UpdateUserRequest(
     @get:Size(
         min = EMAIL_SIZE_MIN,
         max = EMAIL_SIZE_MAX,
-        message = "`email` must between $EMAIL_SIZE_MIN to $EMAIL_SIZE_MAX characters."
+        message = "`email` must between $EMAIL_SIZE_MIN and $EMAIL_SIZE_MAX characters."
     )
     @get:Email(message = "Not a valid email format.")
     @JsonProperty

@@ -21,7 +21,7 @@ data class CreateUserRequest(
     @get:UnicodeCharsLength(
         min = NICKNAME_SIZE_MIN,
         max = NICKNAME_SIZE_MAX,
-        message = "`nickname` must between $NICKNAME_SIZE_MIN to $NICKNAME_SIZE_MAX characters."
+        message = "`nickname` must between $NICKNAME_SIZE_MIN and $NICKNAME_SIZE_MAX characters."
     )
     @JsonProperty
     @JsonPropertyDescription(DESC_NICKNAME)
@@ -56,6 +56,6 @@ data class CreateUserRequest(
         const val DESC_NICKNAME = "A distinct name to identify users. Must between " +
                 "$NICKNAME_SIZE_MIN to $NICKNAME_SIZE_MAX characters long."
         const val DESC_EMAIL = "(Optional) Email address. No longer than $EMAIL_SIZE_MAX characters."
-        const val DESC_INVITED_BY = "(Optional) `loginName` of other user whom made this invitation."
+        const val DESC_INVITED_BY = "(Optional) `loginName` of other user who made this invitation."
     }
 }

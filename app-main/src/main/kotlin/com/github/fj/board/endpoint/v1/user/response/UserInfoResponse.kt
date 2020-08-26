@@ -40,7 +40,7 @@ data class UserInfoResponse(
     companion object {
         const val DESC_NICKNAME = "Nickname that user decided and accepted."
         const val DESC_STATUS =
-            "User's current status. ['u': Unverified, 'v': Verified, 's': Suspended, 'w': Withdrawn]"
+            "User's current status. Read link:#common-types-userStatus[`UserStatus`] for more details."
         const val DESC_EMAIL = "Email address that user provided. Empty if no email is registered."
         const val DESC_CREATED_DATE = "The very first date when this user started activities."
         const val DESC_LAST_ACTIVE_DATE = "The very last date when this user ended activities."
