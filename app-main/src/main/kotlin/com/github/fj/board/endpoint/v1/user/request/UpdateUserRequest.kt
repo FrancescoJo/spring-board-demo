@@ -49,7 +49,7 @@ data class UpdateUserRequest(
         const val EMAIL_SIZE_MAX = 128
 
         const val DESC_NICKNAME = "A distinct name to identify users. Must between " +
-                "$NICKNAME_SIZE_MIN to $NICKNAME_SIZE_MAX characters long."
+                "$NICKNAME_SIZE_MIN and $NICKNAME_SIZE_MAX characters long."
         const val DESC_EMAIL = "(Optional) Email address. No longer than $EMAIL_SIZE_MAX characters."
     }
 }

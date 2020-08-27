@@ -64,11 +64,14 @@ data class BoardInfoResponse(
     val creatorLoginName: String
 ) {
     companion object {
-        const val DESC_ACCESS_ID = "An UUID of this board."
-        const val DESC_STATUS = "Status of this board. ['n': Normal, 'x': Archived]. Archived boards are invisible " +
-                "and inaccessible without authorisation by default."
-        const val DESC_ACCESS = "Access rights of board. ['o': Public, 'p': Private/Members only]."
-        const val DESC_MODE = "Write mode of board. ['rw': Freestyle, 'ro': ReadOnly, 'rw': WriteOnce]."
+        const val DESC_ACCESS_ID = "A UUID of this board."
+        const val DESC_STATUS = "Status of this board. Archived boards are invisible and inaccessible without " +
+                "authorisation by default. Read link:#common-types-boardStatus[`BoardStatus`] " +
+                "for more details."
+        const val DESC_ACCESS = "Access rights of board. Read link:#common-types-boardAccess[`BoardAccess`] " +
+                "for more details."
+        const val DESC_MODE = "Write mode of board. Read link:#common-types-boardMode[`BoardMode`] " +
+                "for more details."
         const val DESC_KEY = "A distinct, human-friendly unique string to identify a board."
         const val DESC_NAME = "A display name of this board."
         const val DESC_DESCRIPTION = "Brief description of this board."

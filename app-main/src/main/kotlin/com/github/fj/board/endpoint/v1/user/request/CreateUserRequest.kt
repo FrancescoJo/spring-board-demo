@@ -31,7 +31,7 @@ data class CreateUserRequest(
     @get:Size(
         min = EMAIL_SIZE_MIN,
         max = EMAIL_SIZE_MAX,
-        message = "`email` must between $EMAIL_SIZE_MIN to $EMAIL_SIZE_MAX characters."
+        message = "`email` must between $EMAIL_SIZE_MIN and $EMAIL_SIZE_MAX characters."
     )
     @get:Email(message = "Not a valid email format.")
     @JsonProperty
@@ -54,7 +54,7 @@ data class CreateUserRequest(
         const val EMAIL_SIZE_MAX = 128
 
         const val DESC_NICKNAME = "A distinct name to identify users. Must between " +
-                "$NICKNAME_SIZE_MIN to $NICKNAME_SIZE_MAX characters long."
+                "$NICKNAME_SIZE_MIN and $NICKNAME_SIZE_MAX characters long."
         const val DESC_EMAIL = "(Optional) Email address. No longer than $EMAIL_SIZE_MAX characters."
         const val DESC_INVITED_BY = "(Optional) `loginName` of other user who made this invitation."
     }

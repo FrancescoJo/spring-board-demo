@@ -20,7 +20,7 @@ import javax.validation.constraints.Pattern
 data class CreateBoardRequest(
     @get:Pattern(
         regexp = "^[A-Za-z0-9]{$KEY_SIZE_MIN,$KEY_SIZE_MAX}\$",
-        message = "`key` must between $KEY_SIZE_MIN to $KEY_SIZE_MAX alphanumeric characters."
+        message = "`key` must between $KEY_SIZE_MIN and $KEY_SIZE_MAX alphanumeric characters."
     )
     @JsonProperty
     @JsonPropertyDescription(DESC_KEY)
@@ -29,7 +29,7 @@ data class CreateBoardRequest(
     @get:UnicodeCharsLength(
         min = NAME_SIZE_MIN,
         max = NAME_SIZE_MAX,
-        message = "`name` must between $NAME_SIZE_MIN to $NAME_SIZE_MAX letters long."
+        message = "`name` must between $NAME_SIZE_MIN and $NAME_SIZE_MAX letters long."
     )
     @JsonProperty
     @JsonPropertyDescription(DESC_NAME)
@@ -54,11 +54,13 @@ data class CreateBoardRequest(
         const val NAME_SIZE_MAX = 18
 
         const val DESC_KEY = "A distinct, human-friendly unique string to identify a board. " +
-                "Must between $KEY_SIZE_MIN to $KEY_SIZE_MAX alphanumeric characters. " +
+                "Must between $KEY_SIZE_MIN and $KEY_SIZE_MAX alphanumeric characters. " +
                 "Once key is specified, it never could be changed."
         const val DESC_NAME = "A display name of this board. Should be concise and meaningful."
         const val DESC_DESCRIPTION = "Brief description of this board."
-        const val DESC_ACCESS = "Access rights of board. ['o': Public(default), 'p': Private/Members only]."
-        const val DESC_MODE = "Write mode of board. ['rw': Freestyle(default), 'ro': ReadOnly, 'rw': WriteOnce]."
+        const val DESC_ACCESS = "Access rights of board. Read link:#common-types-boardAccess[`BoardAccess`] " +
+                "for more details."
+        const val DESC_MODE = "Write mode of board. Read link:#common-types-boardMode[`BoardMode`] " +
+                "for more details."
     }
 }

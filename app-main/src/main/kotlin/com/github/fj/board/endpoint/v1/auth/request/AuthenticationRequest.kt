@@ -61,7 +61,7 @@ data class AuthenticationRequest(
         const val PASSWORD_SIZE = Authentication.PASSWORD_SIZE
 
         const val DESC_LOGIN_NAME = "A unique login name to distinguish users. " +
-                "Must between $LOGIN_NAME_SIZE_MIN to $LOGIN_NAME_SIZE_MAX alphanumeric characters."
+                "Must between $LOGIN_NAME_SIZE_MIN and $LOGIN_NAME_SIZE_MAX alphanumeric characters."
         const val DESC_PASSWORD = "A sha-1 encoded password to get access to service. Must be hex encoded, " +
                 "40 characters long. Do not send any plaintext for this field."
         const val DESC_PLATFORM_TYPE = "Client platform type. Read link:#common-types-platformType[`PlatformType`] " +
