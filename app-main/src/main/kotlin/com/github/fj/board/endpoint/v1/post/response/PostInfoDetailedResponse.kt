@@ -87,22 +87,24 @@ data class PostInfoDetailedResponse(
     companion object {
         const val DESC_BOARD_ID = "An UUID of board which contains this post."
         const val DESC_POST_ID = "An UUID of this post."
-        const val DESC_POST_MODE = "Mode of this post['frv': Free to reply, 'rr': Reply not allowed]."
+        const val DESC_POST_MODE = "Mode of this post. Read link:#common-types-postMode[`PostMode`] " +
+                "for more details."
         const val DESC_POST_NUMBER = "A sequence number of this post in board."
         const val DESC_WRITER_NICKNAME = "Writer's nickname of this post. Maybe null depends on board mode."
         const val DESC_WRITER_LOGIN_NAME = "Writer's login name of this post. Maybe null depends on board mode."
         const val DESC_LAST_MODIFIED_DATE = "The very last date when this post's writer finished their edits."
         const val DESC_LAST_MODIFIED_IP = "The very last IP address of client " +
                 "when this post's writer finished their edits."
-        const val DESC_LAST_MODIFIED_PLATFORM_TYPE = "The very last platform type['a': Android, 'i': iOS, 'w': Web] " +
-                "of client when this post's writer finished their edits. ."
+        const val DESC_LAST_MODIFIED_PLATFORM_TYPE = "The very last platform type of client when this post's writer " +
+                "finished their edits. Read link:#common-types-platformType[`PlatformType`] for more details."
         const val DESC_EDITED = "Boolean flag to determine this post is whether original or not."
         const val DESC_NUMBER = "Number of this post in board."
         const val DESC_TITLE = "Title of this post."
         const val DESC_CONTENTS = "Content of this post."
         const val DESC_VIEW_COUNT = "View count of this post."
         const val DESC_ATTACHMENTS = "Attachments of this post."
-        const val DESC_REPLIES = "List of 'latest' replies of this post. Wrapped as `PageableResponse`."
+        const val DESC_REPLIES = "List of 'latest' replies of this post. Wrapped as `PageableResponse`. " +
+                "Read link:#common-types-pageableResponse[`PageableResponse`] for more details."
 
         fun from(src: PostDetailedInfo, replies: PageableResponse<ReplyInfoResponse>) = PostInfoDetailedResponse(
             boardId = src.boardId.toString(),

@@ -49,7 +49,8 @@ data class UpdatePostRequest(
     companion object {
         const val TITLE_SIZE_MAX = 40
 
-        const val DESC_MODE = "Mode of this post. ['frv': Free to reply, 'rr': Reply not allowed]."
+        const val DESC_MODE = "Mode of this post. Read link:#common-types-postMode[`PostMode`] " +
+                "for more details."
         const val DESC_TITLE = "Title of  target post to edit."
         const val DESC_CONTENTS = "Contents of target post to edit."
         const val DESC_ATTACHMENTS = "Attachments of target post. Maybe null or empty."

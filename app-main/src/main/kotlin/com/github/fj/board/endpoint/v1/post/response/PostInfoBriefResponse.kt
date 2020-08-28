@@ -60,7 +60,8 @@ data class PostInfoBriefResponse(
     companion object {
         const val DESC_BOARD_ID = "An UUID of board which contains this post."
         const val DESC_POST_ID = "An UUID of this post."
-        const val DESC_POST_MODE = "Mode of this post['frv': Free to reply, 'rr': Reply not allowed]."
+        const val DESC_POST_MODE = "Mode of this post. Read link:#common-types-postMode[`PostMode`] " +
+                "for more details."
         const val DESC_POST_NUMBER = "A sequence number of this post in board."
         const val DESC_WRITER_NICKNAME = "Writer's nickname of this post. Maybe null depends on board mode."
         const val DESC_WRITER_LOGIN_NAME = "Writer's login name of this post. Maybe null depends on board mode."
