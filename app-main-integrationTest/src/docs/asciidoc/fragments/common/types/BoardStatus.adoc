@@ -1,0 +1,15 @@
+[[common-types-boardStatus]]
+=== `BoardStatus`
+
+|===
+| Type | Value
+
+| `+NORMAL+`
+| `+n+`
+
+| `+ARCHIVED+`
+| `+x+`
+
+| `+CLOSED+`
+| `+-+`
+|===

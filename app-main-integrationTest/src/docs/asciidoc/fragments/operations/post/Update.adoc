@@ -1,0 +1,20 @@
+[[api-post-update]]
+=== Update post
+operation::updatePost[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+403+`
+| `+CannotEditPostException+`
+| Client attempted to edit a post in an inaccessible board, or not owned by client.
+
+| `+404+`
+| `+BoardNotFoundException+`
+| A board where target post exists, is closed, or changed to members only.
+
+| `+404+`
+| `+PostNotFoundException+`
+| Post with given `accessId` is not found, or already deleted. Just 'not found' is suffice to acknowledge.
+|===

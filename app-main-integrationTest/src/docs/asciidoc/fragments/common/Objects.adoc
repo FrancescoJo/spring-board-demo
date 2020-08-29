@@ -1,0 +1,4 @@
+[[common-payloads-objects]]
+== Common objects
+
+include::objects/PageableResponse.adoc[]

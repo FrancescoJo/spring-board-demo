@@ -1,0 +1,21 @@
+[[common-objects-pageableResponse]]
+=== `PageableResponse`
+|===
+| Path | Type | Description
+
+|`+page+`
+|`+Number+`
+|Requested page of data list. Defaulted to '1' if unspecified.
+
+|`+size+`
+|`+Number+`
+|Requested size of data list. Note that this value may differ to size of `data` if there are fewer data than requested size.
+
+|`+totalCount+`
+|`+Number+`
+|Total count of available data.
+
+|`+data[]+`
+|`+Array+`
+|Actual data of windowed request.
+|===

@@ -1,0 +1,64 @@
+[[api-board-getList]]
+=== Get list of boards
+
+==== Example request
+include::{snippets}/getBoardList-sortedByCriteria/http-request.adoc[]
+
+==== Request parameters
+|===
+| Name | Type | Mandatory | Value
+
+| `+sortBy+`
+|`+KEY+`
+|
+| `k` (Default)
+
+|
+| `+NAME+`
+|
+| `n`
+
+|
+| `+POSTS_COUNT+`
+|
+| `pn`
+
+|
+| `+CREATED_DATE+`
+|
+| `cd`
+
+|
+| `+LAST_MODIFIED_DATE+`
+|
+| `md`
+
+| `+orderBy+`
+| `+DESCENDING+`
+|
+| `new`
+
+|
+| `+ASCENDING+`
+|
+| `old` (Default)
+|===
+
+==== Example response
+include::{snippets}/getBoardList-sortedByCriteria/http-response.adoc[]
+
+==== Response fields
+include::{snippets}/getBoardList-sortedByCriteria/response-fields.adoc[]
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+403+`
+| `+UnauthorisedException+`
+| Board is not owned by client.
+
+| `+404+`
+| `+BoardNotFoundException+`
+| Board with given `accessId` is not found, closed, or members only. Just 'not found' is suffice to acknowledge.
+|===

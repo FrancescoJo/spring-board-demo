@@ -1,0 +1,6 @@
+[[api-user]]
+== User
+
+include::user/Create.adoc[]
+include::user/Update.adoc[]
+include::user/Get.adoc[]

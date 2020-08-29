@@ -1,0 +1,21 @@
+[[common-payloads-error-causes]]
+== Common error causes
+|===
+| HTTP Code | Cause | Reason
+
+| `+400+`
+| `+HttpMessageNotReadableException+`
+| Cannot process given request.
+
+| `+400+`
+| `+IllegalRequestException+`
+| Illegal request from a client. Either request is empty, malformed, and/or mandatory information is omitted.
+
+| `+401+`
+| `+UnauthenticatedException+`
+| Attempted to access to a resource which requires authentication.
+
+| `+404+`
+| `+ResourceNotFoundException+`
+| Attempted to access to a non-existent resource.
+|===

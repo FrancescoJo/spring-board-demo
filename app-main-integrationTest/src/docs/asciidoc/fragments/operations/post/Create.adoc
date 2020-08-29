@@ -1,0 +1,16 @@
+[[api-post-create]]
+=== Create post
+operation::createPost[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+403+`
+| `+CannotCreatePostException+`
+| Client attempted to create a post in closed or read-only board.
+
+| `+404+`
+| `+BoardNotFoundException+`
+| Board with given `accessId` is not found, closed, or members only. Just 'not found' is suffice to acknowledge.
+|===

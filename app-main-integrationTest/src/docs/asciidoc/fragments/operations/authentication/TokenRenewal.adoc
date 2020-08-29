@@ -1,0 +1,16 @@
+[[api-authentication-token]]
+=== Access Token renewal
+operation::refreshAccessToken[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+400+`
+| `+LoginNotAllowedException+`
+| Duplicated login name.
+
+| `+403+`
+| `+RefreshTokenMismatchException+`
+| Illegal refresh token from a client.
+|===

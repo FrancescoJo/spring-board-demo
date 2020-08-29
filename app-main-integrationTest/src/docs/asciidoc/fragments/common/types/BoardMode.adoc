@@ -1,0 +1,15 @@
+[[common-types-boardMode]]
+=== `BoardMode`
+
+|===
+| Type | Value
+
+| `+FREE_STYLE+`
+| `+rw+`
+
+| `+READ_ONLY+`
+| `+ro+`
+
+| `+WRITE_ONCE+`
+| `+wo+`
+|===

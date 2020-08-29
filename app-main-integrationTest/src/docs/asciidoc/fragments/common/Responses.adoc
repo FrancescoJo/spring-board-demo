@@ -1,0 +1,28 @@
+[[common-payloads-responses]]
+== Common Response body format
+
+[source]
+----
+{
+  "body" : ResponseBody<JsonObject>,
+  "timestamp" : <Number>,
+  "type" : "OK"
+}
+----
+
+=== Response body explanation
+|===
+| Path | Type | Description
+
+| `+body+`
+| `+Object+`
+| Wrapper object of actual response.
+
+| `+timestamp+`
+| `+Number+`
+| UTC based UNIX timestamp when server made this response.
+
+| `+type+`
+| `+String+`
+| Reserved value to indicate whether this envelope includes a requested object(`OK`) or error(`ERROR`).
+|===

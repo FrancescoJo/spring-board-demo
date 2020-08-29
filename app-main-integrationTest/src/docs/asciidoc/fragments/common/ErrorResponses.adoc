@@ -1,0 +1,39 @@
+[[common-payloads-error]]
+== Common Error response body format
+
+[source]
+----
+{
+  "body" : {
+    "message" : <String>,
+    "cause" : <String>
+  },
+  "timestamp" : <Number>>
+  "type" : "ERROR"
+}
+----
+
+=== Response body explanation
+|===
+| Path | Type | Description
+
+| `+body+`
+| `+Object+`
+| Wrapper object of actual response.
+
+| `+body.message+`
+| `+String+`
+| Actual error message
+
+| `+body.cause+`
+| `+String+`
+| A codified cause of this error. Has a regex pattern of: `([A-Z]([A-Za-z]+))(Exception\|Error)`.
+
+| `+timestamp+`
+| `+Number+`
+| UTC based UNIX timestamp when server made this response.
+
+| `+type+`
+| `+String+`
+| Reserved value to indicate whether this envelope includes a requested object(`OK`) or error(`ERROR`).
+|===

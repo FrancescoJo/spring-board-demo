@@ -1,0 +1,18 @@
+[[common-types-userStatus]]
+=== `UserStatus`
+
+|===
+| Type | Value
+
+| `+UNVERIFIED+`
+| `+u+`
+
+| `+VERIFIED+`
+| `+v+`
+
+| `+SUSPENDED+`
+| `+s+`
+
+| `+WITHDRAWN+`
+| `+_+`
+|===

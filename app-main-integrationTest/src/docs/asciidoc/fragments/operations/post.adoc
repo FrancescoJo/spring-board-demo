@@ -1,0 +1,8 @@
+[[api-post]]
+== Post
+
+include::post/Create.adoc[]
+include::post/Update.adoc[]
+include::post/Delete.adoc[]
+include::post/GetSingle.adoc[]
+include::post/GetList.adoc[]

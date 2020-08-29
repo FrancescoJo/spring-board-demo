@@ -1,0 +1,55 @@
+[[api-reply-getList]]
+=== Get list of replies
+
+==== Example request
+include::{snippets}/getReplies-limitedFetchSize-#1/http-request.adoc[]
+
+==== Request parameters
+|===
+| Name | Type | Mandatory | Value
+
+| `+sortBy+`
+|`+NUMBER+`
+|
+| `n` (Default)
+
+| `+orderBy+`
+| `+DESCENDING+`
+|
+| `new` (Default)
+
+|
+| `+ASCENDING+`
+|
+| `old`
+
+| `+page+`
+| `+Number+`
+|
+| An integer number equal to or larger than 1. Default is `1`.
+
+| `+count+`
+| `+Number+`
+|
+| An integer number between 20 and 30. Default is `20`.
+|===
+
+==== Example response
+include::{snippets}/getReplies-limitedFetchSize-#1/http-response.adoc[]
+
+==== Response fields
+include::{snippets}/getReplies-limitedFetchSize-#1/response-fields.adoc[]
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+404+`
+| `+BoardNotFoundException+`
+| Board of parent post where reply of given `accessId` is not found, closed, or members only.
+Just 'not found' is suffice to acknowledge.
+
+| `+404+`
+| `+PostNotFoundException+`
+| Post with given `accessId` is not found, deleted, or archived. Just 'not found' is suffice to acknowledge.
+|===

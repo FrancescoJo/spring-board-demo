@@ -1,0 +1,3 @@
+[[api-authentication-withdrawl]]
+=== Service withdrawal
+operation::withdraw[snippets='http-request,http-response,response-fields']

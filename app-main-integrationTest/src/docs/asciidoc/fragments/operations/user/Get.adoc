@@ -1,0 +1,12 @@
+[[api-user-get]]
+=== Get user
+operation::getUser[snippets='http-request,http-response,response-fields']
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+404+`
+| `+UserNotFoundException+`
+| Found no user who has given nickname.
+|===

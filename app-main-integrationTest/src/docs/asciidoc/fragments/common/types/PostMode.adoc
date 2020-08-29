@@ -1,0 +1,15 @@
+[[common-types-postMode]]
+=== `PostMode`
+
+|===
+| Type | Value
+
+| `+FREE_REPLY+`
+| `+r++`
+
+| `+REPLY_ONCE+`
+| `+r1+`
+
+| `+REPLY_NOT_ALLOWED+`
+| `+r-+`
+|===

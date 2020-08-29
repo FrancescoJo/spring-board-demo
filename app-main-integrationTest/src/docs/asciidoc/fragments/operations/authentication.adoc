@@ -1,0 +1,8 @@
+[[api-authentication]]
+== Authentication
+
+include::authentication/SignUp.adoc[]
+include::authentication/SignIn.adoc[]
+include::authentication/TokenRenewal.adoc[]
+include::authentication/ChangePassword.adoc[]
+include::authentication/Withdrawl.adoc[]

@@ -1,0 +1,7 @@
+[[api-reply]]
+== Reply
+
+include::reply/Create.adoc[]
+include::reply/Update.adoc[]
+include::reply/Delete.adoc[]
+include::reply/GetList.adoc[]

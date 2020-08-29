@@ -1,0 +1,22 @@
+[[api-reply-delete]]
+=== Delete reply
+operation::deleteReply[snippets='http-request,http-response,response-fields']
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+403+`
+| `+CannotDeleteReplyException+`
+| Client attempted to delete a post in an inaccessible board, or not owned by client.
+
+| `+404+`
+| `+BoardNotFoundException+`
+| Board of parent post where reply of given `accessId` is not found, closed, or members only.
+Just 'not found' is suffice to acknowledge.
+
+| `+404+`
+| `+ReplyNotFoundException+`
+| Reply with given `accessId` is not found, already deleted, and/or parent post is inaccessible.
+Just 'not found' is suffice to acknowledge.
+|===

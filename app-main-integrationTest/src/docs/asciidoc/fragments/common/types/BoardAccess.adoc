@@ -1,0 +1,12 @@
+[[common-types-boardAccess]]
+=== `BoardAccess`
+
+|===
+| Type | Value
+
+| `+PUBLIC+`
+| `+o+`
+
+| `+MEMBERS_ONLY+`
+| `+p+`
+|===

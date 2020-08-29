@@ -1,0 +1,55 @@
+[[api-post-getList]]
+=== Get list of posts
+
+==== Example request
+include::{snippets}/getPostList-defaultLatest-secondPage/http-request.adoc[]
+
+==== Request parameters
+|===
+| Name | Type | Mandatory | Value
+
+| `+sortBy+`
+|`+NUMBER+`
+|
+| `n` (Default)
+
+|
+| `+VIEWED_COUNT+`
+|
+| `v`
+
+| `+orderBy+`
+| `+DESCENDING+`
+|
+| `new` (Default)
+
+|
+| `+ASCENDING+`
+|
+| `old`
+
+| `+page+`
+| `+Number+`
+|
+| An integer number equal to or larger than 1. Default is `1`.
+
+| `+count+`
+| `+Number+`
+|
+| An integer number between 20 and 30. Default is `20`.
+|===
+
+==== Example response
+include::{snippets}/getPostList-defaultLatest-secondPage/http-response.adoc[]
+
+==== Response fields
+include::{snippets}/getPostList-defaultLatest-secondPage/response-fields.adoc[]
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+404+`
+| `+BoardNotFoundException+`
+| Board with given `accessId` is not found, closed, or members only. Just 'not found' is suffice to acknowledge.
+|===

@@ -1,0 +1,9 @@
+[[common-payloads-types]]
+== Common types
+
+include::types/BoardAccess.adoc[]
+include::types/BoardMode.adoc[]
+include::types/BoardStatus.adoc[]
+include::types/PlatformType.adoc[]
+include::types/PostMode.adoc[]
+include::types/UserStatus.adoc[]

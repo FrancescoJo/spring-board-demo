@@ -1,0 +1,12 @@
+[[api-user-update]]
+=== Update user
+operation::updateUser[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+403+`
+| `+UnauthorisedException+`
+| A client is trying to change other user's personal information, or a client is requesting such operation whom does not have privileges to do so.
+|===

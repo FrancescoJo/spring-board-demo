@@ -1,0 +1,20 @@
+[[api-post-delete]]
+=== Delete post
+operation::deletePost[snippets='http-request,http-response,response-fields']
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+403+`
+| `+CannotDeletePostException+`
+| Client attempted to delete a post in an inaccessible board, or not owned by client.
+
+| `+404+`
+| `+BoardNotFoundException+`
+| A board where target post exists, is closed, or changed to members only.
+
+| `+404+`
+| `+PostNotFoundException+`
+| Post with given `accessId` is not found, or already deleted. Just 'not found' is suffice to acknowledge.
+|===

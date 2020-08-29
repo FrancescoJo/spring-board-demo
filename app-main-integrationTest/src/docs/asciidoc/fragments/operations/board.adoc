@@ -1,0 +1,8 @@
+[[api-board]]
+== Board
+
+include::board/Create.adoc[]
+include::board/Update.adoc[]
+include::board/Delete.adoc[]
+include::board/GetSingle.adoc[]
+include::board/GetList.adoc[]

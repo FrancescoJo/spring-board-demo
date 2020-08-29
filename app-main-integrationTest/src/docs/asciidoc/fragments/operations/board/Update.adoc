@@ -1,0 +1,16 @@
+[[api-board-update]]
+=== Update board
+operation::updateBoard[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+403+`
+| `+UnauthorisedException+`
+| Board is not owned by client.
+
+| `+404+`
+| `+BoardNotFoundException+`
+| Board with given `accessId` is not found.
+|===

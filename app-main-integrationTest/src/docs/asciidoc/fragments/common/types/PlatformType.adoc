@@ -1,0 +1,15 @@
+[[common-types-platformType]]
+=== `PlatformType`
+
+|===
+| Type | Value
+
+| `+ANDROID+`
+| `+a+`
+
+| `+IOS+`
+| `+i+`
+
+| `+WEB+`
+| `+w+`
+|===

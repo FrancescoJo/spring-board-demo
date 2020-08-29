@@ -1,0 +1,20 @@
+[[api-reply-create]]
+=== Create reply
+operation::createReply[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Error situations
+|===
+| HTTP Code | Cause | Reason
+
+| `+403+`
+| `+CannotCreateReplyException+`
+| Client attempted to create a reply in deleted or archived post.
+
+| `+404+`
+| `+BoardNotFoundException+`
+| Board of target post with given `accessId` is not found, closed, or members only. Just 'not found' is suffice to acknowledge.
+
+| `+404+`
+| `+PostNotFoundException+`
+| Post with given `accessId` is not found, deleted, or archived. Just 'not found' is suffice to acknowledge.
+|===
