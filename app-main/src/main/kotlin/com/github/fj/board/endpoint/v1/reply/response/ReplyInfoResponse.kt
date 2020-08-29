@@ -65,8 +65,8 @@ data class ReplyInfoResponse(
         const val DESC_LAST_MODIFIED_DATE = "The very last date when this reply's writer finished their edits."
         const val DESC_LAST_MODIFIED_IP = "The very last IP address of client " +
                 "when this reply's writer finished their edits."
-        const val DESC_LAST_MODIFIED_PLATFORM_TYPE = "The very last platform type['a': Android, 'i': iOS, 'w': Web] " +
-                "of client when this reply's writer finished their edits. ."
+        const val DESC_LAST_MODIFIED_PLATFORM_TYPE = "The very last platform type of client when this reply's writer " +
+                "finished their edits. Read link:#common-types-platformType[`PlatformType`] for more details."
         const val DESC_EDITED = "Boolean flag to determine this reply is whether original or not."
         const val DESC_NUMBER = "Number of this post in board."
         const val DESC_CONTENTS = "Content of this post."
