@@ -1,6 +1,19 @@
+// Refs:
+:snippets: ../../../../../../build/generated-snippets/
+:operation: deletePost
+
 [[api-post-delete]]
 === Delete post
 operation::deletePost[snippets='http-request,http-response,response-fields']
+
+==== Example request
+include::{snippets}/{operation}/http-request.adoc[]
+
+==== Example response
+include::{snippets}/{operation}/http-response.adoc[]
+
+==== Response fields
+include::{snippets}/{operation}/response-fields.adoc[]
 
 ==== Error situations
 |===

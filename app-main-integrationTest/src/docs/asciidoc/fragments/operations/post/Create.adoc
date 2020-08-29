@@ -1,6 +1,22 @@
+// Refs:
+:snippets: ../../../../../../build/generated-snippets/
+:operation: createPost
+
 [[api-post-create]]
 === Create post
-operation::createPost[snippets='http-request,request-fields,http-response,response-fields']
+// operation::createPost[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Example request
+include::{snippets}/{operation}/http-request.adoc[]
+
+==== Request fields
+include::{snippets}/{operation}/request-fields.adoc[]
+
+==== Example response
+include::{snippets}/{operation}/http-response.adoc[]
+
+==== Response fields
+include::{snippets}/{operation}/response-fields.adoc[]
 
 ==== Error situations
 |===

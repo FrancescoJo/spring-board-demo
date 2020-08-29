@@ -10,7 +10,7 @@
 }
 ----
 
-=== Response body explanation
+=== Response fields
 |===
 | Path | Type | Description
 

@@ -1,8 +1,12 @@
+// Refs:
+:snippets: ../../../../../../build/generated-snippets
+:operation: getPostList-defaultLatest-secondPage
+
 [[api-post-getList]]
 === Get list of posts
 
 ==== Example request
-include::{snippets}/getPostList-defaultLatest-secondPage/http-request.adoc[]
+include::{snippets}/{operation}/http-request.adoc[]
 
 ==== Request parameters
 |===
@@ -40,10 +44,10 @@ include::{snippets}/getPostList-defaultLatest-secondPage/http-request.adoc[]
 |===
 
 ==== Example response
-include::{snippets}/getPostList-defaultLatest-secondPage/http-response.adoc[]
+include::{snippets}/{operation}/http-response.adoc[]
 
 ==== Response fields
-include::{snippets}/getPostList-defaultLatest-secondPage/response-fields.adoc[]
+include::{snippets}/{operation}/response-fields.adoc[]
 
 ==== Error situations
 |===

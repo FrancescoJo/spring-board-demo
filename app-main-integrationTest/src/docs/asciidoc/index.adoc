@@ -15,6 +15,7 @@ Francesco Jo <nimbusob@gmail.com>
 :url-project: https://github.com/FrancescoJo/spring-board-demo
 :url-docs: {url-project}/README.md
 :url-issues: {url-project}/asciidoctor
+:snippets: ../../../build/generated-snippets
 // Macros:
 :operation-http-request-title: Example request
 :operation-http-response-title: Example response

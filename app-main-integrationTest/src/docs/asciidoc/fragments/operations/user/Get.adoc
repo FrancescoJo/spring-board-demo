@@ -1,6 +1,20 @@
+// Refs:
+:snippets: ../../../../../../build/generated-snippets/
+:operation: getUser
+
 [[api-user-get]]
 === Get user
-operation::getUser[snippets='http-request,http-response,response-fields']
+// operation::getUser[snippets='http-request,http-response,response-fields']
+
+==== Example request
+include::{snippets}/{operation}/http-request.adoc[]
+
+==== Example response
+include::{snippets}/{operation}/http-response.adoc[]
+
+==== Response fields
+include::{snippets}/{operation}/response-fields.adoc[]
+
 
 ==== Error situations
 |===

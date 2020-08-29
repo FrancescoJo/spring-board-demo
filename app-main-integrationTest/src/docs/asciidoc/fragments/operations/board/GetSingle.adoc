@@ -1,6 +1,19 @@
+// Refs:
+:snippets: ../../../../../../build/generated-snippets/
+:operation: getBoardSingle-authenticated-PUBLIC
+
 [[api-board-getSingle]]
 === Get single board
-operation::getBoardSingle-authenticated-PUBLIC[snippets='http-request,http-response,response-fields']
+// operation::getBoardSingle-authenticated-PUBLIC[snippets='http-request,http-response,response-fields']
+
+==== Example request
+include::{snippets}/{operation}/http-request.adoc[]
+
+==== Example response
+include::{snippets}/{operation}/http-response.adoc[]
+
+==== Response fields
+include::{snippets}/{operation}/response-fields.adoc[]
 
 ==== Error situations
 |===

@@ -1,8 +1,12 @@
+// Refs:
+:snippets: ../../../../../../build/generated-snippets
+:operation: getBoardList-sortedByCriteria
+
 [[api-board-getList]]
 === Get list of boards
 
 ==== Example request
-include::{snippets}/getBoardList-sortedByCriteria/http-request.adoc[]
+include::{snippets}/{operation}/http-request.adoc[]
 
 ==== Request parameters
 |===
@@ -45,10 +49,10 @@ include::{snippets}/getBoardList-sortedByCriteria/http-request.adoc[]
 |===
 
 ==== Example response
-include::{snippets}/getBoardList-sortedByCriteria/http-response.adoc[]
+include::{snippets}/{operation}/http-response.adoc[]
 
 ==== Response fields
-include::{snippets}/getBoardList-sortedByCriteria/response-fields.adoc[]
+include::{snippets}/{operation}/response-fields.adoc[]
 
 ==== Error situations
 |===

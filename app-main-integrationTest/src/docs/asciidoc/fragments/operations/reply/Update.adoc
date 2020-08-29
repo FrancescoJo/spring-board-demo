@@ -1,6 +1,22 @@
+// Refs:
+:snippets: ../../../../../../build/generated-snippets/
+:operation: updateReply
+
 [[api-reply-update]]
 === Update reply
-operation::updateReply[snippets='http-request,request-fields,http-response,response-fields']
+// operation::updateReply[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Example request
+include::{snippets}/{operation}/http-request.adoc[]
+
+==== Request fields
+include::{snippets}/{operation}/request-fields.adoc[]
+
+==== Example response
+include::{snippets}/{operation}/http-response.adoc[]
+
+==== Response fields
+include::{snippets}/{operation}/response-fields.adoc[]
 
 ==== Error situations
 |===
