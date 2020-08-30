@@ -1,0 +1,25 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+task buildFlutterFrontend(type: Exec) {
+    doFirst {
+        commandLine getExecutionScript()
+    }
+}
+
+processResources.dependsOn buildFlutterFrontend
+
+private static String[] getExecutionScript() {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        return ["cmd", "/c", "build_flutter_frontend.bat"]
+    } else if (Os.isFamily(Os.FAMILY_MAC)) {
+        return "./build_flutter_frontend.sh"
+    } else if (Os.isFamily(Os.FAMILY_UNIX)) {
+        return "./build_flutter_frontend.sh"
+    } else {
+        final name = System.getProperty("os.name")
+        final arch = System.getProperty("os.arch")
+        final ver = System.getProperty("os.version")
+
+        throw new UnsupportedOperationException("Unable to build frontend under this system: '${name} (${ver})/${arch}'")
+    }
+}

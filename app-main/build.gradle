@@ -8,6 +8,7 @@ apply from: "$project.rootDir/gradle/scripts/testing-junit.gradle"
 apply from: "$project.rootDir/gradle/scripts/detekt.gradle"
 apply from: "packaging.gradle"
 apply from: "versioning.gradle"
+apply from: "build-frontend.gradle"
 
 sourceSets {
     def allowedBuildTargets = ["local", "release"]
