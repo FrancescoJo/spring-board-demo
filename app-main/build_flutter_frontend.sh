@@ -5,7 +5,7 @@ pushd $CURRENT_DIR% > /dev/null
 
 cd src/frontend
 
-flutter build web
+flutter build web $1
 
 if [ "$?" -eq "1" ]; then
     popd

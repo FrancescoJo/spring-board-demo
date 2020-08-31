@@ -2,19 +2,31 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 task buildFlutterFrontend(type: Exec) {
     doFirst {
-        commandLine getExecutionScript()
+        commandLine getExecutionScript(getBuildConfig())
     }
 }
 
 processResources.dependsOn buildFlutterFrontend
 
-private static String[] getExecutionScript() {
+private static String[] getExecutionScript(final String buildConfig) {
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        return ["cmd", "/c", "build_flutter_frontend.bat"]
+        if (buildConfig == "release") {
+            return ["cmd", "/c", "build_flutter_frontend.bat", "--release"]
+        } else {
+            return ["cmd", "/c", "build_flutter_frontend.bat"]
+        }
     } else if (Os.isFamily(Os.FAMILY_MAC)) {
-        return "./build_flutter_frontend.sh"
+        if (buildConfig == "release") {
+            return "./build_flutter_frontend.sh --release"
+        } else {
+            return "./build_flutter_frontend.sh"
+        }
     } else if (Os.isFamily(Os.FAMILY_UNIX)) {
-        return "./build_flutter_frontend.sh"
+        if (buildConfig == "release") {
+            return "./build_flutter_frontend.sh --release"
+        } else {
+            return "./build_flutter_frontend.sh"
+        }
     } else {
         final name = System.getProperty("os.name")
         final arch = System.getProperty("os.arch")

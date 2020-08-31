@@ -5,7 +5,7 @@ PUSHD %CURRENT_DIR%
 
 CD src\frontend
 
-cmd /c flutter build web
+cmd /c flutter build web %1
 
 IF /I "%errorlevel%" NEQ "0" (
     POPD
