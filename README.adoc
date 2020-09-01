@@ -1,0 +1,42 @@
+= spring-message-board-demo
+:link-jpa:https://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html
+:link-flutter:https://flutter.dev/
+Francesco Jo <nimbusob@gmail.com>
+
+A simple project, Based on default settings of my previous project
+https://github.com/FrancescoJo/springboot-multimodule-kotlin[springboot-multimodule-kotlin], that demonstrating my programming skills.
+
+In this project. I especially focused on showcasing https://en.wikipedia.org/wiki/Test-driven_development[test-driven-development]
+practice, link:{link-jpa}[Java Persistence API] and integration of link:{link-flutter}[Flutter] as web frontend into Spring boot.
+
+== Prerequisites and limitations
+
+This project requires https://openjdk.java.net/[OpenJDK 13] or above.
+
+Tested and built under This 3 major operating systems in 2020: Windows, MacOS and Linux.
+
+Due to inadequate support of Gradle and Kotlin plugin, unfortunately this project is cannot be run
+under in Eclipse IDE. I'm still trying to find a workaround for this.
+
+== Technical stack explanation
+
+* Build tools:
+** https://gradle.org/[Gradle 6.5]
+
+* Languages:
+** https://openjdk.java.net/[Java 13] - platform runtime
+** https://kotlinlang.org/[Kotlin 1.4] - implementation, unit test
+** http://groovy-lang.org/[Groovy 2.5] - integration test
+
+* Frameworks and runtimes:
+** http://undertow.io/[Undertow] - for Web application server
+** http://spring.io/projects/spring-boot[Spring boot 2] - application framework
+** http://hibernate.org/[Hibernate] - link:{link-jpa}[JPA] implementation / persistent data
+** https://github.com/brettwooldridge/HikariCP[HicariCP] - database connection pool
+** link:{link-flutter}[Flutter] - web frontend
+
+* Code quality:
+** https://junit.org/junit5/docs/current/user-guide/[JUnit 5]
+** http://spockframework.org/[Spock framework] with http://groovy-lang.org/[Groovy]
+** https://arturbosch.github.io/detekt/index.html[detekt]
+** https://spring.io/projects/spring-restdocs[Spring RESTDocs] with https://asciidoctor.org/docs/asciidoctor-gradle-plugin/[Asciidoctor] - Automatic documentation
