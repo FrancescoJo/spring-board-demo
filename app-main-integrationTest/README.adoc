@@ -1,0 +1,31 @@
+= app-main-integrationTest
+Francesco Jo <nimbusob@gmail.com>
+// Metadata:
+:description: Integration test overview
+:keywords: spring-boot, jpa-hibernate, junit5, spock-groovy, spring-rest-docs, tdd, kotlin, gradle, flutter-examples
+// Settings:
+:doctype: book
+:toc: left
+:toclevels: 4
+:sectlinks:
+:icons: font
+
+[[overview]]
+== Overview
+
+Integration test suite for module `app-main`. Moreover, this module generates API Documentation via Spring RESTDocs.
+
+All API documentation is created under `build/asciidoc` directory after all integration tests are finished.
+
+[[troubleshoot]]
+== Troubleshoot
+
+Under some systems, especially Microsoft Windows, some tests could not be run because of encoding problems.
+You must enforce encoding to `UTF-8` for all Java tools as setting environment variable as following:
+
+[source]
+----
+SET JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF8"
+SET JAVA_OPTS="-Dfile.encoding=UTF8"
+SET GRADLE_OPTS="-Dfile.encoding=UTF8"
+----

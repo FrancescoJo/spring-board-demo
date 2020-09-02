@@ -32,6 +32,11 @@ artifacts {
 
 test {
     useJUnitPlatform()
+    reports {
+        html.enabled = true
+        junitXml.enabled = true
+    }
+
     testLogging {
         events TestLogEvent.SKIPPED, TestLogEvent.FAILED //, TestLogEvent.STANDARD_OUT, TestLogEvent.STANDARD_ERROR
 

@@ -68,7 +68,7 @@ under in Eclipse IDE. I'm still trying to find a workaround for this.
 ** http://spockframework.org/[Spock framework] with http://groovy-lang.org/[Groovy]
 ** link:{link-detekt}[detekt]
 ** https://spring.io/projects/spring-restdocs[Spring RESTDocs] with
-   https://asciidoctor.org/docs/asciidoctor-gradle-plugin/[Asciidoctor] - Automatic documentation
+https://asciidoctor.org/docs/asciidoctor-gradle-plugin/[Asciidoctor] - Automatic documentation
 
 [[building-and-running]]
 = Building & Running application
@@ -135,13 +135,3 @@ Gradle `detekt` task will perform a static analysis by following:
 ----
 
 For your own configuration, read the official document and modify gradle/scripts/detekt.gradle file.
-
-[[addendum]]
-= Addenda
-
-[[translations]]
-== Translations
-
-There are translations in several languages. You can read this document in
-link:README-es.adoc[español(castellano)], link:README-ko.adoc[한국어],
-and link:README-ja.adoc[日本語].
