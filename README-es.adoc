@@ -1,7 +1,7 @@
 = spring-message-board-demo
 Francesco Jo <nimbusob@gmail.com>
 // Metadata:
-:description: Simple overview of spring-message-board-demo
+:description: Reseña simple de spring-message-board-demo
 :keywords: spring-boot, jpa-hibernate, junit5, spock-groovy, spring-rest-docs, tdd, kotlin, gradle, flutter-examples
 // Settings:
 :doctype: book
@@ -19,119 +19,115 @@ Francesco Jo <nimbusob@gmail.com>
 :link-detekt: https://arturbosch.github.io/detekt/index.html
 
 [[overview]]
-= Overview
+= Resumen
 
-A simple project, Based on default settings of my previous project
+Un proyecto simple, establecido sobre la configuración predeterminada de mi proyecto anterior
 https://github.com/FrancescoJo/springboot-multimodule-kotlin[springboot-multimodule-kotlin],
-that demonstrating my programming skills.
+que muestra mis habilidades de programación.
 
-In this project. I especially focused on showcasing:
-
-- https://spring.io/projects/spring-framework[Spring boot] as RESTful API backend,
-- https://en.wikipedia.org/wiki/Test-driven_development[Test-driven-development] practice,
+- https://spring.io/projects/spring-framework[Spring boot] como RESTful API backend,
+- Práctica de https://en.wikipedia.org/wiki/Test-driven_development[Test-driven-development],
 - link:{link-jpa}[Java Persistence API],
-- Integration of link:{link-flutter}[Flutter] as web frontend into Spring boot.
+- Integración de link:{link-flutter}[Flutter] como web frontend con Spring boot.
 
 [[prerequisites]]
-== Prerequisites and limitations
+== Prerrequisitos y limitaciones
 
-1. link:{link-jdk}[OpenJDK 13] or above.
-2. link:{link-flutter}[Flutter SDK] is also required for build process.
-3. (Optional, Recommended) https://www.jetbrains.com/idea/[IntelliJ IDEA Ultimate] for debugging.
+1. link:{link-jdk}[OpenJDK 13] o superior.
+2. link:{link-flutter}[Flutter SDK] para proceso de compilación de frontend.
+3. (Opcional, recomendado) https://www.jetbrains.com/idea/[IntelliJ IDEA Ultimate] para depuración.
 
-Tested and built under This 3 major operating systems in 2020: Windows, MacOS and Linux.
+Probado y compilado en estos 3 SO principales en 2020: Windows, MacOS y Linux.
 
-Due to inadequate support of Gradle and Kotlin plugin, unfortunately this project is cannot be run
-under in Eclipse IDE. I'm still trying to find a workaround for this.
+Debido por compatibilidad inadecuada del plugin Gradle y Kotlin, no se puede operar este proyecto en Eclipse IDE.
 
 [[tech-stacks]]
-== Technical stack explanation
+== Componentes tecnológicos
 
-* Build tools:
+* Herramienta de compilación:
 ** https://gradle.org/[Gradle 6.5]
 
-* Languages:
+* Idiomas:
 ** link:{link-jdk}[Java 13] - platform runtime
-** https://kotlinlang.org/[Kotlin 1.4] - backend unit test
-** http://groovy-lang.org/[Groovy 2.5] - backend integration test
+** https://kotlinlang.org/[Kotlin 1.4] - Prueba unitaria de backend
+** http://groovy-lang.org/[Groovy 2.5] - Prueba de integración de backend
 ** https://dart.dev[Dart 2.10] - web frontend
 
-* Frameworks and runtimes:
-** http://undertow.io/[Undertow] - for Web application server
-** http://spring.io/projects/spring-boot[Spring boot 2] - application framework
-** http://hibernate.org/[Hibernate] - link:{link-jpa}[JPA] implementation / persistent data
-** https://github.com/brettwooldridge/HikariCP[HicariCP] - database connection pool
+* Frameworks y tiempo de ejecucións:
+** http://undertow.io/[Undertow] - para Web application server
+** http://spring.io/projects/spring-boot[Spring boot 2] - framework de applicación
+** http://hibernate.org/[Hibernate] - implementación de link:{link-jpa}[JPA] / persistent data
+** https://github.com/brettwooldridge/HikariCP[HicariCP] - connection pool de la base de datos
 ** link:{link-flutter}[Flutter] - web frontend
 
-* Code quality:
+* Cualidad del código
 ** https://junit.org/junit5/docs/current/user-guide/[JUnit 5]
-** http://spockframework.org/[Spock framework] with http://groovy-lang.org/[Groovy]
+** http://spockframework.org/[Spock framework] con http://groovy-lang.org/[Groovy]
 ** link:{link-detekt}[detekt]
-** https://spring.io/projects/spring-restdocs[Spring RESTDocs] with
-https://asciidoctor.org/docs/asciidoctor-gradle-plugin/[Asciidoctor] - Automatic documentation
+** https://spring.io/projects/spring-restdocs[Spring RESTDocs] con
+https://asciidoctor.org/docs/asciidoctor-gradle-plugin/[Asciidoctor] - Documentación automatico
 
 [[building-and-running]]
-= Building & Running application
+= Compilación y ejecución
 
-Ensure that both link:{link-jdk}[Java SDK] and link:{link-flutter}[Flutter SDK] commands are directly accessible
-via `PATH`, before build process.
+Debe asegurarse de que ambos comandos link:{link-jdk}[Java SDK] y link:{link-flutter}[Flutter SDK] sean accesibles
+a través de `PATH`, antes del proceso de compilación.
 
 [[how-to-build]]
-== How to build
+== Cómo compilar
 
 [source]
 ----
 ./gradlew clean assemble [-PbuildConfig={local|release}]
 ----
 
-* `buildConfig` will be defaulted as `local` if the option is omitted.
-* Standalone executable JAR file will be created in `app-main/build/outputs` directory after `assemble` task is finished.
+* `buildConfig` será predeterminado como `local` si se omite la opción.
+* Creará un archivo JAR Standalone executable en directorio `app-main/build/outputs`
+  después de en finalizada la tarea `assemble`.
 
 [[how-to-run]]
-== How to run
+== Cómo ejecutar
 
-You must place an `application.yml` file before running this application in project root or execution context root.
-In order to help a quick start, there is `application.yml.sample` file is in root directory. Just copy that file and
-change name to `application.yml`, and you're all set to go.
+Debe poner un archivo `application.yml` antes de ejecutar esta aplicación en directorio raíz de proyecto o
+contexto raíz de ejecución. Para ayudar un inicio rápido, hay un archivo `application.yml.sample` en directorio raíz.
+Simplemente copie lo y cambie el nombre a `application.yml`, y estará listo para comenzar.
 
-Run server after build by following:
+Ejecutar aplicación después de compilación como siguiente:
 
 [subs="attributes,verbatim"]
 ----
 java -jar app-main/build/libs/{app-name}-{app-version}.jar
 ----
 
-and access to localhost with port number specified in your own `application.yml` file.
+y acceder a localhost y numero de puerto escribido en su archivo `application.yml`.
 
 [[code-quality-measurement]]
-= Code quality measurement
+= Medición de cualidad del código
 
 [[how-to-tests]]
-== How to run tests and coverage report
+== Cómo ejecutar prueba unitaria y producir un informe de cobertura
 
-This project is written under TDD practice, thus there are many test cases to prove logical integrity. As we know,
-integration tests are *tests* but running them takes long time rather than unit tests. Therefore, those two tests
-are separated in this project, and you can run both of them by following:
+Este proyecto está hecho bajo de la práctica de TDD, por la tanto hay muchos casos de prueba para demostrar
+la integridad lógica. Como sabemos, la pruebas de integraciones son *pruebas*, pero ejecutarlas lleva mucho tiempo
+en lugar de pruebas unitarias. Por lo tanto, esas dos pruebas están separadas y puede ejecutar ambas siguiendo:
 
 [source]
 ----
 ./gradlew test integrationTest jacocoTestReport
 ----
 
-to run all tests and coverage reports in each `build/reports` directory.
+para ejecutar pruebas todos y producir el informe de cobertura en cada de `build/reports` directorios.
 
-There is a good article about testing -
-read https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html[Google Testing Blog post] for more details.
+Hay un buen artículo sobre pruebas - acceso a
+https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html[Google Testing Blog post] para mas detalles.
 
 [[how-to-analyze]]
-== How to run static analysis and create report files
+== Cómo ejecutar análisis estático y producir un informe
 
-This project uses link:{link-detekt}[detekt] as a static analyser.
-Gradle `detekt` task will perform a static analysis by following:
+Este proyecto utiliza link:{link-detekt}[detekt] como analizador estático.
+La tarea `detekt` de Gradle desarrollará un análisis estático siguiendo:
 
 [source]
 ----
 ./gradlew detekt
 ----
-
-For your own configuration, read the official document and modify gradle/scripts/detekt.gradle file.
