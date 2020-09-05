@@ -1,7 +1,7 @@
 = spring-message-board-demo
 Francesco Jo <nimbusob@gmail.com>
 // Metadata:
-:description: Simple overview of spring-message-board-demo
+:description: spring-message-board-demo 프로젝트 개요
 :keywords: spring-boot, jpa-hibernate, junit5, spock-groovy, spring-rest-docs, tdd, kotlin, gradle, flutter-examples
 // Settings:
 :doctype: book
@@ -19,119 +19,115 @@ Francesco Jo <nimbusob@gmail.com>
 :link-detekt: https://arturbosch.github.io/detekt/index.html
 
 [[overview]]
-= Overview
+= 개요
 
-A simple project, Based on default settings of my previous project
-https://github.com/FrancescoJo/springboot-multimodule-kotlin[springboot-multimodule-kotlin],
-that demonstrating my programming skills.
+내가 보유중인 프로그래밍 능력 시범을 위해, 이전의 예제로 만들었던
+https://github.com/FrancescoJo/springboot-multimodule-kotlin[springboot-multimodule-kotlin] 를 기반으로 한 간단한 프로젝트.
 
-In this project. I especially focused on showcasing:
+이 프로젝트에서는 특히 다음의 영역을 집중적으로 보여주기 위해 노력했습니다:
 
-- https://spring.io/projects/spring-framework[Spring boot] as RESTful API backend,
-- https://en.wikipedia.org/wiki/Test-driven_development[Test-driven-development] practice,
+- https://spring.io/projects/spring-framework[Spring boot] 를 이용한 RESTful API backend 구현,
+- https://en.wikipedia.org/wiki/Test-driven_development[Test-driven-development] 개발 방법론,
 - link:{link-jpa}[Java Persistence API],
-- Integration of link:{link-flutter}[Flutter] as web frontend into Spring boot.
+- link:{link-flutter}[Flutter] 를 Spring boot 앱의 web frontend 로 사용.
 
 [[prerequisites]]
-== Prerequisites and limitations
+== 사전 요구사항 및 한계
 
-1. link:{link-jdk}[OpenJDK 13] or above.
-2. link:{link-flutter}[Flutter SDK] is also required for build process.
-3. (Optional, Recommended) https://www.jetbrains.com/idea/[IntelliJ IDEA Ultimate] for debugging.
+1. link:{link-jdk}[OpenJDK 13] 혹은 이상 필요합니다.
+2. 빌드 과정 완료를 위해 link:{link-flutter}[Flutter SDK] 설치가 추가로 필요합니다.
+3. (필수 아님, 추천) 디버깅을 위한 https://www.jetbrains.com/idea/[IntelliJ IDEA Ultimate] 개발 도구.
 
-Tested and built under This 3 major operating systems in 2020: Windows, MacOS and Linux.
+2020 년 기준 주로 사용되는 Windows, MacOS 그리고 Linux 환경에서 테스트 및 빌드 완료했습니다.
 
-Due to inadequate support of Gradle and Kotlin plugin, unfortunately this project is cannot be run
-under in Eclipse IDE. I'm still trying to find a workaround for this.
+Gradle 과 Kotlin plugin 의 미비점 때문에 이 프로젝트는 Eclipse IDE 에서의 정상 실행을 보장하지 않습니다.
 
 [[tech-stacks]]
-== Technical stack explanation
+== 채택 기술
 
-* Build tools:
+* 빌드 도구:
 ** https://gradle.org/[Gradle 6.5]
 
-* Languages:
-** link:{link-jdk}[Java 13] - platform runtime
-** https://kotlinlang.org/[Kotlin 1.4] - backend unit test
-** http://groovy-lang.org/[Groovy 2.5] - backend integration test
+* 언어:
+** link:{link-jdk}[Java 13] - 플랫폼
+** https://kotlinlang.org/[Kotlin 1.4] - backend 단위 테스트용
+** http://groovy-lang.org/[Groovy 2.5] - backend 통합 테스트용
 ** https://dart.dev[Dart 2.10] - web frontend
 
-* Frameworks and runtimes:
-** http://undertow.io/[Undertow] - for Web application server
-** http://spring.io/projects/spring-boot[Spring boot 2] - application framework
-** http://hibernate.org/[Hibernate] - link:{link-jpa}[JPA] implementation / persistent data
-** https://github.com/brettwooldridge/HikariCP[HicariCP] - database connection pool
+* 프레임 웍과 실행 환경:
+** http://undertow.io/[Undertow] - 웹 애플리케이션 서버
+** http://spring.io/projects/spring-boot[Spring boot 2] - backend 애플리케이션 프레임워크
+** http://hibernate.org/[Hibernate] - link:{link-jpa}[JPA] 구현 및 데이터 영속
+** https://github.com/brettwooldridge/HikariCP[HicariCP] - 데이터베이스 연결 관리
 ** link:{link-flutter}[Flutter] - web frontend
 
-* Code quality:
+* 코드 품질:
 ** https://junit.org/junit5/docs/current/user-guide/[JUnit 5]
-** http://spockframework.org/[Spock framework] with http://groovy-lang.org/[Groovy]
+** http://groovy-lang.org/[Groovy] 를 필요로 하는 http://spockframework.org/[Spock framework]
 ** link:{link-detekt}[detekt]
-** https://spring.io/projects/spring-restdocs[Spring RESTDocs] with
-https://asciidoctor.org/docs/asciidoctor-gradle-plugin/[Asciidoctor] - Automatic documentation
+** https://spring.io/projects/spring-restdocs[Spring RESTDocs] 에 통합된
+https://asciidoctor.org/docs/asciidoctor-gradle-plugin/[Asciidoctor] - 문서 자동화
 
 [[building-and-running]]
-= Building & Running application
+= 빌드 및 실행
 
-Ensure that both link:{link-jdk}[Java SDK] and link:{link-flutter}[Flutter SDK] commands are directly accessible
-via `PATH`, before build process.
+빌드 및 실행 과정 이전에 link:{link-jdk}[Java SDK] 와 link:{link-flutter}[Flutter SDK] 명령을
+접근 가능한 `PATH` 에 선언해야 합니다.
 
 [[how-to-build]]
-== How to build
+== 빌드하기
 
 [source]
 ----
 ./gradlew clean assemble [-PbuildConfig={local|release}]
 ----
 
-* `buildConfig` will be defaulted as `local` if the option is omitted.
-* Standalone executable JAR file will be created in `app-main/build/outputs` directory after `assemble` task is finished.
+* `buildConfig` 는 옵션을 생략하면 `local` 로 자동 고정됩니다.
+* 단독 실행용 JAR 파일은 `assemble` 작업 이후 `app-main/build/outputs` 디렉토리에 생성됩니다.
 
 [[how-to-run]]
-== How to run
+== 실행하기
 
-You must place an `application.yml` file before running this application in project root or execution context root.
-In order to help a quick start, there is `application.yml.sample` file is in root directory. Just copy that file and
-change name to `application.yml`, and you're all set to go.
+프로그램 실행 이전에 `application.yml` 파일을 project root 또는 실행 context root 에 만들어야 합니다.
+초반 실행 과정을 빠르게 하기 위해 project root 에 `application.yml.sample` 파일이 있습니다.
+이 파일을 복사 후 이름을 `application.yml` 로만 바꿔도 바로 실행이 가능합니다.
 
-Run server after build by following:
+빌드 후 다음 명령으로 서버를 실행합니다:
 
 [subs="attributes,verbatim"]
 ----
 java -jar app-main/build/libs/{app-name}-{app-version}.jar
 ----
 
-and access to localhost with port number specified in your own `application.yml` file.
+또한 `application.yml` 에 설정한 localhost 의 port 번호로 접속을 시도하면 됩니다.
 
 [[code-quality-measurement]]
-= Code quality measurement
+= 코드 품질 측정
 
 [[how-to-tests]]
-== How to run tests and coverage report
+== 테스트 실행 및 커버리지 보고서
 
-This project is written under TDD practice, thus there are many test cases to prove logical integrity. As we know,
-integration tests are *tests* but running them takes long time rather than unit tests. Therefore, those two tests
-are separated in this project, and you can run both of them by following:
+이 프로젝트는 TDD 를 따르고 있으며, 따라서 논리 완결성을 증명하기 위한 테스트 케이스가 많이 있습니다.
+알다시피, 통합 테스트는 *테스트* 지만 단위 테스트에 비해 실행 시간이 오래 걸립니다.
+따라서, 두 테스트는 프로젝트 내에서 각각 분리되어 있으며 이를 모두 실행하려면:
 
 [source]
 ----
 ./gradlew test integrationTest jacocoTestReport
 ----
 
-to run all tests and coverage reports in each `build/reports` directory.
+명령을 실행해야 하며 테스트 및 커버리지 보고서가 각 모듈의 `build/reports` 디렉토리에 생성됩니다.
 
-There is a good article about testing -
-read https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html[Google Testing Blog post] for more details.
+또한 https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html[Google 테스트 블로그] 에는
+좋은 테스트 문서가 있으니 이를 참고하시면 좋습니다.
 
 [[how-to-analyze]]
-== How to run static analysis and create report files
+== 정적 분석 실행 및 보고서
 
-This project uses link:{link-detekt}[detekt] as a static analyser.
-Gradle `detekt` task will perform a static analysis by following:
+이 프로젝트는 정적 분석 도구로 link:{link-detekt}[detekt] 를 사용합니다.
+아래 명령으로 Gradle 의 `detekt` 작업을 실행해 정적 분석을 실행하세요:
 
 [source]
 ----
 ./gradlew detekt
 ----
-
-For your own configuration, read the official document and modify gradle/scripts/detekt.gradle file.
