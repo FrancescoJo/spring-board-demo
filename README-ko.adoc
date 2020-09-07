@@ -77,7 +77,7 @@ https://asciidoctor.org/docs/asciidoctor-gradle-plugin/[Asciidoctor] - 문서 �
 [[how-to-build]]
 == 빌드하기
 
-[source]
+[source,shell script]
 ----
 ./gradlew clean assemble [-PbuildConfig={local|release}]
 ----
@@ -111,7 +111,7 @@ java -jar app-main/build/libs/{app-name}-{app-version}.jar
 알다시피, 통합 테스트는 *테스트* 지만 단위 테스트에 비해 실행 시간이 오래 걸립니다.
 따라서, 두 테스트는 프로젝트 내에서 각각 분리되어 있으며 이를 모두 실행하려면:
 
-[source]
+[source,shell script]
 ----
 ./gradlew test integrationTest jacocoTestReport
 ----
@@ -127,7 +127,7 @@ java -jar app-main/build/libs/{app-name}-{app-version}.jar
 이 프로젝트는 정적 분석 도구로 link:{link-detekt}[detekt] 를 사용합니다.
 아래 명령으로 Gradle 의 `detekt` 작업을 실행해 정적 분석을 실행하세요:
 
-[source]
+[source,shell script]
 ----
 ./gradlew detekt
 ----

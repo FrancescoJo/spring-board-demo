@@ -79,7 +79,7 @@ via `PATH`, before build process.
 [[how-to-build]]
 == How to build
 
-[source]
+[source,shell script]
 ----
 ./gradlew clean assemble [-PbuildConfig={local|release}]
 ----
@@ -113,7 +113,7 @@ This project is written under TDD practice, thus there are many test cases to pr
 integration tests are *tests* but running them takes long time rather than unit tests. Therefore, those two tests
 are separated in this project, and you can run both of them by following:
 
-[source]
+[source,shell script]
 ----
 ./gradlew test integrationTest jacocoTestReport
 ----
@@ -129,7 +129,7 @@ read https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests
 This project uses link:{link-detekt}[detekt] as a static analyser.
 Gradle `detekt` task will perform a static analysis by following:
 
-[source]
+[source,shell script]
 ----
 ./gradlew detekt
 ----

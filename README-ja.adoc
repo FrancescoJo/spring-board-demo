@@ -78,7 +78,7 @@ https://asciidoctor.org/docs/asciidoctor-gradle-plugin/[Asciidoctor]－文書の
 [[how-to-build]]
 == ビルド方法
 
-[source]
+[source,shell script]
 ----
 ./gradlew clean assemble [-PbuildConfig={local|release}]
 ----
@@ -112,7 +112,7 @@ java -jar app-main/build/libs/{app-name}-{app-version}.jar
 ご存知のように、統合テストは *テスト* ですが単体テストに比べて実行時間が長くかかります。
 だから、両方のテストはプロジェクト内でそれぞれ分離されており、これをすべて実行するには：
 
-[source]
+[source,shell script]
 ----
 ./gradlew test integrationTest jacocoTestReport
 ----
@@ -128,7 +128,7 @@ java -jar app-main/build/libs/{app-name}-{app-version}.jar
 このプロジェクトは静的分析ツールとして link:{link-detekt}[detekt] を使います。
 以下のコマンドで Gradle の `detekt` 作業を実行して静的分析を実行してください：
 
-[source]
+[source,shell script]
 ----
 ./gradlew detekt
 ----

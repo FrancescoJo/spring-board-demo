@@ -76,7 +76,7 @@ a través de `PATH`, antes del proceso de compilación.
 [[how-to-build]]
 == Cómo compilar
 
-[source]
+[source,shell script]
 ----
 ./gradlew clean assemble [-PbuildConfig={local|release}]
 ----
@@ -111,7 +111,7 @@ Este proyecto está hecho bajo de la práctica de TDD, por la tanto hay muchos c
 la integridad lógica. Como sabemos, la pruebas de integraciones son *pruebas*, pero ejecutarlas lleva mucho tiempo
 en lugar de pruebas unitarias. Por lo tanto, esas dos pruebas están separadas y puede ejecutar ambas siguiendo:
 
-[source]
+[source,shell script]
 ----
 ./gradlew test integrationTest jacocoTestReport
 ----
@@ -127,7 +127,7 @@ https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html
 Este proyecto utiliza link:{link-detekt}[detekt] como analizador estático.
 La tarea `detekt` de Gradle desarrollará un análisis estático siguiendo:
 
-[source]
+[source,shell script]
 ----
 ./gradlew detekt
 ----

@@ -1,7 +1,7 @@
 [[common-payloads-responses]]
 == Common Response body format
 
-[source]
+[source,json]
 ----
 {
   "body" : ResponseBody<JsonObject>,

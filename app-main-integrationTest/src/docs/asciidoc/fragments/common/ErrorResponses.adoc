@@ -1,7 +1,7 @@
 [[common-payloads-error]]
 == Common Error response body format
 
-[source]
+[source,json]
 ----
 {
   "body" : {

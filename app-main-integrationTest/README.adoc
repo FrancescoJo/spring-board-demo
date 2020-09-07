@@ -23,7 +23,7 @@ All API documentation is created under `build/asciidoc` directory after all inte
 Under some systems, especially Microsoft Windows, some tests could not be run because of encoding problems.
 You must enforce encoding to `UTF-8` for all Java tools as setting environment variable as following:
 
-[source]
+[source,shell script]
 ----
 SET JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF8"
 SET JAVA_OPTS="-Dfile.encoding=UTF8"
