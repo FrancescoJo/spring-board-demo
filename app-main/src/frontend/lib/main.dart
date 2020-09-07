@@ -1,15 +1,35 @@
+// spring-message-board-demo
+// Refer to LICENCE.txt for licence details.
 import 'package:flutter/material.dart';
+import 'package:frontend/app/inject/ViewModelModule.dart';
+import 'package:frontend/app/inject/DataSourceModule.dart';
+import 'package:frontend/app/inject/RepositoryModule.dart';
+import 'package:frontend/app/ui/MyAppViewModel.dart';
 
+/// Main programme entry point.
+///
+/// Author: Francesco Jo(<nimbusob@gmail.com>) <br/>
+/// Since: 07 - Sep - 2020
 void main() {
-  runApp(MyApp());
+  final dataSrcModule = DataSourceModule();
+  final repoModule = RepositoryModule(dataSrcModule);
+  final vmModule = ViewModelModule(repoModule);
+
+  runApp(MyApp(vmModule));
 }
 
 class MyApp extends StatelessWidget {
+  final ViewModelModule _viewModelModule;
+
+  MyApp(this._viewModelModule);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final MyAppViewModel vm = _viewModelModule.myAppViewModel();
+
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: vm.getText(),
       theme: ThemeData(
         // This is the theme of your application.
         //

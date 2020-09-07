@@ -1,0 +1,85 @@
+= spring-message-board-demo frontend
+Francesco Jo <nimbusob@gmail.com>
+// Metadata:
+:description: Simple overview of spring-message-board-demo frontend
+:keywords: dart, flutter, tdd, dependency-injection
+// Settings:
+:doctype: book
+:toc: left
+:toclevels: 4
+:sectlinks:
+:icons: font
+// Refs:
+:app-name: spring-board-demo
+:app-version: 1.0
+:link-flutter: https://flutter.dev/
+:link-detekt: https://arturbosch.github.io/detekt/index.html
+
+[[overview]]
+= Overview
+
+A Web frontend app of `spring-message-board` demo project built by Flutter. In this project I focused on practicing:
+
+- https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/[Onion architecture]
+- https://medium.com/better-programming/mvvm-in-flutter-edd212fd767a[MVVM pattern]
+
+to separate programme components as testable as possible.
+
+[[component-structure]]
+== Application component structure
+
+The component diagram looks like below:
+
+[source,text]
+----
+    UI Frontend
+         |
+ Use case(View model)
+         |
+     Repository
+         |
+    Data source
+----
+
+[[directory-structure]]
+== Directory structure
+
+[source,text]
+----
+/android            # Source templates for Android
+/ios                # Source templates for iOS
+/web                # Source templates for web (main target of this project)
+/lib                # Flutter application sources
+  ./app             # *package*: Main application
+    ./inject        #   Dependency Injection definitions
+    ./stats         #   3rdparty statistics collector
+    ./ui            #   UI feature implementations
+  ./core            # *package*: Core
+    ./dataSrc       #   *package*: Data source - data retrieval as DTO form
+    ./exception     #
+    ./model         #   Information holder for drawing UI
+    ./repository    #   *package*: Repository - data multiplexing, caching, and relay as Model form
+  ./util            # Common logic used in across all packages
+  ./main.dart
+/test               # For unit and integration tests
+----
+
+[[background]]
+= Technical decisions and backgrounds:
+
+[[tech-stacks-dependency-injection]]
+== Dependency Injection
+
+At the initial stage this project, I researched several days for appropriate
+https://en.wikipedia.org/wiki/Dependency_injection[dependency injection] engines for Dart, and there are several:
+
+- https://pub.dev/packages/ioc[IoC]
+- https://pub.dev/packages/injector[injector]
+- https://github.com/google/inject.dart[inject.dart]
+
+however none of those are officially supported by Google/Dart/Flutter team - although *inject.dart* seems the best
+as it works very similar to https://github.com/google/dagger[Dagger] which is the most famous DI engine in Android -
+therefore in this project, all dependency injections are done manually.
+
+This definitely going to be not a good choice, so I hope there will be any in Dart/Flutter world, soon.
+
