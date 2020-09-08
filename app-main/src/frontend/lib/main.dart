@@ -5,6 +5,7 @@ import 'package:frontend/app/inject/ViewModelModule.dart';
 import 'package:frontend/app/inject/DataSourceModule.dart';
 import 'package:frontend/app/inject/RepositoryModule.dart';
 import 'package:frontend/app/ui/MyAppViewModel.dart';
+import 'package:provider/provider.dart';
 
 /// Main programme entry point.
 ///
@@ -15,18 +16,16 @@ void main() {
   final repoModule = RepositoryModule(dataSrcModule);
   final vmModule = ViewModelModule(repoModule);
 
-  runApp(MyApp(vmModule));
+  runApp(
+      vmModule.bind(MyApp())
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final ViewModelModule _viewModelModule;
-
-  MyApp(this._viewModelModule);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final MyAppViewModel vm = _viewModelModule.myAppViewModel();
+    final vm = Provider.of<IMyAppViewModel>(context);
 
     return MaterialApp(
       title: vm.getText(),
