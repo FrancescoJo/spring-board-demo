@@ -1,0 +1,9 @@
+import 'package:intl/intl.dart';
+import 'package:frontend/generated/i18n/Messages.dart';
+
+// ignore: camel_case_types
+class {messageBundleTypeForBcp47LangTag} implements Messages {
+  const {messageBundleTypeForBcp47LangTag}();
+
+  $<__MESSAGES_I18N_IMPL__>
+}

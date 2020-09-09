@@ -1,0 +1,11 @@
+{
+  "packageName": "frontend",
+  "srcDir": "lib",
+  "destination": "generated/i18n",
+  "supportLocales": ["en-US", "es"],
+  "fallbacks": {
+    "default": "en-US",
+    "en": "en-US",
+    "es": "es"
+  }
+}

@@ -1,0 +1,13 @@
+:STRING:
+@override
+String {entryName}() =>
+  Intl.message("{message}");
+
+:PLURAL:
+@override
+String {entryName}(final int {firstArg}$<, final Object {arg}>) =>
+  Intl.plural(
+      {firstArg},
+      $<{quantifier}: "{messageForQuantifier}",\n>
+      args: [{firstArg}$<, {arg}>]
+  );

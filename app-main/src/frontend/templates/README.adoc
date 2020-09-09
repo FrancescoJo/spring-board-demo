@@ -1,0 +1,1 @@
+All files in this directory are not actual source files, but for referencing / snapshot / etc.

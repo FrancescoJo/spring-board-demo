@@ -1,0 +1,3 @@
+const _TYPES_FOR_LOCALES = {
+  $<"{bcp47LangTag}": {messageBundleTypeForBcp47LangTag}>
+};

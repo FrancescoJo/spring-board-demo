@@ -1,0 +1,79 @@
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:{packageName}/{destination}/Messages.dart';
+import 'package:{packageName}/{destination}/Messages_en_US.dart';
+import 'package:{packageName}/{destination}/Messages_es.dart';
+
+class I18n {
+  /// Must be called when app configuration is changed(Global BuildContext is rebuilt).
+  static void reload() {
+    // Invalidate delegate to trigger _getDelegate() rebuilds Message instance
+    _delegate = null;
+  }
+
+  $<__MESSAGES_I18N_ACCESSOR__>
+}
+
+__DEFAULT_LOCALE__
+
+__TYPES_FOR_LOCALES__
+
+__CONSTRUCTORS__
+
+Messages _delegate;
+
+Messages _getDelegate() {
+  if (_delegate != null) {
+    return _delegate;
+  }
+
+  final Locale locale = _getCurrentLocale();
+
+  Type messageBundle = _TYPES_FOR_LOCALES[locale.toLanguageTag()];
+  if (messageBundle == null) {
+    messageBundle = _TYPES_FOR_LOCALES["${locale.languageCode}-${locale.countryCode}"];
+  }
+  if (messageBundle == null) {
+    messageBundle = _TYPES_FOR_LOCALES[locale.languageCode];
+  }
+  if (messageBundle == null) {
+    messageBundle = _TYPES_FOR_LOCALES[_DEFAULT_LOCALE.toLanguageTag()];
+  }
+
+  _delegate = _constructors[messageBundle]();
+  return _delegate;
+}
+
+Locale _getCurrentLocale() => (() {
+  final String localeName = _getLocaleName();
+  final localeParts = localeName.split("_");
+  switch (localeParts.length) {
+    case 1:
+      // language only
+      return new Locale(localeParts[0]);
+    case 2:
+      // language + country(ISO 3166) and/or language + script
+      final RegExp countryMatcher = new RegExp(r"[A-Z]{2,3}");
+      if (countryMatcher.hasMatch(localeParts[1])) {
+        return new Locale(localeParts[0], localeParts[1]);
+      } else {
+        return Locale.fromSubtags(languageCode: localeParts[0], scriptCode: localeParts[1]);
+      }
+      break;
+    case 3:
+      return Locale.fromSubtags(
+          languageCode: localeParts[0], scriptCode: localeParts[1], countryCode: localeParts[2]);
+  }
+}());
+
+String _getLocaleName() => (() {
+  try {
+    // Locale is only supported for Android and iOS currently in Sep 2020:
+    return Platform.localeName;
+  } catch (e) {
+    return [_DEFAULT_LOCALE.languageCode, _DEFAULT_LOCALE.scriptCode, _DEFAULT_LOCALE.countryCode]
+        .where((str) => !(str?.isEmpty ?? true))
+        .join("_");
+  }
+}());

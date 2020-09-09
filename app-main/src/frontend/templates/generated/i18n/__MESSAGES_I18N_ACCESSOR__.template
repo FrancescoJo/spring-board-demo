@@ -1,0 +1,7 @@
+:STRING:
+static String {entryName}() =>
+  _getDelegate().{entryName}();
+
+:PLURAL:
+static String {entryName}(final int {firstArg}$<, final Object {arg}>) =>
+  _getDelegate().{entryName}(firstArg$<, {arg}>);
