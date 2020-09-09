@@ -1,9 +1,9 @@
 // spring-message-board-demo
 // Refer to LICENCE.txt for licence details.
 import 'package:flutter/material.dart';
-import 'package:frontend/app/inject/ViewModelModule.dart';
 import 'package:frontend/app/inject/DataSourceModule.dart';
 import 'package:frontend/app/inject/RepositoryModule.dart';
+import 'package:frontend/app/inject/ViewModelModule.dart';
 import 'package:frontend/app/ui/MyAppViewModel.dart';
 import 'package:provider/provider.dart';
 

@@ -39,3 +39,6 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+# Autogen by tsv_i18n_2_flutter
+lib/generated/i18n/*

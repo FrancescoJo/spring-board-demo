@@ -6,7 +6,6 @@ import 'package:frontend/app/inject/RepositoryModule.dart';
 import 'package:frontend/app/ui/MyAppViewModel.dart';
 import 'package:frontend/repository/SimpleTextRepository.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
 
 /// View Model definitions for application.
 ///

@@ -1,0 +1,3 @@
+entryName	args	message	remarks
+helloWorld		¡Hola, mundo!
+emailsLeft	howMany, userName	{ "zero": "Hay $howMany correos electrónicos para $userName",   "one": "Hay $howMany correo electrónico para $userName",   "two": "",   "few": "",   "many": "",   "other": "Hay $howMany correos electrónicos para $userName" }
