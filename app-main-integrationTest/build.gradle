@@ -44,6 +44,7 @@ task integrationTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
     outputs.upToDateWhen { false }
     mustRunAfter test
+    finalizedBy asciidoctor
 }
 
 check.dependsOn integrationTest
@@ -88,7 +89,6 @@ asciidoctor {
      * and reboot system to apply values.
      */
     options.encoding = "UTF-8"
-    dependsOn test
 }
 
 // https://stackoverflow.com/questions/50681096/groovy-2-5-0-gives-noclassdeffounderror-for-methodcalltransformation
