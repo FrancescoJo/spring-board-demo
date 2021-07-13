@@ -17,15 +17,15 @@ private static String[] getExecutionScript(final String buildConfig) {
         }
     } else if (Os.isFamily(Os.FAMILY_MAC)) {
         if (buildConfig == "release") {
-            return "./build_flutter_frontend.sh --release"
+            return ["./build_flutter_frontend.sh --release"]
         } else {
-            return "./build_flutter_frontend.sh"
+            return ["./build_flutter_frontend.sh"]
         }
     } else if (Os.isFamily(Os.FAMILY_UNIX)) {
         if (buildConfig == "release") {
-            return "./build_flutter_frontend.sh --release"
+            return ["./build_flutter_frontend.sh --release"]
         } else {
-            return "./build_flutter_frontend.sh"
+            return ["./build_flutter_frontend.sh"]
         }
     } else {
         final name = System.getProperty("os.name")

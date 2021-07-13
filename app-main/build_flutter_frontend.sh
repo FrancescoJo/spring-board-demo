@@ -1,7 +1,7 @@
 #!/bin/bash
 CURRENT_DIR=`pwd`
 
-pushd $CURRENT_DIR% > /dev/null
+pushd $CURRENT_DIR > /dev/null
 
 cd src/frontend
 
