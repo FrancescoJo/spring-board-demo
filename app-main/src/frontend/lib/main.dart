@@ -16,9 +16,7 @@ void main() {
   final repoModule = RepositoryModule(dataSrcModule);
   final vmModule = ViewModelModule(repoModule);
 
-  runApp(
-      vmModule.bind(MyApp())
-  );
+  runApp(vmModule.bind(MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -51,7 +49,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
