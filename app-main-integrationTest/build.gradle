@@ -12,13 +12,14 @@ sourceSets {
     integrationTest {
         final srcBase = "src/integrationTest"
         java {
-            srcDirs srcDirs = [srcDirs, "$srcBase/groovy", "$srcBase/java"]
+            srcDirs = [srcDirs, "$srcBase/groovy", "$srcBase/java"]
             compileClasspath += main.output + test.output
             runtimeClasspath += main.output + test.output
         }
 
+        // !chore: Gradle 7.0 warning and must be removed
         resources {
-            srcDirs srcDirs = [srcDirs, "$srcBase/resources"]
+            srcDirs = [srcDirs, "$srcBase/resources"]
         }
     }
 }
@@ -27,6 +28,7 @@ idea {
     module {
         testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
         testResourceDirs += project.sourceSets.integrationTest.resources.srcDirs
+        // !chore: Gradle 7.0 warning
         scopes.TEST.plus += [configurations.integrationTestCompile]
     }
 }
@@ -53,7 +55,7 @@ dependencies {
     integrationTestImplementation project(":app-main")
 
     // lang
-    integrationTestImplementation "org.codehaus.groovy:groovy-all:$groovyVersion"
+    integrationTestImplementation "org.codehaus.groovy:groovy:$groovyVersion"
 
     // Spring boot test libs
     integrationTestImplementation "org.springframework.boot:spring-boot-starter-test:$version_springBoot"

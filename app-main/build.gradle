@@ -16,11 +16,11 @@ sourceSets {
     println("Building JAR for '$buildConfig' environment")
     main {
         java {
-            srcDirs srcDirs = [srcDirs, "src/$buildConfig/java", "src/$buildConfig/kotlin"]
+            srcDirs = [srcDirs, "src/$buildConfig/java", "src/$buildConfig/kotlin"]
         }
 
         resources {
-            srcDirs srcDirs = [srcDirs, "src/$buildConfig/resources"]
+            srcDirs = [srcDirs, "src/$buildConfig/resources"]
         }
     }
 }

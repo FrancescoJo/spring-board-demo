@@ -4,7 +4,7 @@ buildscript {
     ext {
         // lang
         version_jvm = 1.8
-        version_kotlin = "1.4.0"
+        version_kotlin = "1.5.10"
 
         // lang ext
         version_javax_validation = "2.0.1.Final"
